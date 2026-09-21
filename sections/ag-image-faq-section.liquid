@@ -1,0 +1,586 @@
+{% comment %} ag-image-faq-section.liquid — propriété de James Sparks {% endcomment %}
+{% assign heading_text = section.settings.heading_text %}
+{% assign heading_size = section.settings.heading_size %}
+{% assign heading_weight = section.settings.heading_weight %}
+{% assign heading_color = section.settings.heading_color %}
+
+{% assign subheading_text = section.settings.subheading_text %}
+{% assign subheading_size = section.settings.subheading_size %}
+{% assign subheading_weight = section.settings.subheading_weight %}
+{% assign subheading_color = section.settings.subheading_color %}
+
+{% assign section_image = section.settings.section_image %}
+
+{% assign faq_title_size = section.settings.faq_title_size %}
+{% assign faq_title_color = section.settings.faq_title_color %}
+
+{% assign faq_description_size = section.settings.faq_description_size %}
+{% assign faq_description_color = section.settings.faq_description_color %}
+
+{% assign section_margin_top = section.settings.margin_top %}
+{% assign section_margin_bottom = section.settings.margin_bottom %}
+{% assign section_padding_x = section.settings.padding_left %}
+{% assign section_max_width = section.settings.max_width %}
+{% assign section_background = section.settings.background %}
+
+{% assign enable_icon = section.settings.enable_icon %}
+
+{% assign svg_color = section.settings.svg_color %}
+{% assign line_color = section.settings.line_color %}
+
+<style>
+  .section-ag-{{section.id}}-padding {
+    {% if section_max_width == true %}
+      max-width: 100%;
+    {% else %}
+      max-width: 120rem;
+    {% endif %}
+    margin: var(--mt) auto var(--mb);
+    padding: 0 var(--px, 1.5rem);
+    padding-top: var(--pt);
+    padding-bottom: var(--pb);
+  }
+
+  .section-ag-{{section.id}} {
+    background: {{section_background}};
+  }
+
+  .section-ag-{{section.id}} * {
+    font-size: calc(var(--font-size) * 0.9);
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-ag-{{section.id}}-padding {
+      padding: 0 var(--px-desktop, 5rem);
+      padding-top: var(--pt-desktop);
+      padding-bottom: var(--pb-desktop);
+      font-size: var(--font-size);
+    }
+    .section-ag-{{section.id}} * {
+      font-size: var(--font-size);
+    }
+  }
+</style>
+
+<style>
+  .title-ag-{{section.id}} {
+    text-align: center;
+    color: {{ heading_color }};
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: {{ heading_weight }};
+  }
+</style>
+
+<style>
+  .grid-ag-{{section.id}} {
+    display: grid;
+    gap: 35px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  @media (min-width: 1000px) {
+    .grid-ag-{{section.id}} {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+  }
+  .answer-ag-{{section.id}} {
+    padding: 10px 0 30px;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+  }
+  .answer-ag-{{section.id}} p {
+    margin-top: 0;
+  }
+  .answer-ag-{{section.id}} p:last-child {
+    margin-bottom: 0;
+  }
+  .button-ag-{{section.id}} {
+    cursor: pointer;
+    background: transparent;
+    width: 100%;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 22px 25px 19px 0px;
+    position: relative;
+  }
+  @media (min-width: 750px) {
+    .button-ag-{{section.id}} {
+      padding: 22px 25px 19px 0px;
+    }
+  }
+  .button-ag-{{section.id}}:focus {
+    outline: none;
+  }
+  .faq-ag-{{section.id}} {
+    border-top: 1px solid {{line_color}};
+  }
+  .faq-ag-{{section.id}}:last-child,
+  .faq-ag-{{section.id}}:nth-last-child(2) {
+    border-bottom: 1px solid {{line_color}};
+  }
+  .faq-answer-height-cal-ag-{{section.id}} {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+</style>
+
+<div
+  class="section-ag-{{section.id}} section-ag-{{section.id}}-padding"
+  style="
+    --max-width: {{section_max_width}}rem;
+    --pt: 27px;
+    --pt-desktop: 36px;
+    --pb: 27px;
+    --pb-desktop: 36px;
+    --px: 1.5rem;
+    --px-desktop: {{section_padding_x}}rem;
+    --mt: {{section_margin_top}}px;
+    --mb: {{section_margin_bottom}}px;
+  "
+>
+  {% if subheading_text != blank %}
+    <div
+      style="
+        text-align: center;
+        --font-size: {{ subheading_size }}px;
+        color: {{ subheading_color }};
+        margin-bottom: 19px;
+        font-weight: {{ subheading_weight }};
+      "
+    >
+      {{ subheading_text }}
+    </div>
+  {% endif %}
+  {% if heading_text != blank %}
+    <h2 class="title-ag-{{section.id}}" style="--font-size: {{heading_size}}px;">{{ heading_text }}</h2>
+  {% endif %}
+
+  <div class="grid-ag-{{section.id}}">
+    <div
+      style="
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      "
+    >
+      {% if section_image != blank %}
+        <img
+          style="width: 100%; object-fit: contain;"
+          src="{{ section_image | img_url: 'master' }}"
+          alt=""
+        >
+      {% else %}
+        <div style="background: #d9d9d9; width: 100%;">
+          {{ 'product-6' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div style="position: relative;">
+      {% for block in section.blocks %}
+        <div class="faq-ag-{{section.id}}" style="--border-color: #f2f2f2;">
+          <div
+            class="button-ag-{{section.id}}"
+            style="
+              color: #1f2d54;
+              --font-size: 20px;
+            "
+          >
+            {% if enable_icon == true %}
+              {% if block.settings.item_icon != blank %}
+                <img
+                  style="width: 40px; object-fit: contain; margin-right: 32px; flex-shrink: 0;"
+                  src="{{ block.settings.item_icon | img_url: 'master' }}"
+                  alt=""
+                >
+              {% else %}
+                <div style="width:40px; height: 40px;">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder_svg' }}
+                </div>
+              {% endif %}
+            {% endif %}
+
+            <div style="color: {{faq_title_color}}; font-size: {{faq_title_size}}px;">
+              {{ block.settings.item_question }}
+            </div>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.0"
+              viewBox="0 0 143.000000 83.000000"
+              preserveAspectRatio="xMidYMid meet"
+              class="icon-ag-{{section.id}}"
+              style="
+                fill: {{ svg_color }};
+                width: 17px;
+                height: auto;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                --rotate: 0deg;
+                transform: translateY(-50%) rotate(var(--rotate));
+                transition: transform 0.3s ease;
+              "
+            >
+              <g transform="translate(0.000000,83.000000) scale(0.100000,-0.100000)" fill="" stroke="none">
+                <path d="M57 772 l-57 -57 360 -360 360 -360 357 357 358 358 -63 62 -62 63 -298 -298 -297 -297 -295 295 c-162 162 -297 295 -300 295 -3 0 -31 -26 -63 -58z"></path>
+              </g>
+            </svg>
+          </div>
+          <div
+            class="answer-ag-{{section.id}}"
+            style="
+              display: none; height: 0; padding-top: 0; padding-bottom: 0;
+              --font-size: {{faq_description_size}}px;
+              color: {{ faq_description_color }};
+            "
+          >
+            {{ block.settings.item_answer }}
+          </div>
+        </div>
+        <div class="faq-ag-{{section.id}} faq-answer-height-cal-ag-{{section.id}}">
+          <div
+            class="answer-ag-{{section.id}}"
+            style="--font-size: {{faq_description_size}}px; color: {{ faq_description_color }};"
+          >
+            {{ block.settings.item_answer }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG - Image with FAQ #3",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading Text",
+      "default": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 10,
+      "max": 72,
+      "step": 1,
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Bold" }
+      ],
+      "default": "bold"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1f2d54"
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "subheading_text",
+      "label": "Subheading Text",
+      "default": "Subheading"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "min": 10,
+      "max": 72,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Bold" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#1f2d54"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "FAQ"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_icon",
+      "label": "Enable Icon",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "svg_color",
+      "label": "SVG Color",
+      "default": "#333"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Separator Line Color",
+      "default": "#f1f1f1"
+    },
+    {
+      "type": "range",
+      "id": "faq_title_size",
+      "label": "FAQ Title Size",
+      "min": 10,
+      "max": 72,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "faq_title_weight",
+      "label": "FAQ Title Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Bold" }
+      ],
+      "default": "bold"
+    },
+    {
+      "type": "color",
+      "id": "faq_title_color",
+      "label": "FAQ Title Color",
+      "default": "#1f2d54"
+    },
+    {
+      "type": "range",
+      "id": "faq_description_size",
+      "label": "FAQ Description Size",
+      "min": 10,
+      "max": 72,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "faq_description_weight",
+      "label": "FAQ Description Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Bold" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "color",
+      "id": "faq_description_color",
+      "label": "FAQ Description Color",
+      "default": "#1f2d54"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "max_width",
+      "label": "Enable Full Width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "Padding X",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#fdfbf9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "item_icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "item_question",
+          "label": "Question",
+          "default": "What is your question?"
+        },
+        {
+          "type": "text",
+          "id": "item_answer",
+          "label": "Answer",
+          "default": "This is an answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "FAQ",
+      "name": "AG - Image with FAQ #3"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  (function () {
+    function sectionSetup() {
+      const answerPaddingTop = 10;
+      const answerPaddingBottom = 30;
+
+      const faqs = document.querySelectorAll(
+        '.faq-ag-{{section.id}}:not(.faq-answer-height-cal-ag-{{section.id}})'
+      );
+      const buttons = document.querySelectorAll(
+        '.faq-ag-{{section.id}}:not(.faq-answer-height-cal-ag-{{section.id}}) .button-ag-{{section.id}}'
+      );
+      const answers = document.querySelectorAll(
+        '.faq-ag-{{section.id}}:not(.faq-answer-height-cal-ag-{{section.id}}) .answer-ag-{{section.id}}'
+      );
+      const answersHeightCalElements = document.querySelectorAll(
+        '.faq-answer-height-cal-ag-{{section.id}} .answer-ag-{{section.id}}'
+      );
+      const icons = document.querySelectorAll(
+        '.faq-ag-{{section.id}}:not(.faq-answer-height-cal-ag-{{section.id}}) .icon-ag-{{section.id}}'
+      );
+
+      let activeIndex = -1;
+
+      function openAnswer(index) {
+        const height = answersHeightCalElements[index].offsetHeight;
+        answers[index].style.display = 'block';
+        setTimeout(() => {
+          answers[index].style.paddingTop = `${answerPaddingTop}px`;
+          answers[index].style.paddingBottom = `${answerPaddingBottom}px`;
+          answers[index].style.height = `${height}px`;
+          icons[index].style.setProperty('--rotate', '180deg');
+        });
+      }
+
+      function closeAnswer(index) {
+        answers[index].style.paddingTop = 0;
+        answers[index].style.paddingBottom = 0;
+        answers[index].style.height = 0;
+        icons[index].style.setProperty('--rotate', '0deg');
+        setTimeout(() => {
+          answers[index].style.display = 'none';
+        }, 300);
+      }
+
+      function toggleAnswer(index) {
+        if (answers[index].style.display === 'none') {
+          openAnswer(index);
+          activeIndex = index;
+        } else {
+          closeAnswer(index);
+          activeIndex = -1;
+        }
+      }
+
+      function closeAllAnswerBut(index) {
+        answers.forEach((answer, i) => {
+          if (i !== index) {
+            closeAnswer(i);
+          }
+        });
+      }
+
+      buttons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+          toggleAnswer(index);
+          closeAllAnswerBut(index);
+        });
+      });
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (activeIndex !== -1) {
+            const height = answersHeightCalElements[activeIndex].offsetHeight;
+            answers[activeIndex].style.height = `${height}px`;
+          }
+        }, 250);
+      });
+    }
+
+    sectionSetup();
+
+    document.addEventListener('shopify:section:load', function (event) {
+      if (event.detail.sectionId === '{{section.id}}') {
+        sectionSetup();
+      }
+    });
+  })();
+</script>

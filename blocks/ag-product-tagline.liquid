@@ -1,0 +1,25 @@
+{% assign block_settings = block.settings %}
+
+<p class="ag-product-tagline" {{ block.shopify_attributes }}>
+  {{ block_settings.text | default: 'Quatre-vingt-dix nutriments essentiels réunis dans un seul geste.' }}
+</p>
+
+{% schema %}
+{
+  "name": "AG Product Tagline",
+  "tag": null,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Tagline text",
+      "default": "Quatre-vingt-dix nutriments essentiels réunis dans un seul geste — pensé par des nutritionnistes, dosé comme en clinique."
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Product Tagline"
+    }
+  ]
+}
+{% endschema %}

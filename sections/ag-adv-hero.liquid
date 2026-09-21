@@ -1,0 +1,325 @@
+{% comment %} ag-adv-hero.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+{%- liquid
+  assign style          = section.settings.hero_style
+  assign tag_text       = section.settings.tag_text
+  assign h1_text        = section.settings.headline
+  assign h1_hi          = section.settings.headline_hi
+  assign dek            = section.settings.subhead
+  assign hero_img       = section.settings.hero_image
+  assign caption        = section.settings.caption
+
+  assign byline_name    = section.settings.byline_name
+  assign byline_role    = section.settings.byline_role
+  assign byline_avatar  = section.settings.byline_avatar
+  assign show_share     = section.settings.show_share
+
+  assign hero_height    = section.settings.overlay_height
+  assign overlay_color  = section.settings.overlay_color
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+
+  # Replace highlighted phrase in headline with sage-colored span
+  assign h1_render = h1_text
+  if h1_hi != blank
+    assign h1_span = '<span class="hi">' | append: h1_hi | append: '</span>'
+    assign h1_render = h1_text | replace: h1_hi, h1_span
+  endif
+-%}
+
+<div class="ag-adv spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  {%- if style == 'overlay' -%}
+    {%- comment -%} ── OVERLAY MODE: image full-bleed with headline on top ── {%- endcomment -%}
+    <section
+      class="ag-adv-hero ag-adv-hero--overlay"
+      style="
+        position:relative;
+        min-height:{{ hero_height }}vh;
+        display:flex;align-items:center;justify-content:center;
+        padding:64px 20px;
+        background:#000 {% if hero_img != blank %}url('{{ hero_img | image_url: width: 2000 }}') center/cover no-repeat{% endif %};
+        border-radius:0;
+        margin:0;
+      "
+    >
+      <div style="position:absolute;inset:0;background:{{ overlay_color }};opacity:{{ overlay_opacity }};"></div>
+      <div style="position:relative;z-index:2;max-width:920px;text-align:center;color:#fff;">
+        {%- if tag_text != blank -%}
+          <span class="ag-adv__tag" style="background:rgba(255,255,255,.15);color:#fff;">{{ tag_text }}</span>
+        {%- endif -%}
+        {%- if h1_text != blank -%}
+          <h1 class="ag-adv-hero__h1" style="color:#fff;">{{ h1_render }}</h1>
+        {%- endif -%}
+        {%- if dek != blank -%}
+          <p class="ag-adv-hero__dek" style="color:rgba(255,255,255,.85);">{{ dek }}</p>
+        {%- endif -%}
+      </div>
+    </section>
+  {%- else -%}
+    {%- comment -%} ── EDITORIAL MODE: hook block + hero image stacked ── {%- endcomment -%}
+    <div class="ag-adv__wrap">
+      <div class="ag-adv__col ag-adv-hero">
+        {%- if tag_text != blank -%}
+          <span class="ag-adv__tag">{{ tag_text }}</span>
+        {%- endif -%}
+        {%- if h1_text != blank -%}
+          <h1 class="ag-adv-hero__h1">{{ h1_render }}</h1>
+        {%- endif -%}
+        {%- if dek != blank -%}
+          <p class="ag-adv-hero__dek">{{ dek }}</p>
+        {%- endif -%}
+
+        {%- if byline_name != blank -%}
+          <div class="ag-adv-hero__byline">
+            <span class="ag-adv-hero__av">
+              {%- if byline_avatar != blank -%}
+                <img src="{{ byline_avatar | image_url: width: 92 }}" alt="{{ byline_name | escape }}" loading="lazy">
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag }}
+              {%- endif -%}
+            </span>
+            <div class="ag-adv-hero__who">
+              <b>{{ byline_name }}</b>
+              {%- if byline_role != blank -%}<span>{{ byline_role }}</span>{%- endif -%}
+            </div>
+            {%- if show_share -%}
+              <div class="ag-adv-hero__share">
+                <a href="#" aria-label="Share on Facebook">f</a>
+                <a href="#" aria-label="Share on X">𝕏</a>
+                <a href="#" aria-label="Share on LinkedIn">in</a>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if hero_img != blank -%}
+        <div class="ag-adv__col">
+          <figure class="ag-adv-hero__img-wrap">
+            <img
+              src="{{ hero_img | image_url: width: 1400 }}"
+              srcset="{{ hero_img | image_url: width: 720 }} 720w,
+                      {{ hero_img | image_url: width: 1200 }} 1200w,
+                      {{ hero_img | image_url: width: 1600 }} 1600w"
+              sizes="(min-width:720px) 720px, 100vw"
+              alt="{{ hero_img.alt | default: h1_text | escape }}"
+              loading="lazy"
+              width="{{ hero_img.width }}"
+              height="{{ hero_img.height }}"
+            >
+          </figure>
+          {%- if caption != blank -%}
+            <p class="ag-adv-hero__cap">{{ caption }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — Hero",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "hero_style",
+      "label": "Style du hero",
+      "options": [
+        {
+          "value": "editorial",
+          "label": "Éditorial (texte au-dessus de l'image)"
+        },
+        {
+          "value": "overlay",
+          "label": "Plein écran avec overlay"
+        }
+      ],
+      "default": "editorial"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Accroche / pill",
+      "info": "Petite étiquette au-dessus du titre",
+      "default": "★ Customer Story"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Titre principal (H1)",
+      "default": "Why 127,000 people quietly switched to this sleep patch"
+    },
+    {
+      "type": "text",
+      "id": "headline_hi",
+      "label": "Mots à surligner en sage",
+      "info": "Le texte exact à colorer (doit apparaître dans le titre)",
+      "default": "127,000 people"
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Sous-titre",
+      "default": "No pills. No prescriptions. Just a small patch behind the ear — and a lot of people finally waking up rested."
+    },
+    {
+      "type": "header",
+      "content": "Byline (éditorial)"
+    },
+    {
+      "type": "text",
+      "id": "byline_name",
+      "label": "Nom de l'auteur",
+      "default": "Maya Chen"
+    },
+    {
+      "type": "text",
+      "id": "byline_role",
+      "label": "Rôle / date / temps de lecture",
+      "default": "Wellness writer · June 2, 2026 · 7 min read"
+    },
+    {
+      "type": "image_picker",
+      "id": "byline_avatar",
+      "label": "Photo de l'auteur"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Afficher les boutons de partage",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Image hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image principale"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Légende sous l'image",
+      "default": "Photo shared by a verified customer · @restedfinally"
+    },
+    {
+      "type": "header",
+      "content": "Overlay (mode plein écran)"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Couleur de l'overlay",
+      "default": "#1c2420",
+      "visible_if": "{{ section.settings.hero_style == 'overlay' }}"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacité de l'overlay",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 45,
+      "visible_if": "{{ section.settings.hero_style == 'overlay' }}"
+    },
+    {
+      "type": "range",
+      "id": "overlay_height",
+      "label": "Hauteur du hero",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 75,
+      "visible_if": "{{ section.settings.hero_style == 'overlay' }}"
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — Hero"
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

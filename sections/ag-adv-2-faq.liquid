@@ -1,0 +1,231 @@
+{% comment %} ag-adv-2-faq.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+  {% if s.line_color != blank %}--ag2-line:{{ s.line_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <div class="ag-adv-2__col">
+    {%- if s.kicker != blank or s.heading != blank -%}
+      <div class="ag-adv-2__shead" style="margin-top:20px;">
+        {%- if s.kicker != blank -%}<span class="ag-adv-2__kicker">{{ s.kicker }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2>{{ s.heading }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="ag-adv-2-faq">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq_item' -%}
+          <details {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.question }}</summary>
+            <div class="ag-adv-2-faq__ans">{{ block.settings.answer }}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- if s.cta_text != blank -%}
+      <div class="ag-adv-2__btn-center" style="margin:32px 0 8px;">
+        <a href="{{ s.cta_link | default: '#offre' }}" class="ag-adv-2__btn ag-adv-2__btn--coral ag-adv-2__btn--lg">
+          {{ s.cta_text }} <span class="ag-adv-2__arr">&rarr;</span>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — FAQ",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Questions fréquentes"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre H2",
+      "default": "Ce qu'on nous demande le plus"
+    },
+    {
+      "type": "header",
+      "content": "CTA final"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Je commande mon flacon"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (+/−)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent profonde",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur des questions",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur des réponses",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Couleur des séparateurs",
+      "default": "#ececec"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Ouverte par défaut",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Au bout de combien de temps voit-on des résultats ?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Réponse",
+          "default": "<p>La plupart des utilisatrices remarquent une peau plus souple dès la première semaine.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "open": true,
+            "question": "Au bout de combien de temps voit-on des résultats ?",
+            "answer": "<p>La plupart des utilisatrices remarquent une peau plus souple et moins de tiraillement dès la première semaine.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Est-ce adapté aux peaux sensibles ?",
+            "answer": "<p>Oui. La formule est sans parfum, sans alcool et sans huiles essentielles, et elle est testée sous contrôle dermatologique.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment l'intégrer à ma routine ?",
+            "answer": "<p>Appliquez 3 à 4 gouttes sur peau propre, matin et soir.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Puis-je l'utiliser avec du rétinol ou de la vitamine C ?",
+            "answer": "<p>Tout à fait. Lumira renforce la barrière cutanée.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Que se passe-t-il si ça ne fonctionne pas pour moi ?",
+            "answer": "<p>Vous êtes couverte par notre garantie 60 jours.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Est-ce un abonnement ?",
+            "answer": "<p>Non. Vous achetez le nombre de flacons que vous souhaitez, sans engagement.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

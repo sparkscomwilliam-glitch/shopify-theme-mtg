@@ -1,0 +1,55 @@
+/* ============================================
+   AG SECTIONS — DESIGN TOKENS
+   Source unique pour typo, boutons, espacements
+   ============================================ */
+
+:root {
+  /* ─── TYPOGRAPHY : DISPLAY (Hero H1) ─── */
+  --ag-fs-display-xl: clamp(44px, 7vw, 80px);
+  --ag-fs-display:    clamp(38px, 5.5vw, 60px);
+  --ag-fs-display-sm: clamp(30px, 4vw, 42px);
+
+  /* ─── TYPOGRAPHY : HEADINGS ─── */
+  --ag-fs-h2:         clamp(26px, 3.5vw, 36px);
+  --ag-fs-h3:         clamp(20px, 2.2vw, 24px);
+
+  /* ─── TYPOGRAPHY : BODY ─── */
+  --ag-fs-lead:       clamp(16px, 1.3vw, 18px);
+  --ag-fs-body:       16px;
+  --ag-fs-small:      14px;
+  --ag-fs-eyebrow:    13px;
+
+  /* ─── TYPOGRAPHY : CTAs ─── */
+  --ag-fs-cta:        16px;
+  --ag-fs-cta-lg:     18px;
+  --ag-fs-cta-sm:     14px;
+
+  /* ─── TYPOGRAPHY : SPECIAL ─── */
+  --ag-fs-stat:       clamp(28px, 3.5vw, 40px);
+
+  /* ─── BUTTONS : SIZING ─── */
+  --ag-btn-h:           52px;
+  --ag-btn-h-lg:        60px;
+  --ag-btn-h-sm:        40px;
+  --ag-btn-px:          28px;
+  --ag-btn-px-lg:       40px;
+  --ag-btn-px-sm:       20px;
+  --ag-btn-radius:      8px;
+  --ag-btn-radius-pill: 999px;
+
+  /* ─── SPACING : SECTION ─── */
+  --ag-section-py:    clamp(56px, 7vw, 96px);
+  --ag-section-px:    clamp(20px, 5vw, 40px);
+
+  /* ─── SPACING : GAPS ─── */
+  --ag-gap-xs: 4px;
+  --ag-gap-sm: 8px;
+  --ag-gap-md: 16px;
+  --ag-gap-lg: 24px;
+  --ag-gap-xl: 40px;
+
+  /* ─── LINE HEIGHTS ─── */
+  --ag-lh-tight:  1.05;
+  --ag-lh-snug:   1.2;
+  --ag-lh-normal: 1.5;
+}

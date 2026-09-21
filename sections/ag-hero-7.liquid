@@ -1,0 +1,392 @@
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.text_font | font_face: font_display: 'swap' }}
+
+  .ag-hero-7-{{ section.id }} {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #fff;
+    min-height: 740px;
+    
+    --heading-font: {{ section.settings.heading_font.family | default: "sans-serif" }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-weight: {{ section.settings.heading_font.weight | default: 800 }};
+    
+    --text-font: {{ section.settings.text_font.family | default: "sans-serif" }}, {{ section.settings.text_font.fallback_families }};
+  }
+
+  /* Backgrounds */
+  .ag-hero-7__background-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  
+  .ag-hero-7__background-mobile, .ag-hero-7__background-desktop {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .ag-hero-7__background-desktop {
+    display: none;
+  }
+
+  /* Content Wrapper */
+  .ag-hero-7__content-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: 52px 20px 30px 20px;
+  }
+
+  .ag-hero-7__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 24px;
+    max-width: 320px;
+  }
+
+  /* Review */
+  .ag-hero-7__review {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .ag-hero-7__review-stars {
+    display: flex;
+    gap: 2px;
+    color: {{ section.settings.review_stars_color | default: '#941609' }};
+  }
+  .ag-hero-7__review-stars svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .ag-hero-7__review-text {
+    font-family: var(--text-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-eyebrow);
+    color: {{ section.settings.review_color | default: '#000000' }};
+    margin: 0;
+  }
+
+  /* Title */
+  .ag-hero-7__title {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-display-xl);
+    line-height: 0.95;
+    text-align: center;
+    color: {{ section.settings.heading_color | default: '#000000' }};
+    margin: 0;
+  }
+
+  /* Subtitle */
+  .ag-hero-7__subtitle {
+    font-family: var(--text-font);
+    font-weight: 600;
+    font-size: var(--ag-fs-lead);
+    line-height: 1.4;
+    text-align: center;
+    color: {{ section.settings.subheading_color | default: '#000000' }};
+    margin: 0;
+  }
+  
+  .ag-hero-7__subtitle-highlight {
+    font-weight: 700;
+    color: {{ section.settings.highlight_color | default: '#941609' }};
+    text-decoration: underline;
+  }
+
+  /* Button */
+  .ag-hero-7__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ section.settings.button_bg_color | default: '#8e1713' }};
+    color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    font-family: var(--text-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-cta-lg);
+    width: 100%;
+    max-width: 294px;
+    height: var(--ag-btn-h-lg);
+    border-radius: var(--ag-btn-radius);
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  
+  .ag-hero-7__button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  /* Desktop overrides */
+  @media (min-width: 768px) {
+    .ag-hero-7-{{ section.id }} {
+      min-height: 704px;
+    }
+    
+    .ag-hero-7__background-desktop { display: block; }
+    .ag-hero-7__background-mobile { display: none; }
+    
+    .ag-hero-7__content-wrapper {
+      justify-content: flex-start;
+      padding: 90px 57px 50px 57px;
+    }
+
+    .ag-hero-7__content {
+      align-items: flex-start;
+      max-width: 650px;
+      gap: 20px;
+    }
+
+    .ag-hero-7__review {
+      gap: 15px;
+    }
+
+    .ag-hero-7__review-stars svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .ag-hero-7__review-text {
+      font-size: var(--ag-fs-lead);
+    }
+
+    .ag-hero-7__title {
+      text-align: left;
+    }
+
+    .ag-hero-7__subtitle {
+      text-align: left;
+    }
+
+    .ag-hero-7__button {
+      max-width: 363px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .ag-hero-7__content-wrapper {
+      padding-left: calc((100vw - 1440px) / 2 + 57px);
+      padding-right: calc((100vw - 1440px) / 2 + 57px);
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-7 ag-hero-7-{{ section.id }}">
+  <div class="ag-hero-7__background-wrapper">
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 800 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-7__background-mobile" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-7__background-mobile" style="background:#ddd;"></div>
+    {%- endif -%}
+    
+    {%- if section.settings.image_desktop != blank -%}
+      <img src="{{ section.settings.image_desktop | image_url: width: 1600 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-7__background-desktop" width="{{ section.settings.image_desktop.width }}" height="{{ section.settings.image_desktop.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-7__background-desktop" style="background:#eee;"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="ag-hero-7__content-wrapper">
+    <div class="ag-hero-7__content">
+      
+      {%- if section.settings.show_review -%}
+        <div class="ag-hero-7__review">
+          <div class="ag-hero-7__review-stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+              </svg>
+            {%- endfor -%}
+          </div>
+          {%- if section.settings.review_text != blank -%}
+            <p class="ag-hero-7__review-text">{{ section.settings.review_text }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ag-hero-7__title">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="ag-hero-7__subtitle">
+          {%- if section.settings.subheading_highlight_text != blank -%}
+            {%- assign highlight_wrapped = '<span class="ag-hero-7__subtitle-highlight">' | append: section.settings.subheading_highlight_text | append: '</span>' -%}
+            {{ section.settings.subheading | replace: section.settings.subheading_highlight_text, highlight_wrapped }}
+          {%- else -%}
+            {{ section.settings.subheading }}
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="ag-hero-7__button">
+          {{ section.settings.button_text }}
+        </a>
+      {%- endif -%}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero Cookware",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Typography Options"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "header",
+      "content": "Review Top"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_review",
+      "label": "Show Review",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Review Text",
+      "default": "Used & Lovely by 500+ chefs"
+    },
+    {
+      "type": "color",
+      "id": "review_color",
+      "label": "Review Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "review_stars_color",
+      "label": "Review Stars Color",
+      "default": "#941609"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Michelin-star\nLegacy Cookware"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "It's never been easier to feel like a pro at home"
+    },
+    {
+      "type": "text",
+      "id": "subheading_highlight_text",
+      "label": "Text to Highlight",
+      "info": "This exact text in the subheading will be highlighted with the color below and underlined.",
+      "default": "feel like a pro at home"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Color",
+      "default": "#941609"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Save $40 on Alva pans"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#8e1713"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero Cookware"
+    }
+  ]
+}
+{% endschema %}

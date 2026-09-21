@@ -1,0 +1,43 @@
+{% assign block_settings = block.settings %}
+
+<div class="ag-benefit-pills" {{ block.shopify_attributes }}>
+  {%- assign labels = block_settings.labels | split: '|' -%}
+  {%- for label in labels -%}
+    {%- assign trimmed = label | strip -%}
+    {%- if trimmed != blank -%}
+      <span class="ag-benefit-pills__item">
+        {%- if block_settings.show_gem -%}
+          <span class="ag-benefit-pills__gem" aria-hidden="true"></span>
+        {%- endif -%}
+        {{ trimmed }}
+      </span>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Benefit Pills",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "labels",
+      "label": "Pills (separated by |)",
+      "default": "Énergie|Immunité|Sommeil|Digestion",
+      "info": "Separate each pill with a pipe character |"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gem",
+      "label": "Show gem icon",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Benefit Pills"
+    }
+  ]
+}
+{% endschema %}

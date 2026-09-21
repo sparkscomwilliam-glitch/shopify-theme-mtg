@@ -1,0 +1,383 @@
+<div class="ag-feature-1 color-{{ section.settings.color_scheme }} gradient{% if section.settings.title == blank %} no-heading{% endif %}">
+  <div class="page-width ag-feature-1__container section-{{ section.id }}-padding">
+    {%- unless section.settings.title == blank -%}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin text-{{ section.settings.heading_alignment }}">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+        {%- if section.settings.description != blank -%}
+          <div class="ag-feature-1__description rte">
+            {{ section.settings.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+
+    <div class="ag-feature-1__cards-wrapper">
+      <ul class="ag-feature-1__cards" role="list">
+        {%- for block in section.blocks -%}
+          <li class="ag-feature-1__card{% if forloop.first %} ag-feature-1__card--first{% endif %}" {{ block.shopify_attributes }}>
+            <div class="ag-feature-1__card-inner" style="--card-bg: {{ block.settings.bg_color }};">
+              
+              {%- comment -%}Top part: Image{%- endcomment -%}
+              <div class="ag-feature-1__card-image-wrapper">
+                {%- assign product = all_products[block.settings.product] -%}
+                {%- if block.settings.image != blank -%}
+                  {%- assign card_image = block.settings.image -%}
+                {%- elsif product != blank and product.featured_image != blank -%}
+                  {%- assign card_image = product.featured_image -%}
+                {%- else -%}
+                  {%- assign card_image = null -%}
+                {%- endif -%}
+                
+                {%- if card_image != blank -%}
+                  {{ card_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'ag-feature-1__card-image' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg ag-feature-1__card-image' }}
+                {%- endif -%}
+              </div>
+
+              {%- comment -%}Bottom part: Text info{%- endcomment -%}
+              <!-- We conditionally hide this whole block if it carries no text/colors based on the user's setup, but we default to show it. -->
+              {%- unless forloop.first -%}
+              <div class="ag-feature-1__card-info">
+                {%- if block.settings.icon_svg != blank -%}
+                  <div class="ag-feature-1__card-icon">
+                    {{ block.settings.icon_svg }}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.title != blank -%}
+                  <h3 class="ag-feature-1__card-title">{{ block.settings.title }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="ag-feature-1__card-text rte">
+                    {{ block.settings.text }}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.button_text != blank -%}
+                  <a href="{% if block.settings.button_link != blank %}{{ block.settings.button_link }}{% elsif product != blank %}{{ product.url }}{% else %}#{% endif %}" class="ag-feature-1__button">
+                    {{ block.settings.button_text }}
+                  </a>
+                {%- endif -%}
+              </div>
+              {%- endunless -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Feature 1",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Unwrap Flavor, Savor Perfection",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1",
+      "label": "Heading Size"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Clear and concise overview of the product or service being offered.</p>",
+      "label": "Description"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Feature Card",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image",
+          "info": "Overrides product image if both are present."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Used for the default image and button link."
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Card Information Background Color",
+          "default": "#F5E6CC"
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icon SVG",
+          "info": "Paste raw SVG code here."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card Title",
+          "default": "Convenience"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Card Text",
+          "default": "<p>Shop from the comfort of their own home and have their purchases delivered directly.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Label",
+          "default": "SHOP THE BARS"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link",
+          "info": "Overrides product link if provided."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Feature 1",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* Horizontal scrolling cards layout */
+  .ag-feature-1__cards-wrapper {
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .ag-feature-1__cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 0 0 20px 0; /* padding bottom for scrollbar margin on some OS */
+    margin: 0;
+    list-style: none;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+  
+  .ag-feature-1__cards::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
+  }
+
+  .ag-feature-1__card {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 75vw;
+    max-width: 320px;
+    display: flex;
+  }
+
+  /* First card is larger and acts as an image card */
+  .ag-feature-1__card--first {
+    width: 85vw;
+    max-width: 380px;
+  }
+
+  .ag-feature-1__card-inner {
+    background-color: var(--card-bg, #F5E6CC);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ag-feature-1__card--first .ag-feature-1__card-inner {
+    background-color: transparent; /* usually just an image */
+  }
+
+  .ag-feature-1__card-image-wrapper {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+
+  .ag-feature-1__card--first .ag-feature-1__card-image-wrapper {
+    aspect-ratio: 3/4; /* Taller portrait format for the first image */
+    height: 100%;
+    border-radius: 12px;
+  }
+
+  .ag-feature-1__card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  .ag-feature-1__card:hover .ag-feature-1__card-image {
+    transform: scale(1.05);
+  }
+
+  .ag-feature-1__card-info {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+    color: #1A1A1A;
+  }
+
+  .ag-feature-1__card-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ag-feature-1__card-icon svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ag-feature-1__card-title {
+    margin: 0;
+    font-size: var(--ag-fs-h3);
+    font-weight: 600;
+    line-height: 1.2;
+    color: inherit;
+  }
+
+  .ag-feature-1__card-text {
+    margin: 0;
+    font-size: var(--ag-fs-body);
+    line-height: 1.5;
+    color: inherit;
+    opacity: 0.8;
+  }
+
+  .ag-feature-1__button {
+    display: inline-block;
+    margin-top: auto;
+    font-size: var(--ag-fs-small);
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: inherit;
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 2px;
+    align-self: flex-start;
+    transition: opacity 0.2s ease;
+  }
+
+  .ag-feature-1__button:hover {
+    opacity: 0.7;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ag-feature-1__cards {
+      gap: 24px;
+    }
+    
+    .ag-feature-1__card {
+      width: 320px;
+    }
+
+    .ag-feature-1__card--first {
+      width: 420px; 
+    }
+    
+    .ag-feature-1__card--first .ag-feature-1__card-image-wrapper {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+</style>

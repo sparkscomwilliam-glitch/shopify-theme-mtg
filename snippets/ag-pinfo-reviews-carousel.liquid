@@ -1,0 +1,141 @@
+{% comment %}
+  AG Product Info — Reviews carousel (snippet)
+  Accepts: block, section
+{% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+{%- assign default_5 = bs.default_stars_5 | default: 'https://cdn.shopify.com/s/files/1/0633/4496/7905/files/stars-5-1_2.svg?v=1704889528' -%}
+
+<style>
+  .ag-rc-{{ uid }} {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    touch-action: pan-y;
+    background: {{ bs.bg_color | default: 'transparent' }};
+    border-radius: {{ bs.container_radius | default: 0 }}px;
+    padding: {{ bs.padding_y | default: 0 }}px {{ bs.padding_x | default: 0 }}px;
+    margin-top: {{ bs.margin_top | default: 0 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+  }
+  .ag-rc-{{ uid }}__wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+  .ag-rc-{{ uid }}__box {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    margin: 0;
+  }
+  .ag-rc-{{ uid }}__image {
+    max-width: {{ bs.image_size | default: 70 }}px;
+    height: auto;
+    border-radius: {{ bs.image_radius | default: 12 }}px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+  }
+  .ag-rc-{{ uid }}__text {
+    font-size: {{ bs.text_size | default: 12 }}px;
+    color: {{ bs.text_color | default: '#333333' }};
+    margin: 0;
+    line-height: 1.2;
+    font-style: {% if bs.text_italic %}italic{% else %}normal{% endif %};
+  }
+  .ag-rc-{{ uid }}__meta {
+    display: flex;
+    align-items: baseline;
+    font-size: {{ bs.name_size | default: 12 }}px;
+    color: {{ bs.name_color | default: '#333333' }};
+  }
+  .ag-rc-{{ uid }}__name { margin-right: 5px; }
+  .ag-rc-{{ uid }}__stars img {
+    width: {{ bs.stars_width | default: 85 }}px;
+    height: auto;
+    margin-top: 8px;
+  }
+  .ag-rc-{{ uid }}__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 24px;
+    color: {{ bs.arrow_color | default: '#333333' }};
+    background: none;
+    border: 0;
+    padding: 0 8px;
+    line-height: 1;
+  }
+  .ag-rc-{{ uid }}__arrow--left { left: 0; z-index: 1; }
+  .ag-rc-{{ uid }}__arrow--right { right: 10px; }
+</style>
+
+<div class="ag-rc-{{ uid }}" data-ag-rc="{{ uid }}" {{ block.shopify_attributes }}>
+  {%- if bs.show_arrows -%}
+    <button type="button" class="ag-rc-{{ uid }}__arrow ag-rc-{{ uid }}__arrow--left" data-ag-rc-prev aria-label="Précédent">&lsaquo;</button>
+  {%- endif -%}
+  <div class="ag-rc-{{ uid }}__wrapper" data-ag-rc-track>
+    {%- for i in (1..4) -%}
+      {%- assign key_text = 'r' | append: i | append: '_text' -%}
+      {%- assign key_image = 'r' | append: i | append: '_image' -%}
+      {%- assign key_name = 'r' | append: i | append: '_name' -%}
+      {%- assign key_stars = 'r' | append: i | append: '_stars' -%}
+      {%- assign t_text = bs[key_text] -%}
+      {%- if t_text == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign t_image = bs[key_image] -%}
+      {%- assign t_name = bs[key_name] -%}
+      {%- assign t_stars = bs[key_stars] -%}
+      {%- if t_stars == blank -%}{%- assign t_stars = default_5 -%}{%- endif -%}
+      <div class="ag-rc-{{ uid }}__box">
+        {%- if t_image != blank -%}
+          <img src="{{ t_image }}" alt="{{ t_name | escape }}" class="ag-rc-{{ uid }}__image" loading="lazy" width="{{ bs.image_size | default: 70 }}" height="{{ bs.image_size | default: 70 }}">
+        {%- endif -%}
+        <div>
+          <div class="ag-rc-{{ uid }}__text">{{ t_text }}</div>
+          <div class="ag-rc-{{ uid }}__meta">
+            <span class="ag-rc-{{ uid }}__name">{{ t_name }}</span>
+            {%- if t_stars != blank -%}
+              <div class="ag-rc-{{ uid }}__stars">
+                <img src="{{ t_stars }}" alt="Note" loading="lazy" width="{{ bs.stars_width | default: 85 }}" height="16">
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+  {%- if bs.show_arrows -%}
+    <button type="button" class="ag-rc-{{ uid }}__arrow ag-rc-{{ uid }}__arrow--right" data-ag-rc-next aria-label="Suivant">&rsaquo;</button>
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    var root = document.querySelector('[data-ag-rc="{{ uid }}"]');
+    if (!root) return;
+    var track = root.querySelector('[data-ag-rc-track]');
+    if (!track || track.children.length === 0) return;
+    var total = track.children.length;
+    var index = 0;
+    var startX = 0, endX = 0;
+    function update() { track.style.transform = 'translateX(' + (-index * 100) + '%)'; }
+    function next() { index = (index + 1) % total; update(); }
+    function prev() { index = (index - 1 + total) % total; update(); }
+    var prevBtn = root.querySelector('[data-ag-rc-prev]');
+    var nextBtn = root.querySelector('[data-ag-rc-next]');
+    if (prevBtn) prevBtn.addEventListener('click', prev);
+    if (nextBtn) nextBtn.addEventListener('click', next);
+    root.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchmove', function(e) {
+      endX = e.touches[0].clientX;
+      if (startX - endX > 50) { next(); startX = endX; }
+      else if (endX - startX > 50) { prev(); startX = endX; }
+    }, { passive: true });
+    {%- if bs.autoplay -%}
+      setInterval(next, {{ bs.autoplay_delay | default: 5 | times: 1000 }});
+    {%- endif -%}
+  })();
+</script>

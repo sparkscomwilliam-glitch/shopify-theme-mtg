@@ -1,0 +1,216 @@
+{% comment %} ag-adv-intro.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+{%- liquid
+  assign body         = section.settings.body
+  assign illu         = section.settings.illustration
+  assign pull         = section.settings.pull_quote
+  assign pull_big     = section.settings.pull_large
+  assign show_stats   = section.settings.show_stats
+-%}
+
+<div class="ag-adv spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  <div class="ag-adv__wrap">
+    <section class="ag-adv-intro">
+      <div class="ag-adv__col">
+        {%- if illu != blank -%}
+          <figure class="ag-adv-intro__fig">
+            <img src="{{ illu | image_url: width: 720 }}" alt="{{ illu.alt | escape }}" loading="lazy">
+          </figure>
+        {%- endif -%}
+
+        {%- if body != blank -%}
+          {{ body }}
+        {%- endif -%}
+
+        {%- if pull != blank -%}
+          {%- if pull_big -%}
+            <p class="ag-adv__pull" style="font-size:clamp(22px,3.4vw,30px);">{{ pull }}</p>
+          {%- else -%}
+            <p class="ag-adv__pull">{{ pull }}</p>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if show_stats -%}
+          <div class="ag-adv__stats">
+            <div class="ag-adv__stat">
+              <div class="n">{{ section.settings.stat_1_n }}</div>
+              <div class="l">{{ section.settings.stat_1_l }}</div>
+            </div>
+            <div class="ag-adv__stat">
+              <div class="n">{{ section.settings.stat_2_n }}</div>
+              <div class="l">{{ section.settings.stat_2_l }}</div>
+            </div>
+            <div class="ag-adv__stat">
+              <div class="n">{{ section.settings.stat_3_n }}</div>
+              <div class="l">{{ section.settings.stat_3_l }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — Intro",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Corps narratif"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Texte de l'article",
+      "default": "<p>I almost didn't write this. I'm naturally skeptical of anything that goes viral in wellness circles — it's usually hype. But after the same product kept showing up in my group chats, my sister's, and three separate parenting forums I lurk in, I started paying attention.</p><p>The product is <a href=\"#offer\">NovaSleep Pro</a>, a drug-free sleep patch. And the reason people keep recommending it isn't an ad — it's that it actually seems to work for them. So I spent a week reading every review I could find. Here's what I learned.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "illustration",
+      "label": "Image d'illustration (flottante droite, optionnelle)"
+    },
+    {
+      "type": "header",
+      "content": "Pull-quote"
+    },
+    {
+      "type": "textarea",
+      "id": "pull_quote",
+      "label": "Citation mise en avant",
+      "default": "The thing that struck me wasn't the marketing. It was how ordinary the people leaving 5-star reviews were."
+    },
+    {
+      "type": "checkbox",
+      "id": "pull_large",
+      "label": "Afficher en grand format éditorial",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Stats"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Afficher la bande de statistiques",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_1_n",
+      "label": "Stat 1 — Chiffre",
+      "default": "127k+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_l",
+      "label": "Stat 1 — Label",
+      "default": "customers and counting"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_n",
+      "label": "Stat 2 — Chiffre",
+      "default": "4.6★"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_l",
+      "label": "Stat 2 — Label",
+      "default": "from 8,412 verified reviews"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_n",
+      "label": "Stat 3 — Chiffre",
+      "default": "92%"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_l",
+      "label": "Stat 3 — Label",
+      "default": "would recommend to a friend"
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — Intro"
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

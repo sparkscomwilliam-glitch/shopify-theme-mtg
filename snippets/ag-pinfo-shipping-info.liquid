@@ -1,0 +1,86 @@
+{% comment %} AG Product Info — Shipping info with dynamic ship date. Accepts: block, section {% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+
+<style>
+  .ag-si-{{ uid }} {
+    display: flex;
+    padding: {{ bs.padding_y | default: 6 }}px {{ bs.padding_x | default: 16 }}px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    background-color: {{ bs.bg_color | default: '#f6f6f6' }};
+    border-radius: {{ bs.radius | default: 10 }}px;
+    margin-top: {{ bs.margin_top | default: 0 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ag-si-{{ uid }}__item { display: flex; align-items: center; gap: 6px; }
+  .ag-si-{{ uid }}__text {
+    font-size: {{ bs.text_size | default: 12 }}px;
+    color: {{ bs.text_color | default: '#000000' }};
+    line-height: 1.3;
+  }
+  .ag-si-{{ uid }}__date,
+  .ag-si-{{ uid }}__free {
+    font-weight: 700;
+    color: {{ bs.highlight_color | default: bs.text_color | default: '#000000' }};
+  }
+  .ag-si-{{ uid }}__pulse {
+    width: {{ bs.dot_size | default: 12 }}px;
+    height: {{ bs.dot_size | default: 12 }}px;
+    border-radius: 50%;
+    background: {{ bs.dot_color | default: '#137333' }};
+    animation: ag-si-fade-{{ uid }} 1s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .ag-si-{{ uid }}__icon {
+    width: {{ bs.icon_size | default: 25 }}px;
+    height: auto;
+    flex-shrink: 0;
+  }
+  @keyframes ag-si-fade-{{ uid }} {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+</style>
+
+<div class="ag-si-{{ uid }}" {{ block.shopify_attributes }}>
+  <div class="ag-si-{{ uid }}__item">
+    {%- if bs.show_dot -%}
+      <span class="ag-si-{{ uid }}__pulse" aria-hidden="true"></span>
+    {%- endif -%}
+    <div class="ag-si-{{ uid }}__text">
+      {{ bs.ship_prefix | default: 'Expédié le' }}
+      <span class="ag-si-{{ uid }}__date" data-ag-si-date="{{ uid }}">{{ bs.fallback_date | default: 'demain' }}</span>
+    </div>
+  </div>
+  <div class="ag-si-{{ uid }}__item">
+    {%- if bs.icon_image != blank -%}
+      {{ bs.icon_image | image_url: width: 80 | image_tag: loading: 'lazy', alt: 'icon', class: 'ag-si-' | append: uid | append: '__icon' }}
+    {%- elsif bs.icon_url != blank -%}
+      <img src="{{ bs.icon_url }}" alt="" loading="lazy" class="ag-si-{{ uid }}__icon" width="{{ bs.icon_size | default: 25 }}" height="{{ bs.icon_size | default: 25 }}">
+    {%- endif -%}
+    <div class="ag-si-{{ uid }}__text">
+      {{ bs.shipping_prefix }} <span class="ag-si-{{ uid }}__free">{{ bs.free_label | default: 'GRATUITE' }}</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var el = document.querySelector('[data-ag-si-date="{{ uid }}"]');
+    if (!el) return;
+    var days = {{ bs.days_after_today | default: 1 }};
+    var today = new Date();
+    today.setDate(today.getDate() + days);
+    var locale = {{ bs.date_locale | default: 'fr-FR' | json }};
+    try {
+      el.textContent = today.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (e) {
+      el.textContent = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+  })();
+</script>

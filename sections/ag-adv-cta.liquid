@@ -1,0 +1,283 @@
+{% comment %} ag-adv-cta.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+{%- liquid
+  assign show_price   = section.settings.show_price
+  assign show_urgency = section.settings.show_urgency
+  assign show_guar    = section.settings.show_guarantee
+  assign sticky       = section.settings.sticky_mobile
+-%}
+
+<div class="ag-adv spacing-style" id="offer" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  <div class="ag-adv__wrap">
+    <section class="ag-adv-final">
+
+      {%- if show_urgency and section.settings.urgency_text != blank -%}
+        <span class="ag-adv__tag">{{ section.settings.urgency_text }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.headline != blank -%}
+        <h2>{{ section.settings.headline }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subtitle != blank -%}
+        <p>{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+
+      {%- if show_price -%}
+        <div class="ag-adv-final__price">
+          {%- if section.settings.price_now != blank -%}
+            <span class="ag-adv-final__now">{{ section.settings.price_now }}</span>
+          {%- endif -%}
+          {%- if section.settings.price_was != blank -%}
+            <span class="ag-adv-final__was">{{ section.settings.price_was }}</span>
+          {%- endif -%}
+          {%- if section.settings.discount_text != blank -%}
+            <span class="ag-adv-final__off">{{ section.settings.discount_text }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.cta_text != blank -%}
+        <a
+          class="ag-adv__cta"
+          href="{{ section.settings.cta_link | default: '#' }}"
+          style="background:{{ section.settings.btn_color }};{% if section.settings.btn_text_color != blank %}color:{{ section.settings.btn_text_color }};{% endif %}"
+        >
+          {{ section.settings.cta_text }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.below_button != blank -%}
+        <div class="ag-adv-final__sub">{{ section.settings.below_button }}</div>
+      {%- endif -%}
+
+      {%- if show_guar -%}
+        <div class="ag-adv-guar">
+          <span class="ag-adv-guar__seal">{{ section.settings.seal_text }}</span>
+          <span>{{ section.settings.guarantee_text }}</span>
+        </div>
+      {%- endif -%}
+
+    </section>
+  </div>
+
+  {%- if sticky and section.settings.cta_text != blank -%}
+    <div class="ag-adv-sticky is-on">
+      <a class="ag-adv__cta" href="{{ section.settings.cta_link | default: '#' }}" style="background:{{ section.settings.btn_color }};{% if section.settings.btn_text_color != blank %}color:{{ section.settings.btn_text_color }};{% endif %}">{{ section.settings.cta_text }}</a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — CTA final",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_urgency",
+      "label": "Afficher un badge d'urgence",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Badge d'urgence",
+      "default": "★ Reader Offer · 50% Off"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Titre",
+      "default": "See why everyone's switching"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "The brand is offering 50% off first orders while introductory stock lasts."
+    },
+    {
+      "type": "header",
+      "content": "Prix"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Afficher la ligne de prix",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_now",
+      "label": "Prix actuel",
+      "default": "$29"
+    },
+    {
+      "type": "text",
+      "id": "price_was",
+      "label": "Prix barré",
+      "default": "$59"
+    },
+    {
+      "type": "text",
+      "id": "discount_text",
+      "label": "Badge réduction",
+      "default": "50% OFF"
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Claim Your 50% Discount →"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "text",
+      "id": "below_button",
+      "label": "Mention sous le bouton",
+      "default": "Free shipping · 60-day guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Garantie"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_guarantee",
+      "label": "Afficher le seal de garantie",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "seal_text",
+      "label": "Texte du seal (court)",
+      "default": "60<br>NIGHT"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Texte de garantie",
+      "default": "60-night money-back guarantee · Free shipping"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fond de la carte",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Couleur du bouton",
+      "default": "#4f7a5e"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Couleur du texte du bouton",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_mobile",
+      "label": "Activer la barre CTA sticky en bas (mobile)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — CTA final"
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

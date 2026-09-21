@@ -1,0 +1,383 @@
+{%- style -%}
+  .ag-hero-5-{{ section.id }} {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .ag-hero-5__background-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  
+  .ag-hero-5__background-mobile {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .ag-hero-5__background-desktop {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ag-hero-5__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(rgba(27, 73, 84, 0.75) 0%, rgba(27, 73, 84, 0.263) 55%, rgba(27, 73, 84, 0) 67.66%, rgba(27, 73, 84, 0) 100%), linear-gradient(rgba(8, 41, 60, 0.2) 0%, rgba(8, 41, 60, 0.15) 56.74%, rgba(8, 41, 60, 0) 63.85%, rgba(8, 41, 60, 0) 100%);
+  }
+
+  .ag-hero-5__content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px 20px 20px;
+    gap: 30px;
+    min-height: 70vh;
+    justify-content: center;
+  }
+
+  .ag-hero-5__title {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: var(--ag-fs-display);
+    line-height: 1.17;
+    color: rgba(255,255,255,0.83);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 0.9px;
+    text-transform: capitalize;
+  }
+
+  .ag-hero-5__features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 330px;
+  }
+
+  .ag-hero-5__feature-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: rgba(255,255,255,0.83);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--ag-fs-small);
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  .ag-hero-5__feature-icon {
+    width: 12px;
+    height: 9px;
+    flex-shrink: 0;
+  }
+
+  .ag-hero-5__btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .ag-hero-5__btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #8fd8d5;
+    color: #000;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: var(--ag-fs-cta);
+    letter-spacing: 1.92px;
+    height: var(--ag-btn-h);
+    padding: 0 var(--ag-btn-px);
+    text-align: center;
+    min-width: 278px;
+    box-sizing: border-box;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .ag-hero-5__btn:hover {
+    background: #7ec2bf;
+    transform: translateY(-2px);
+  }
+
+  .ag-hero-5__logos-wrapper {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    padding-bottom: 40px;
+  }
+
+  .ag-hero-5__logos-title {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--ag-fs-eyebrow);
+    text-transform: lowercase; /* Matches "as seen on" */
+    color: #fff;
+    letter-spacing: 0.36px;
+    margin: 0;
+    font-weight: 300;
+  }
+
+  .ag-hero-5__logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    max-width: 330px;
+  }
+
+  .ag-hero-5__logo-img {
+    max-height: 26px;
+    object-fit: contain;
+  }
+
+  @media (min-width: 768px) {
+    .ag-hero-5-{{ section.id }} {
+      flex-direction: row;
+      background: #fff;
+      height: auto;
+      min-height: 600px;
+    }
+    
+    .ag-hero-5__background-wrapper {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: auto;
+      width: 50%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .ag-hero-5__background-desktop {
+      display: block;
+    }
+    
+    .ag-hero-5__background-mobile {
+      display: none;
+    }
+
+    .ag-hero-5__overlay {
+      display: none; 
+    }
+
+    .ag-hero-5__content {
+      width: 50%;
+      align-items: flex-start;
+      padding: 60px 8vw;
+      justify-content: center;
+      gap: 50px;
+      min-height: auto;
+    }
+
+    .ag-hero-5__title {
+      color: rgba(0,0,0,0.83);
+      text-align: left;
+      letter-spacing: 1.65px;
+      line-height: 1.17;
+    }
+
+    .ag-hero-5__features {
+      max-width: none;
+      gap: 22px;
+    }
+
+    .ag-hero-5__feature-item {
+      font-size: var(--ag-fs-lead);
+      color: rgba(0,0,0,0.83);
+      letter-spacing: 0.54px;
+      font-weight: 300;
+    }
+
+    .ag-hero-5__btn-wrapper {
+      align-items: flex-start;
+    }
+
+    .ag-hero-5__logos-wrapper {
+      position: absolute;
+      top: 49px;
+      right: 5vw; /* Positioned over the right image */
+      flex-direction: row;
+      gap: 25px;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .ag-hero-5__logos-title {
+      font-size: var(--ag-fs-small);
+      letter-spacing: 1.68px;
+      text-transform: uppercase;
+    }
+
+    .ag-hero-5__logos {
+      gap: 22px;
+      max-width: none;
+    }
+    
+    .ag-hero-5__logo-img {
+      max-height: 48px; 
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-5 ag-hero-5-{{ section.id }}">
+  <div class="ag-hero-5__background-wrapper">
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 1000 }}" alt="{{ section.settings.title | escape }}" class="ag-hero-5__background-mobile" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}" loading="lazy">
+    {%- endif -%}
+    {%- if section.settings.image_desktop != blank -%}
+      <img src="{{ section.settings.image_desktop | image_url: width: 1600 }}" alt="{{ section.settings.title | escape }}" class="ag-hero-5__background-desktop" width="{{ section.settings.image_desktop.width }}" height="{{ section.settings.image_desktop.height }}" loading="lazy">
+    {%- endif -%}
+    <div class="ag-hero-5__overlay"></div>
+  </div>
+
+  <div class="ag-hero-5__content">
+    {%- if section.settings.title != blank -%}
+      <h2 class="ag-hero-5__title">{{ section.settings.title | newline_to_br }}</h2>
+    {%- endif -%}
+
+    <div class="ag-hero-5__features">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'feature' -%}
+          <div class="ag-hero-5__feature-item" {{ block.shopify_attributes }}>
+            <svg class="ag-hero-5__feature-icon" preserveAspectRatio="none" width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 3.5L4 6.5L10 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ block.settings.text }}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="ag-hero-5__btn-wrapper">
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="ag-hero-5__btn">{{ section.settings.button_text }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+  
+  <div class="ag-hero-5__logos-wrapper">
+    <p class="ag-hero-5__logos-title">as seen on</p>
+    <div class="ag-hero-5__logos">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'logo' -%}
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.image.alt | default: 'Logo' }}" class="ag-hero-5__logo-img" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="lazy" {{ block.shopify_attributes }}>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero 5",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Heading",
+      "default": "The perfect\ntemperature with\nevery sip"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop WINE CHILLERS"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Image (Right Half)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Bullet",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Feature Text",
+          "default": "World's first & only wine glass chiller"
+        }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "As Seen On Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero 5",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "World's first & only wine glass chiller"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Keeps wine chilled for hours without ice"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Designed for stemmed & stemless glasses"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,651 @@
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.text_font | font_face: font_display: 'swap' }}
+
+  .ag-hero-8-{{ section.id }} {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #fff;
+    min-height: 605px; /* Mobile height */
+    
+    --heading-font: {{ section.settings.heading_font.family | default: "sans-serif" }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-weight: {{ section.settings.heading_font.weight | default: 700 }};
+    
+    --text-font: {{ section.settings.text_font.family | default: "sans-serif" }}, {{ section.settings.text_font.fallback_families }};
+  }
+
+  /* Announcement Bar */
+  .ag-hero-8__announcement {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 33px;
+    background: {{ section.settings.announce_bg_color | default: '#f4ea88' }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 0 15px;
+  }
+  
+  .ag-hero-8__announcement-text {
+    font-family: var(--text-font);
+    font-size: var(--ag-fs-eyebrow);
+    color: {{ section.settings.announce_text_color | default: '#000000' }};
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  .ag-hero-8__announcement-text span:first-child {
+    font-weight: 500;
+  }
+  
+  .ag-hero-8__announcement-text span:last-child {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  /* Background Images and Gradients */
+  .ag-hero-8__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .ag-hero-8__bg-mobile {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom;
+  }
+  
+  .ag-hero-8__bg-desktop {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .ag-hero-8__gradient {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    /* Mobile gradient: top to bottom */
+    background: linear-gradient(180deg, rgba(255,255,255,0) 40.38%, #808080 72.11%, #2e2e2e 100%);
+  }
+
+  /* Content Overlay */
+  .ag-hero-8__content-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align bottom on mobile */
+    min-height: 605px;
+    padding: 60px 20px 40px 20px;
+  }
+
+  .ag-hero-8__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 323px;
+    gap: 8px;
+  }
+
+  .ag-hero-8__text-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 14px;
+    margin-bottom: 5px;
+  }
+
+  /* Reviews */
+  .ag-hero-8__review-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .ag-hero-8__review-top {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .ag-hero-8__avatars {
+    display: flex;
+    align-items: center;
+    padding-right: 11px;
+  }
+  
+  .ag-hero-8__avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 100px;
+    border: 2px solid {{ section.settings.announce_bg_color | default: '#f4ea88' }};
+    margin-right: -11px;
+    overflow: hidden;
+    position: relative;
+    background: #ccc;
+  }
+  
+  .ag-hero-8__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ag-hero-8__review-stars {
+    display: flex;
+    gap: 2px;
+    color: {{ section.settings.review_stars_color | default: '#f4ea88' }};
+  }
+  
+  .ag-hero-8__review-stars svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .ag-hero-8__review-text {
+    font-family: var(--text-font);
+    font-weight: 500;
+    font-size: var(--ag-fs-eyebrow);
+    color: {{ section.settings.review_text_color | default: '#000000' }};
+    margin: 0;
+  }
+
+  /* Headings */
+  .ag-hero-8__titles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .ag-hero-8__heading {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-display-sm);
+    line-height: 1;
+    color: {{ section.settings.heading_color | default: '#000000' }};
+    margin: 0;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  .ag-hero-8__subheading {
+    font-family: var(--text-font);
+    font-weight: 400;
+    font-size: var(--ag-fs-eyebrow);
+    line-height: 1.3;
+    color: {{ section.settings.subheading_color | default: '#000000' }};
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Button Box */
+  .ag-hero-8__cta-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    background: {{ section.settings.button_bg_color | default: '#f4ea88' }};
+    border-radius: var(--ag-btn-radius);
+    min-height: var(--ag-btn-h);
+    padding: 0 var(--ag-btn-px);
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  
+  .ag-hero-8__cta-box:hover {
+    transform: translateY(-2px);
+  }
+
+  .ag-hero-8__cta-title {
+    font-family: var(--text-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-cta);
+    line-height: 1;
+    color: {{ section.settings.button_text_color | default: '#181212' }};
+    margin: 0;
+    text-align: center;
+  }
+
+  .ag-hero-8__cta-subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .ag-hero-8__cta-subtitle svg {
+    width: 12px;
+    height: 15px;
+    color: {{ section.settings.button_text_color | default: '#181212' }};
+  }
+  
+  .ag-hero-8__cta-subtext {
+    font-family: var(--text-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-eyebrow);
+    line-height: 1;
+    color: {{ section.settings.button_text_color | default: '#181212' }};
+    margin: 0;
+  }
+
+  /* Shipping Box */
+  .ag-hero-8__shipping {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .ag-hero-8__shipping svg {
+    width: 17px;
+    height: 12px;
+    color: {{ section.settings.heading_color | default: '#000000' }};
+  }
+  
+  .ag-hero-8__shipping-text {
+    font-family: var(--text-font);
+    font-size: var(--ag-fs-eyebrow);
+    color: {{ section.settings.heading_color | default: '#000000' }};
+    margin: 0;
+    line-height: 1;
+  }
+  
+  .ag-hero-8__shipping-text span:first-child {
+    font-weight: 700;
+  }
+
+  /* Desktop overrides */
+  @media (min-width: 768px) {
+    .ag-hero-8-{{ section.id }} {
+      min-height: 634px;
+    }
+
+    .ag-hero-8__bg-desktop { display: block; }
+    .ag-hero-8__bg-mobile { display: none; }
+    
+    .ag-hero-8__gradient {
+      /* Desktop gradient: right to left */
+      background: linear-gradient(270deg, rgba(255,255,255,0) 37.5%, rgba(143,143,143,0.52) 63.94%, #292929 94.71%);
+    }
+    
+    .ag-hero-8__content-wrapper {
+      min-height: 634px;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 5rem;
+    }
+
+    /* Target positioning specific to the design */
+    .ag-hero-8__content {
+      max-width: 472px;
+      gap: 8px;
+    }
+
+    .ag-hero-8__text-group {
+      gap: 14px;
+    }
+
+    .ag-hero-8__review-text {
+      font-size: var(--ag-fs-body);
+    }
+
+    .ag-hero-8__review-stars svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .ag-hero-8__subheading {
+      font-size: var(--ag-fs-body);
+    }
+
+    .ag-hero-8__cta-box {
+      min-height: var(--ag-btn-h-lg);
+    }
+    
+    .ag-hero-8__shipping {
+      justify-content: flex-start;
+      padding-left: 10px;
+    }
+  }
+
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-8 ag-hero-8-{{ section.id }}">
+  
+  {%- if section.settings.show_announce -%}
+    <div class="ag-hero-8__announcement">
+      <p class="ag-hero-8__announcement-text">
+        <span>{{ section.settings.announce_text_1 }}</span>
+        <span>{{ section.settings.announce_text_2 }}</span>
+      </p>
+    </div>
+  {%- endif -%}
+
+  <div class="ag-hero-8__background">
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 800 }}" alt="{{ section.settings.heading_text | escape }}" class="ag-hero-8__bg-mobile" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-8__bg-mobile" style="background:#ddd;"></div>
+    {%- endif -%}
+    
+    {%- if section.settings.image_desktop != blank -%}
+      <img src="{{ section.settings.image_desktop | image_url: width: 1600 }}" alt="{{ section.settings.heading_text | escape }}" class="ag-hero-8__bg-desktop" width="{{ section.settings.image_desktop.width }}" height="{{ section.settings.image_desktop.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-8__bg-desktop" style="background:#eee;"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="ag-hero-8__gradient"></div>
+
+  <div class="ag-hero-8__content-wrapper">
+    <div class="ag-hero-8__content">
+      
+      <div class="ag-hero-8__text-group">
+        {%- if section.settings.show_review -%}
+          <div class="ag-hero-8__review-block">
+            <div class="ag-hero-8__review-top">
+              
+              <div class="ag-hero-8__avatars">
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'avatar' -%}
+                    <div class="ag-hero-8__avatar" {{ block.shopify_attributes }}>
+                      {%- if block.settings.image != blank -%}
+                        <img src="{{ block.settings.image | image_url: width: 100 }}" alt="Avatar" loading="lazy" width="35" height="35">
+                      {%- else -%}
+                        <div style="width:100%;height:100%;background:#ccc;"></div>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+              <div class="ag-hero-8__review-stars">
+                {%- for i in (1..5) -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                  </svg>
+                {%- endfor -%}
+              </div>
+            </div>
+            {%- if section.settings.review_text != blank -%}
+              <p class="ag-hero-8__review-text">{{ section.settings.review_text }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="ag-hero-8__titles">
+          {%- if section.settings.heading_text != blank -%}
+            <h2 class="ag-hero-8__heading">{{ section.settings.heading_text | newline_to_br }}</h2>
+          {%- endif -%}
+
+          {%- if section.settings.subheading_text != blank -%}
+            <p class="ag-hero-8__subheading">{{ section.settings.subheading_text }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.button_text != blank -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="ag-hero-8__cta-box">
+            <p class="ag-hero-8__cta-title">{{ section.settings.button_text }}</p>
+            {%- if section.settings.button_subtext != blank -%}
+              <div class="ag-hero-8__cta-subtitle">
+                <svg viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 0L0 2.25V6.8625C0 10.53 2.565 13.9575 6 15C9.435 13.9575 12 10.53 12 6.8625V2.25L6 0ZM5.2875 11.25L2.25 8.2125L3.3075 7.155L5.2875 9.1275L8.6925 5.7225L9.75 6.7875L5.2875 11.25Z" fill="currentColor"/>
+                </svg>
+                <p class="ag-hero-8__cta-subtext">{{ section.settings.button_subtext }}</p>
+              </div>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.shipping_text != blank -%}
+        <div class="ag-hero-8__shipping">
+          <svg viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5 3H12V0H0V9H1.5C1.5 10.65 2.85 12 4.5 12C6.15 12 7.5 10.65 7.5 9H10.5C10.5 10.65 11.85 12 13.5 12C15.15 12 16.5 10.65 16.5 9H17V6L14.5 3ZM4.5 10.5C3.675 10.5 3 9.825 3 9C3 8.175 3.675 7.5 4.5 7.5C5.325 7.5 6 8.175 6 9C6 9.825 5.325 10.5 4.5 10.5ZM12 4.5H13.725L15 6V7.5H12V4.5ZM13.5 10.5C12.675 10.5 12 9.825 12 9C12 8.175 12.675 7.5 13.5 7.5C14.325 7.5 15 8.175 15 9C15 9.825 14.325 10.5 13.5 10.5Z" fill="currentColor"/>
+          </svg>
+          <p class="ag-hero-8__shipping-text">
+            <span>{{ section.settings.shipping_text_bold }}</span>
+            <span>{{ section.settings.shipping_text }}</span>
+          </p>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero Kids",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announce",
+      "label": "Show Announcement Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announce_text_1",
+      "label": "Announcement Text 1",
+      "default": "MASSIVE DISCOUNT -"
+    },
+    {
+      "type": "text",
+      "id": "announce_text_2",
+      "label": "Announcement Highlight",
+      "default": "GET 40% OFF + FREE GIFT"
+    },
+    {
+      "type": "color",
+      "id": "announce_bg_color",
+      "label": "Background Color",
+      "default": "#f4ea88"
+    },
+    {
+      "type": "color",
+      "id": "announce_text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Typography Options"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "header",
+      "content": "Review Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_review",
+      "label": "Show Review",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Review Text",
+      "default": "50,129+ kids love learning with Little Corners"
+    },
+    {
+      "type": "color",
+      "id": "review_text_color",
+      "label": "Review Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "review_stars_color",
+      "label": "Review Stars Color",
+      "default": "#f4ea88"
+    },
+    {
+      "type": "header",
+      "content": "Headings"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text",
+      "label": "Heading",
+      "default": "PLAY MORE. LEARN SMARTER."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_text",
+      "label": "Subheading",
+      "default": "Boost your child's learning potential with innovative, interactive play experiences designed to spark curiosity."
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Main Text",
+      "default": "Save $40 on Alva pans"
+    },
+    {
+      "type": "text",
+      "id": "button_subtext",
+      "label": "Button Sub Text",
+      "default": "100% SSL Encrypted Payment"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#f4ea88"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#181212"
+    },
+    {
+      "type": "header",
+      "content": "Shipping Status"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text_bold",
+      "label": "Shipping Status Bold",
+      "default": "FREE SHIPPING"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping Status Description",
+      "default": " ON ORDERS OVER $77*"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "avatar",
+      "name": "Avatar Image",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Reviewer Avatar Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero Kids",
+      "blocks": [
+        { "type": "avatar" },
+        { "type": "avatar" },
+        { "type": "avatar" }
+      ]
+    }
+  ]
+}
+{% endschema %}

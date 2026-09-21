@@ -1,0 +1,243 @@
+{% comment %} ag-adv-2-header.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+  assign date_text = s.date_text
+  assign rubric    = s.rubric
+  assign logo_text = s.logo_text
+  assign logo_b    = s.logo_text_bold
+  assign show_nav  = s.show_nav
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+  {% if s.border_color != blank %}--ag2-line:{{ s.border_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <header class="ag-adv-2-header">
+    <div class="ag-adv-2-header__top">
+      {%- if date_text != blank -%}
+        <span class="ag-adv-2-header__date">{{ date_text }}</span>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+      {%- if rubric != blank -%}
+        <span class="ag-adv-2-header__rubric">{{ rubric }}</span>
+      {%- endif -%}
+    </div>
+    <div class="ag-adv-2-header__main">
+      <a class="ag-adv-2-header__logo" href="{{ s.logo_link | default: shop.url }}">
+        {%- if s.logo_image != blank -%}
+          <img src="{{ s.logo_image | image_url: width: 320 }}" alt="{{ logo_text | escape }}" style="max-height:42px;width:auto;display:inline-block;">
+        {%- else -%}
+          {{ logo_text }}{% if logo_b != blank %} <b>{{ logo_b }}</b>{% endif %}
+        {%- endif -%}
+      </a>
+      {%- if show_nav and section.blocks.size > 0 -%}
+        <nav class="ag-adv-2-header__nav">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'nav_link' and block.settings.label != blank -%}
+              <a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    </div>
+  </header>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Header",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barre du haut"
+    },
+    {
+      "type": "text",
+      "id": "date_text",
+      "label": "Date (gauche)",
+      "default": "Jeudi 4 Juin 2026"
+    },
+    {
+      "type": "text",
+      "id": "rubric",
+      "label": "Rubrique (droite)",
+      "default": "Beauty Insider"
+    },
+    {
+      "type": "header",
+      "content": "Logo / Nom du média"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image (optionnel)",
+      "info": "Si défini, remplace le texte du logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Texte du logo",
+      "default": "The Glow"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_bold",
+      "label": "Texte du logo (mis en couleur d'accent)",
+      "default": "Report"
+    },
+    {
+      "type": "url",
+      "id": "logo_link",
+      "label": "Lien du logo"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Afficher la navigation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte / logo",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (b du logo)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent — rubrique",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur secondaire (date, nav)",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Couleur de la bordure",
+      "default": "#ececec"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Lien de navigation",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texte",
+          "default": "Skincare"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Header",
+      "blocks": [
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "Skincare"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "Maquillage"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "Tendances"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "Bien-être"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "Shop"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

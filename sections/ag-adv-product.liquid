@@ -1,0 +1,269 @@
+{% comment %} ag-adv-product.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+{%- liquid
+  assign img        = section.settings.product_image
+  assign name       = section.settings.product_name
+  assign eye        = section.settings.eyebrow
+  assign desc       = section.settings.description
+  assign url        = section.settings.product_url
+  assign cta_text   = section.settings.cta_text
+  assign position   = section.settings.image_position
+  assign badge      = section.settings.promo_badge
+
+  assign pos_class = ''
+  if position == 'right'
+    assign pos_class = ' ag-adv-product--right'
+  endif
+-%}
+
+<div class="ag-adv spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  <div class="ag-adv__wrap">
+    <section class="ag-adv-product{{ pos_class }}">
+
+      {%- if badge != blank -%}
+        <span class="ag-adv-product__badge">{{ badge }}</span>
+      {%- endif -%}
+
+      <figure class="ag-adv-product__fig">
+        {%- if img != blank -%}
+          <img src="{{ img | image_url: width: 800 }}" alt="{{ name | escape }}" loading="lazy" width="{{ img.width }}" height="{{ img.height }}">
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag }}
+        {%- endif -%}
+      </figure>
+
+      <div class="ag-adv-product__body">
+        {%- if eye != blank -%}
+          <div class="ag-adv-product__eye">{{ eye }}</div>
+        {%- endif -%}
+        {%- if name != blank -%}
+          <h2 class="ag-adv-product__title">{{ name }}</h2>
+        {%- endif -%}
+        {%- if desc != blank -%}
+          <div class="ag-adv-product__desc">{{ desc }}</div>
+        {%- endif -%}
+
+        <ul class="ag-adv__bul">
+          {%- if section.settings.bullet_1 != blank -%}<li><span class="ck">✓</span>{{ section.settings.bullet_1 }}</li>{%- endif -%}
+          {%- if section.settings.bullet_2 != blank -%}<li><span class="ck">✓</span>{{ section.settings.bullet_2 }}</li>{%- endif -%}
+          {%- if section.settings.bullet_3 != blank -%}<li><span class="ck">✓</span>{{ section.settings.bullet_3 }}</li>{%- endif -%}
+          {%- if section.settings.bullet_4 != blank -%}<li><span class="ck">✓</span>{{ section.settings.bullet_4 }}</li>{%- endif -%}
+          {%- if section.settings.bullet_5 != blank -%}<li><span class="ck">✓</span>{{ section.settings.bullet_5 }}</li>{%- endif -%}
+        </ul>
+
+        {%- if cta_text != blank -%}
+          <a class="ag-adv__cta ag-adv__cta--full" href="{{ url | default: '#offer' }}">{{ cta_text }}</a>
+        {%- endif -%}
+
+        {%- if section.settings.show_microtrust -%}
+          <div class="ag-adv__microtrust">
+            <span class="ag-adv__stars">★★★★★</span>
+            <span>{{ section.settings.microtrust_text }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — Produit",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Produit"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Photo du produit"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (petit titre au-dessus)",
+      "default": "So what is it?"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Nom du produit",
+      "default": "NovaSleep Pro"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description courte",
+      "default": "<p>A drug-free patch worn behind the ear. It releases a natural sleep blend slowly through the skin all night — working with your body instead of knocking it out.</p>"
+    },
+    {
+      "type": "text",
+      "id": "promo_badge",
+      "label": "Badge promo (optionnel)",
+      "info": "Ex: -50% AUJOURD'HUI",
+      "default": "-50% TODAY"
+    },
+    {
+      "type": "header",
+      "content": "Bullets"
+    },
+    {
+      "type": "text",
+      "id": "bullet_1",
+      "label": "Bullet 1",
+      "default": "Fall asleep faster — no racing mind"
+    },
+    {
+      "type": "text",
+      "id": "bullet_2",
+      "label": "Bullet 2",
+      "default": "Deeper, more unbroken sleep"
+    },
+    {
+      "type": "text",
+      "id": "bullet_3",
+      "label": "Bullet 3",
+      "default": "Non-habit-forming, no morning fog"
+    },
+    {
+      "type": "text",
+      "id": "bullet_4",
+      "label": "Bullet 4",
+      "default": "Third-party lab certified & clean"
+    },
+    {
+      "type": "text",
+      "id": "bullet_5",
+      "label": "Bullet 5"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Try NovaSleep Pro — 50% Off →"
+    },
+    {
+      "type": "url",
+      "id": "product_url",
+      "label": "Lien vers la fiche produit"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_microtrust",
+      "label": "Afficher la ligne de réassurance (étoiles + reviews)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "microtrust_text",
+      "label": "Texte de réassurance",
+      "default": "4.6 · 8,412 reviews"
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Position de l'image (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Gauche"
+        },
+        {
+          "value": "right",
+          "label": "Droite"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — Produit"
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

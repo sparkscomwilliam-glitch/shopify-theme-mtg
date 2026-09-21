@@ -1,0 +1,66 @@
+{% assign block_settings = block.settings %}
+
+<div class="ag-reviews-stars" {{ block.shopify_attributes }}>
+  <span class="ag-reviews-stars__stars" aria-label="{{ block_settings.rating }} stars out of 5">
+    {{ block_settings.stars_symbol | default: '★★★★★' }}
+  </span>
+  {%- if block_settings.show_link -%}
+    <a class="ag-reviews-stars__link" href="{{ block_settings.link_url | default: '#reviews' }}">
+      <span class="ag-reviews-stars__rating">{{ block_settings.rating }}</span>
+      {%- if block_settings.suffix != blank -%}
+        · {{ block_settings.suffix }}
+      {%- endif -%}
+    </a>
+  {%- else -%}
+    <span>
+      <span class="ag-reviews-stars__rating">{{ block_settings.rating }}</span>
+      {%- if block_settings.suffix != blank -%}
+        · {{ block_settings.suffix }}
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Reviews Stars",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "default": "4,9"
+    },
+    {
+      "type": "text",
+      "id": "stars_symbol",
+      "label": "Stars symbol",
+      "default": "★★★★★"
+    },
+    {
+      "type": "text",
+      "id": "suffix",
+      "label": "Suffix (after rating)",
+      "default": "2 847 avis vérifiés"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_link",
+      "label": "Make rating clickable",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL (anchor or page)",
+      "info": "Use #reviews to jump to a reviews section on the page"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Reviews Stars"
+    }
+  ]
+}
+{% endschema %}

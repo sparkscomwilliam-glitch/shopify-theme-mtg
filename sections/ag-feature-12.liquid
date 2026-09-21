@@ -1,0 +1,555 @@
+{%- liquid
+  assign bg_desktop         = section.settings.bg_image_desktop
+  assign bg_mobile          = section.settings.bg_image_mobile
+  assign gradient_desktop   = section.settings.gradient_overlay_desktop
+  assign gradient_mobile    = section.settings.gradient_overlay_mobile
+
+  assign heading            = section.settings.heading
+  assign description        = section.settings.description
+
+  assign heading_color      = section.settings.heading_color
+  assign body_color         = section.settings.body_color
+  assign stat_color         = section.settings.stat_color
+
+  assign disclaimer_text    = section.settings.disclaimer_text
+  assign disclaimer_bg      = section.settings.disclaimer_bg_color
+  assign disclaimer_opacity = section.settings.disclaimer_bg_opacity
+  assign disclaimer_color   = section.settings.disclaimer_text_color
+
+  assign h_desktop          = section.settings.min_height_desktop
+  assign h_mobile           = section.settings.min_height_mobile
+
+  assign disclaimer_opacity_float = disclaimer_opacity | times: 1.0 | divided_by: 10
+  assign disclaimer_bg_rgba = disclaimer_bg | color_modify: 'alpha', disclaimer_opacity_float
+
+  assign alt_desktop = ''
+  assign alt_mobile  = ''
+  if bg_desktop != blank
+    assign alt_desktop = bg_desktop.alt | default: ''
+  endif
+  if bg_mobile != blank
+    assign alt_mobile = bg_mobile.alt | default: ''
+  endif
+-%}
+
+<style>
+  #ag-f12-{{ section.id }},
+  #ag-f12-{{ section.id }} *,
+  #ag-f12-{{ section.id }} *::before,
+  #ag-f12-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  /* ── Section root — pleine largeur ───────────────────────────────── */
+  #ag-f12-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    min-height: {{ h_mobile }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  /* ── Image de fond — <picture> absolue ───────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  /* La <picture> elle-même est absolue pour que l'img ait une hauteur résolue */
+  #ag-f12-{{ section.id }} .ag-f12__bg picture {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__bg picture img,
+  #ag-f12-{{ section.id }} .ag-f12__bg picture svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Gradient overlay ─────────────────────────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background: {{ gradient_mobile }};
+  }
+
+  /* ── Inner layout ─────────────────────────────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px 20px;
+    min-height: {{ h_mobile }}px;
+    justify-content: space-between;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__content {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+  }
+
+  /* ── Header block (heading + description) ─────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-style: var(--font-heading--style);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(28px, 5vw, 47px);
+    line-height: 1.14;
+    text-transform: uppercase;
+    color: {{ heading_color }};
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__description {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-style: var(--font-body--style);
+    font-weight: 400;
+    font-size: clamp(16px, 2vw, 22px);
+    line-height: 1.4;
+    color: {{ body_color }};
+  }
+
+  /* ── Stats list ───────────────────────────────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__stat-number {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-style: var(--font-heading--style);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(44px, 8vw, 63px);
+    line-height: 1.14;
+    text-transform: uppercase;
+    color: {{ stat_color }};
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__stat-divider {
+    display: none;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__stat-desc {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-style: var(--font-body--style);
+    font-weight: 400;
+    font-size: clamp(15px, 1.6vw, 20px);
+    line-height: 1.4;
+    color: {{ body_color }};
+    max-width: 300px;
+  }
+
+  /* ── Disclaimer ───────────────────────────────────────────────────── */
+  #ag-f12-{{ section.id }} .ag-f12__disclaimer {
+    display: flex;
+    justify-content: center;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__disclaimer-inner {
+    background: {{ disclaimer_bg_rgba }};
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 9px;
+    padding: 10px 27px;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  #ag-f12-{{ section.id }} .ag-f12__disclaimer-text {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-style: var(--font-body--style);
+    font-weight: 400;
+    font-size: clamp(13px, 1.4vw, 18px);
+    line-height: 1.4;
+    color: {{ disclaimer_color }};
+  }
+
+  /* ── Desktop layout ───────────────────────────────────────────────── */
+  @media (min-width: 769px) {
+    #ag-f12-{{ section.id }} {
+      min-height: {{ h_desktop }}px;
+      justify-content: stretch;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__overlay {
+      background: {{ gradient_desktop }};
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__inner {
+      padding: 47px 60px 24px;
+      min-height: {{ h_desktop }}px;
+      justify-content: space-between;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__content {
+      margin-left: 39%;
+      width: 61%;
+      max-width: 680px;
+      gap: 24px;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__header {
+      text-align: left;
+      padding: 0;
+      gap: 8px;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__stats {
+      gap: 16px;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__stat {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 0;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__stat-number {
+      min-width: 155px;
+      flex-shrink: 0;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__stat-divider {
+      display: block;
+      width: 1px;
+      height: 57px;
+      background-color: {{ body_color }};
+      flex-shrink: 0;
+      opacity: 0.45;
+      margin-right: 20px;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__stat-desc {
+      text-align: left;
+      max-width: 410px;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__disclaimer-inner {
+      max-width: none;
+      white-space: nowrap;
+    }
+
+    #ag-f12-{{ section.id }} .ag-f12__disclaimer-text {
+      font-size: clamp(15px, 1.6vw, 22px);
+    }
+  }
+</style>
+
+<section id="ag-f12-{{ section.id }}">
+
+  {%- comment -%}
+    Image de fond responsive via <picture>.
+    - <source media="(min-width:769px)"> = image desktop sur grand écran
+    - <img> = image mobile (fallback sur desktop si absente)
+  {%- endcomment -%}
+  <div class="ag-f12__bg" aria-hidden="true">
+    <picture>
+      {%- if bg_desktop != blank -%}
+        <source
+          media="(min-width: 769px)"
+          srcset="{{ bg_desktop | image_url: width: 1440 }} 1440w, {{ bg_desktop | image_url: width: 2400 }} 2400w"
+          sizes="100vw"
+        >
+      {%- endif -%}
+
+      {%- if bg_mobile != blank -%}
+        <img
+          src="{{ bg_mobile | image_url: width: 800 }}"
+          srcset="{{ bg_mobile | image_url: width: 600 }} 600w, {{ bg_mobile | image_url: width: 900 }} 900w, {{ bg_mobile | image_url: width: 1200 }} 1200w"
+          sizes="100vw"
+          alt="{{ alt_mobile }}"
+          width="{{ bg_mobile.width }}"
+          height="{{ bg_mobile.height }}"
+          loading="eager"
+        >
+      {%- elsif bg_desktop != blank -%}
+        <img
+          src="{{ bg_desktop | image_url: width: 800 }}"
+          srcset="{{ bg_desktop | image_url: width: 600 }} 600w, {{ bg_desktop | image_url: width: 900 }} 900w, {{ bg_desktop | image_url: width: 1200 }} 1200w"
+          sizes="100vw"
+          alt="{{ alt_desktop }}"
+          width="{{ bg_desktop.width }}"
+          height="{{ bg_desktop.height }}"
+          loading="eager"
+        >
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {%- endif -%}
+    </picture>
+  </div>
+
+  <div class="ag-f12__overlay" aria-hidden="true"></div>
+
+  <div class="ag-f12__inner">
+
+    <div class="ag-f12__content">
+
+      <div class="ag-f12__header">
+        {%- if heading != blank -%}
+          <h2 class="ag-f12__heading">{{ heading }}</h2>
+        {%- endif -%}
+        {%- if description != blank -%}
+          <p class="ag-f12__description">{{ description }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="ag-f12__stats">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'stat' -%}
+              <div class="ag-f12__stat" {{ block.shopify_attributes }}>
+                {%- if block.settings.stat_number != blank -%}
+                  <p class="ag-f12__stat-number">{{ block.settings.stat_number }}</p>
+                {%- endif -%}
+                <div class="ag-f12__stat-divider" aria-hidden="true"></div>
+                {%- if block.settings.stat_description != blank -%}
+                  <p class="ag-f12__stat-desc">{{ block.settings.stat_description }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    {%- if disclaimer_text != blank -%}
+      <div class="ag-f12__disclaimer">
+        <div class="ag-f12__disclaimer-inner">
+          <p class="ag-f12__disclaimer-text">{{ disclaimer_text }}</p>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AG — Feature #12",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Arrière-plan"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_desktop",
+      "label": "Image de fond — Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Image de fond — Mobile",
+      "info": "Si vide, l'image desktop est utilisée sur mobile."
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_overlay_desktop",
+      "label": "Dégradé — Desktop",
+      "info": "Superposition sur l'image (desktop). Supporte les dégradés CSS.",
+      "default": "linear-gradient(90deg, rgba(0,0,0,0) 36%, rgba(0,0,0,0.26) 52%, rgba(0,0,0,0.44) 100%)"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_overlay_mobile",
+      "label": "Dégradé — Mobile",
+      "info": "Superposition sur l'image (mobile). Supporte les dégradés CSS.",
+      "default": "linear-gradient(0deg, rgba(0,0,0,0) 23%, rgba(0,0,0,0.59) 32%, rgba(0,0,0,1) 36%)"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Built on Clinically Studied Methods"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Heat and massage have been studied for jaw relief. yourTMJ Pen makes them easy to apply whenever you need."
+    },
+    {
+      "type": "header",
+      "content": "Couleurs du contenu"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du texte (description & stats)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "stat_color",
+      "label": "Couleur des chiffres statistiques",
+      "default": "#aad7fa"
+    },
+    {
+      "type": "header",
+      "content": "Disclaimer"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer_text",
+      "label": "Texte du disclaimer",
+      "default": "Disclaimer: Statistics reflect general TMJ patient self-care habits sourced from TMJ.org"
+    },
+    {
+      "type": "color",
+      "id": "disclaimer_bg_color",
+      "label": "Couleur de fond du disclaimer",
+      "default": "#021220"
+    },
+    {
+      "type": "range",
+      "id": "disclaimer_bg_opacity",
+      "label": "Opacité du fond du disclaimer",
+      "info": "0 = transparent, 10 = opaque",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "disclaimer_text_color",
+      "label": "Couleur du texte du disclaimer",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Dimensions"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Hauteur minimale — Desktop",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 680
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Hauteur minimale — Mobile",
+      "min": 400,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 700
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistique",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Chiffre / valeur",
+          "default": "95%"
+        },
+        {
+          "type": "text",
+          "id": "stat_description",
+          "label": "Description de la statistique",
+          "default": "of users say yourTMJ Pen helped them through flare-ups"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG — Feature #12",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "95%",
+            "stat_description": "of users say yourTMJ Pen helped them through flare-ups"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "72%",
+            "stat_description": "using heat compresses see a reduction of their TMJ symptoms"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "9/10",
+            "stat_description": "customers Recommend yourTMJ pen to friends suffering the same pain"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

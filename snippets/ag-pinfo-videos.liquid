@@ -1,0 +1,150 @@
+{% comment %}
+  AG Product Info — Videos slider (snippet)
+
+  Renders up to 6 video slides. Each card auto-plays muted on loop
+  and shows a play-icon overlay. Clicking a card opens a fullscreen
+  dialog with native video controls (unmuted).
+
+  Accepts:
+  - block:    the host block (its settings drive the slider)
+  - section:  the host section (used to scope the slider in JS)
+
+  Setting keys read from the block:
+  - slides_per_view, slides_per_view_mobile, gap, card_radius
+  - aspect_ratio
+  - autoplay, loop_video, show_play_icon, open_lightbox
+  - arrow_bg, arrow_color, play_icon_color
+  - For each i in 1..6:
+      video_i        (video picker — Shopify-hosted)
+      video_url_i    (text — external mp4 fallback)
+      poster_i       (image_picker — poster frame)
+{% endcomment %}
+
+{%- liquid
+  assign uid = section.id | append: '-' | append: block.id
+
+  assign slides_per_view = block.settings.slides_per_view | default: 3
+  assign slides_per_view_mobile = block.settings.slides_per_view_mobile | default: 1
+  assign gap = block.settings.gap | default: 16
+  assign card_radius = block.settings.card_radius | default: 12
+  assign aspect_ratio = block.settings.aspect_ratio | default: '9/16'
+  assign autoplay = block.settings.autoplay
+  assign loop_video = block.settings.loop_video
+  assign show_play_icon = block.settings.show_play_icon
+  assign open_lightbox = block.settings.open_lightbox
+
+  assign max_slots = 6
+-%}
+
+{%- capture videos_html -%}
+  {%- for i in (1..6) -%}
+    {%- liquid
+      assign v_setting_key = 'video_' | append: i
+      assign u_setting_key = 'video_url_' | append: i
+      assign p_setting_key = 'poster_' | append: i
+
+      assign v_obj = block.settings[v_setting_key]
+      assign v_url_text = block.settings[u_setting_key]
+      assign v_poster = block.settings[p_setting_key]
+
+      assign mp4_src = ''
+      if v_obj != blank and v_obj.sources != blank
+        for s in v_obj.sources
+          if s.format == 'mp4'
+            assign mp4_src = s.url
+            break
+          endif
+        endfor
+      endif
+      if mp4_src == blank and v_url_text != blank
+        assign mp4_src = v_url_text
+      endif
+    -%}
+
+    {%- if mp4_src != blank -%}
+      <div
+        class="ag-videos__slide"
+        data-ag-videos-slide
+        role="group"
+        aria-label="Video {{ i }}"
+        {% if open_lightbox %}data-ag-videos-open{% endif %}
+      >
+        <div class="ag-videos__media">
+          <video
+            data-ag-videos-video
+            src="{{ mp4_src }}"
+            {% if v_poster != blank %}poster="{{ v_poster | image_url: width: 720 }}"{% endif %}
+            playsinline
+            muted
+            preload="metadata"
+            {% if loop_video %}loop{% endif %}
+            {% if autoplay %}autoplay{% endif %}
+          ></video>
+
+          {%- if show_play_icon -%}
+            <span class="ag-videos__play" aria-hidden="true">
+              <svg viewBox="0 0 70 70">
+                <g opacity="0.55"><rect x="1" y="1" width="68" height="68" rx="34"/></g>
+                <path d="M45.48,34.39 27.42,24 a.7,.7 0 0 0 -1.05,.6 V45.43 a.7,.7 0 0 0 1.05,.6 L45.48,35.61 A.7,.7 0 0 0 45.48,34.39 Z" fill="currentColor"/>
+              </svg>
+            </span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- assign trimmed = videos_html | strip -%}
+{%- if trimmed == blank -%}
+  {%- if request.design_mode -%}
+    <div class="ag-videos ag-videos--empty" {{ block.shopify_attributes }}>
+      <p class="ag-videos__empty">
+        <strong>Vidéos (slider)</strong><br>
+        Ajoutez au moins une vidéo (picker Shopify ou URL mp4 externe) dans les paramètres de ce block.
+      </p>
+    </div>
+  {%- endif -%}
+{%- else -%}
+  <div
+    class="ag-videos"
+    data-ag-videos
+    data-uid="{{ uid }}"
+    data-slides-per-view="{{ slides_per_view }}"
+    data-slides-per-view-mobile="{{ slides_per_view_mobile }}"
+    data-open-lightbox="{% if open_lightbox %}true{% else %}false{% endif %}"
+    style="
+      --ag-videos-radius: {{ card_radius }}px;
+      --ag-videos-gap: {{ gap }}px;
+      --ag-videos-aspect: {{ aspect_ratio }};
+      --ag-videos-arrow-bg: {{ block.settings.arrow_bg | default: '#ffffff' }};
+      --ag-videos-arrow-color: {{ block.settings.arrow_color | default: '#16211b' }};
+      --ag-videos-play-color: {{ block.settings.play_icon_color | default: '#ffffff' }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div class="ag-videos__viewport" data-ag-videos-viewport>
+      <div class="ag-videos__track" data-ag-videos-track>
+        {{ videos_html }}
+      </div>
+    </div>
+
+    <button type="button" class="ag-videos__arrow ag-videos__arrow--prev" data-ag-videos-prev aria-label="Previous slide">
+      <svg viewBox="0 0 50 50" aria-hidden="true">
+        <path d="M32.61,7.5a2.27,2.27,0,0,0-1.61.67L15.78,23.39a2.28,2.28,0,0,0,0,3.22L31,41.83a2.28,2.28,0,1,0,3.23-3.23L20.62,25,34.22,11.4a2.29,2.29,0,0,0,0-3.23A2.25,2.25,0,0,0,32.61,7.5Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <button type="button" class="ag-videos__arrow ag-videos__arrow--next" data-ag-videos-next aria-label="Next slide">
+      <svg viewBox="0 0 50 50" aria-hidden="true">
+        <path d="M17.39,7.5A2.27,2.27,0,0,1,19,8.17L34.22,23.39a2.28,2.28,0,0,1,0,3.22L19,41.83a2.28,2.28,0,1,1-3.23-3.23L29.38,25,15.78,11.4a2.29,2.29,0,0,1,0-3.23A2.25,2.25,0,0,1,17.39,7.5Z" fill="currentColor"/>
+      </svg>
+    </button>
+
+    {%- if open_lightbox -%}
+      <dialog class="ag-videos__dialog" data-ag-videos-dialog aria-label="Video preview">
+        <button type="button" class="ag-videos__dialog-close" data-ag-videos-close aria-label="Close">×</button>
+        <video data-ag-videos-dialog-video controls playsinline></video>
+      </dialog>
+    {%- endif -%}
+  </div>
+{%- endif -%}

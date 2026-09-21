@@ -1,0 +1,46 @@
+<div class="ag-product-section__info" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "AG Info Column",
+  "tag": null,
+  "blocks": [
+    { "type": "@app" },
+    { "type": "ag-promo-badge" },
+    { "type": "ag-reviews-stars" },
+    { "type": "ag-product-tagline" },
+    { "type": "ag-benefit-pills" },
+    { "type": "ag-subscription-plans" },
+    { "type": "ag-trust-badges" },
+    { "type": "ag-macro-cards" },
+    { "type": "product-title" },
+    { "type": "price" },
+    { "type": "variant-picker" },
+    { "type": "buy-buttons" },
+    { "type": "product-description" },
+    { "type": "accordion" },
+    { "type": "product-inventory" },
+    { "type": "accelerated-checkout" },
+    { "type": "text" },
+    { "type": "icon" },
+    { "type": "image" },
+    { "type": "button" },
+    { "type": "video" },
+    { "type": "spacer" },
+    { "type": "_divider" }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This is the right column. Add and reorder blocks freely (title, variant picker, buy buttons, accordion, etc.)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Info Column"
+    }
+  ]
+}
+{% endschema %}

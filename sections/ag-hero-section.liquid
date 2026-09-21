@@ -1,0 +1,1342 @@
+{% comment %} ag-hero-section.liquid — propriété de James Sparks {% endcomment %}
+{%- liquid
+  assign show_rating          = section.settings.show_rating
+  assign rating_value         = section.settings.rating_value
+  assign rating_text          = section.settings.rating_text
+
+  assign hero_title           = section.settings.title
+  assign subtitle             = section.settings.subtitle
+  assign show_title_gradient  = section.settings.title_use_gradient
+  assign title_gradient       = section.settings.title_gradient
+
+  assign use_colored_words    = section.settings.use_colored_words
+  assign colored_words        = section.settings.colored_words
+
+  assign use_font_words       = section.settings.use_font_words
+  assign font_words           = section.settings.font_words
+  assign custom_font          = section.settings.custom_font
+
+  assign button_text          = section.settings.button_text
+  assign button_url           = section.settings.button_url
+  assign button_text_color    = section.settings.button_text_color
+  assign button_bg_color      = section.settings.button_bg_color
+  assign button_width         = section.settings.button_width
+  assign button_height        = section.settings.button_height
+  assign button_radius        = section.settings.button_radius
+  assign button_use_gradient  = section.settings.button_use_gradient
+  assign button_gradient      = section.settings.button_gradient
+  assign button_use_icon      = section.settings.button_use_icon
+  assign button_icon_svg      = section.settings.button_icon_svg
+  assign button_icon_pos      = section.settings.button_icon_position
+
+  assign guarantee_text       = section.settings.guarantee_text
+  assign guarantee_color      = section.settings.guarantee_text_color
+  assign guarantee_size       = section.settings.guarantee_text_size
+
+  assign hero_image           = section.settings.hero_image
+  assign mobile_image         = section.settings.mobile_image | default: hero_image
+
+  assign pad_left             = section.settings.content_padding_left
+  assign pad_right            = section.settings.content_padding_right
+  assign spacing              = section.settings.content_spacing
+
+  # Mobile spacing controls
+  assign mobile_pad_top       = section.settings.mobile_content_padding_top
+  assign mobile_gap           = section.settings.mobile_content_gap
+
+  # Precompute rating star values
+  assign rating_floor      = rating_value | floor
+  assign rating_decimal    = rating_value | minus: rating_floor
+  assign rating_half_index = rating_floor | plus: 1
+-%}
+
+<style>
+  #ag__{{ section.id }} * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  #ag__{{ section.id }} {
+    width: 100%;
+  }
+
+  /* ─── Desktop ─────────────────────────────────────────── */
+
+  #ag__{{ section.id }} .ag-hero__desktop {
+    display: flex;
+    width: 100%;
+    height: 710px;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+  }
+
+  #ag__{{ section.id }} .ag-hero__desktop-gradient {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 1;
+  }
+
+  #ag__{{ section.id }} .ag-hero__content-gradient {
+    width: 54%;
+    height: 100%;
+  }
+
+  #ag__{{ section.id }} .ag-hero__image-gradient {
+    width: 46%;
+    height: 100%;
+  }
+
+  #ag__{{ section.id }} .ag-hero__content {
+    width: 54%;
+    height: 445px;
+    padding: 20px 0 15px 64px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    margin-top: 133px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews {
+    display: flex;
+    gap: 6px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews.horizontal {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews.vertical {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #ag__{{ section.id }} .ag-hero__review-inner {
+    display: flex;
+    gap: 10px;
+    padding: 0 1px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews.horizontal .ag-hero__review-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews.vertical .ag-hero__review-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #ag__{{ section.id }} .ag-hero__stars {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  #ag__{{ section.id }} .ag-hero__star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  #ag__{{ section.id }} .ag-hero__review-text {
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  #ag__{{ section.id }} .ag-hero__reviews.horizontal .ag-hero__review-text {
+    margin-left: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__review-text:hover {
+    opacity: 0.8;
+  }
+
+  #ag__{{ section.id }} .ag-hero__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__heading {
+    color: #000;
+    font-weight: bold;
+    line-height: 1.1;
+    letter-spacing: -0.4px;
+  }
+
+  /* Gradient text — !important needed because the inline `background:` shorthand
+     implicitly resets background-clip to border-box (CSS spec behaviour). */
+  #ag__{{ section.id }} .ag-hero__heading--gradient {
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    display: inline-block;
+  }
+
+  #ag__{{ section.id }} .ag-hero__subtitle {
+    color: #000;
+    font-size: 20px;
+    line-height: 1.3;
+    max-width: 633px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__benefits {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+
+  #ag__{{ section.id }} .ag-hero__benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__benefit-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__benefit-text {
+    font-size: 18px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__divider {
+    width: 1px;
+    height: 38px;
+    background-color: rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 304px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border: none;
+    padding: 15px 24px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  #ag__{{ section.id }} .ag-hero__btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__guarantee {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__guarantee-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__image-col {
+    width: 46%;
+    height: 710px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__image-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #ag__{{ section.id }} .ag-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    position: relative;
+    z-index: 0;
+    display: block;
+  }
+
+  /* ─── Mobile ──────────────────────────────────────────── */
+
+  #ag__{{ section.id }} .ag-hero__mobile {
+    display: none;
+    position: relative;
+    width: 100%;
+    min-height: 710px;
+    overflow: hidden;
+  }
+
+  /* Background gradient layers — split top/bottom */
+  #ag__{{ section.id }} .ag-hero__mobile-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-content-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 1;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-image-gradient {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 1;
+  }
+
+  /* Main content container — flow layout, centered, above everything */
+  #ag__{{ section.id }} .ag-hero__mobile-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: {{ mobile_pad_top | default: 30 }}px 16px 0;
+    gap: {{ mobile_gap | default: 24 }}px;
+    text-align: center;
+  }
+
+  /* Reviews — now centered inside the content flow, not absolutely positioned */
+  #ag__{{ section.id }} .ag-hero__mobile-reviews {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-reviews.vertical {
+    flex-direction: column;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-reviews .ag-hero__review-text {
+    font-size: 13px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-title-wrapper {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-title {
+    font-weight: 700;
+    text-align: center;
+    color: #000;
+    letter-spacing: -0.4px;
+  }
+
+  /* Same fix on mobile heading */
+  #ag__{{ section.id }} .ag-hero__mobile-title--gradient {
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    display: inline-block;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-subtitle {
+    width: 100%;
+    max-width: 320px;
+    color: #000;
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: center;
+    margin: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-benefits {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-benefit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    text-align: center;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-benefit-item .ag-hero__benefit-text {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-separator {
+    width: 1px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-cta {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-cta .ag-hero__cta {
+    width: 100%;
+    height: 47px;
+    padding: 0 16px;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-cta .ag-hero__guarantee {
+    margin-top: 5px;
+  }
+
+  /* Image — full-width responsive, anchored at bottom */
+  #ag__{{ section.id }} .ag-hero__mobile-image-col {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 380 / 365;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-image-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #ag__{{ section.id }} .ag-hero__mobile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 0;
+    display: block;
+  }
+
+  /* ─── Tablet ──────────────────────────────────────────── */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    #ag__{{ section.id }} .ag-hero__desktop {
+      height: 600px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__content {
+      width: 58%;
+      padding-left: 25px;
+      gap: 20px;
+      margin-top: 80px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__image-col {
+      width: 42%;
+      height: 600px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__benefit-text {
+      font-size: 14px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__benefits {
+      gap: 15px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__btn-wrapper {
+      width: 250px;
+    }
+  }
+
+  @media (max-width: 1400px) and (min-width: 769px) {
+    #ag__{{ section.id }} .ag-hero__content {
+      padding-left: 40px;
+      gap: 30px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__subtitle {
+      font-size: 18px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__benefit-text {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 1200px) and (min-width: 769px) {
+    #ag__{{ section.id }} .ag-hero__content {
+      padding-left: 30px;
+      gap: 25px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__subtitle {
+      font-size: 16px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__benefit-text {
+      font-size: 15px;
+    }
+
+    #ag__{{ section.id }} .ag-hero__benefits {
+      gap: 20px;
+    }
+  }
+
+  /* ─── Mobile breakpoint ───────────────────────────────── */
+  @media (max-width: 768px) {
+    #ag__{{ section.id }} .ag-hero__desktop {
+      display: none;
+    }
+
+    #ag__{{ section.id }} .ag-hero__mobile {
+      display: block;
+    }
+  }
+
+  @media (max-width: 375px) {
+    #ag__{{ section.id }} .ag-hero__mobile-benefit-item .ag-hero__benefit-text {
+      font-size: 11px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    #ag__{{ section.id }} .ag-hero__mobile-benefit-item .ag-hero__benefit-text {
+      font-size: 10px;
+    }
+  }
+</style>
+
+{%- comment -%} ── Macros ─────────────────────────────────────────────────── {%- endcomment -%}
+
+{%- comment -%} Inline star rating (replaces missing 'rating-stars' snippet) {%- endcomment -%}
+{%- capture ag_star_full -%}<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>{%- endcapture -%}
+{%- capture ag_star_half -%}<svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77V2z"/><path fill="currentColor" opacity="0.3" d="M12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2v15.77z"/></svg>{%- endcapture -%}
+{%- capture ag_star_empty -%}<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" opacity="0.3" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>{%- endcapture -%}
+
+{%- comment -%} Inline benefit icons (replaces missing 'benefit-icon' snippet) {%- endcomment -%}
+{%- capture ag_icon_leaf -%}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8C8 10 5.9 16.17 3.82 19.05c0 0 3.18-2.05 6.23-2.55C7 19 6 22 6 22c4 0 8-3 10-8s1-6 1-6z"/><line x1="17" y1="8" x2="6" y2="22"/></svg>{%- endcapture -%}
+{%- capture ag_icon_expand -%}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>{%- endcapture -%}
+{%- capture ag_icon_bottle -%}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="3" rx="1"/><path d="M7 5h10l1 3H6z"/><path d="M6 8a7 7 0 1012 0"/><line x1="12" y1="11" x2="12" y2="15"/><line x1="10" y1="13" x2="14" y2="13"/></svg>{%- endcapture -%}
+{%- capture ag_icon_check -%}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20,6 9,17 4,12"/></svg>{%- endcapture -%}
+{%- capture ag_icon_shield -%}<svg width="{{ guarantee_size }}" height="{{ guarantee_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9,12 11,14 15,10"/></svg>{%- endcapture -%}
+
+{%- comment -%} ── Title helpers ──────────────────────────────────────────── {%- endcomment -%}
+{%- comment -%}
+  Build title_colored and title_fonted ahead of time so we can reuse
+  across both desktop and mobile without duplicating loop logic.
+{%- endcomment -%}
+{%- if use_colored_words and colored_words != blank -%}
+  {%- assign title_colored = hero_title -%}
+  {%- assign cwords_array  = colored_words | split: ',' -%}
+  {%- for cword in cwords_array -%}
+    {%- assign cword_t = cword | strip -%}
+    {%- assign cspan   = '<span style="color:' | append: section.settings.word_color | append: ';">' | append: cword_t | append: '</span>' -%}
+    {%- assign title_colored = title_colored | replace: cword_t, cspan -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if use_font_words and font_words != blank -%}
+  {%- assign title_fonted  = hero_title -%}
+  {%- assign fwords_array  = font_words | split: ',' -%}
+  {%- for fword in fwords_array -%}
+    {%- assign fword_t = fword | strip -%}
+    {%- assign fspan   = '<span style="font-family:' | append: custom_font | append: ';">' | append: fword_t | append: '</span>' -%}
+    {%- assign title_fonted = title_fonted | replace: fword_t, fspan -%}
+  {%- endfor -%}
+{%- endif -%}
+
+<div id="ag__{{ section.id }}">
+
+  {%- comment -%} ════════════════════ DESKTOP ════════════════════ {%- endcomment -%}
+  <div class="ag-hero__desktop">
+
+    <div class="ag-hero__desktop-gradient">
+      <div class="ag-hero__content-gradient" style="background: {{ section.settings.desktop_content_gradient }};"></div>
+      <div class="ag-hero__image-gradient"   style="background: {{ section.settings.desktop_image_gradient }};"></div>
+    </div>
+
+    <div class="ag-hero__content" style="padding-left: {{ pad_left }}px; padding-right: {{ pad_right }}px; gap: {{ spacing }}px;">
+
+      {%- if show_rating -%}
+        <div class="ag-hero__reviews {{ section.settings.review_alignment }}">
+          <div class="ag-hero__review-inner">
+            <span class="ag-hero__stars" style="font-size: {{ section.settings.star_size }}px; color: {{ section.settings.rating_color }};">
+              {%- for i in (1..5) -%}
+                {%- if i <= rating_floor -%}
+                  <span class="ag-hero__star">{{ ag_star_full }}</span>
+                {%- elsif i == rating_half_index and rating_decimal >= 0.5 -%}
+                  <span class="ag-hero__star">{{ ag_star_half }}</span>
+                {%- else -%}
+                  <span class="ag-hero__star">{{ ag_star_empty }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </span>
+            {%- if rating_text != blank -%}
+              <a href="{{ section.settings.review_link | default: '#' }}" class="ag-hero__review-text" style="color: {{ section.settings.rating_text_color }};">{{ rating_text }}</a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="ag-hero__title-wrapper">
+        {%- if hero_title != blank -%}
+          {%- if show_title_gradient and title_gradient != blank -%}
+            <h1 class="ag-hero__heading ag-hero__heading--gradient" style="font-size: {{ section.settings.desktop_title_size }}px; background: {{ title_gradient }};">
+              {{- hero_title -}}
+            </h1>
+          {%- elsif use_colored_words and colored_words != blank -%}
+            <h1 class="ag-hero__heading" style="font-size: {{ section.settings.desktop_title_size }}px;">{{ title_colored }}</h1>
+          {%- elsif use_font_words and font_words != blank -%}
+            <h1 class="ag-hero__heading" style="font-size: {{ section.settings.desktop_title_size }}px;">{{ title_fonted }}</h1>
+          {%- else -%}
+            <h1 class="ag-hero__heading" style="font-size: {{ section.settings.desktop_title_size }}px;">{{ hero_title }}</h1>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- if subtitle != blank -%}
+        <p class="ag-hero__subtitle">{{ subtitle }}</p>
+      {%- endif -%}
+
+      <div class="ag-hero__benefits">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'benefit' -%}
+            <div class="ag-hero__benefit-item">
+              <div class="ag-hero__benefit-icon" style="color: {{ section.settings.benefit_icon_color }};">
+                {%- if block.settings.custom_svg != blank -%}
+                  {{ block.settings.custom_svg }}
+                {%- else -%}
+                  {%- case block.settings.icon_type -%}
+                    {%- when 'leaf'   -%}{{ ag_icon_leaf }}
+                    {%- when 'expand' -%}{{ ag_icon_expand }}
+                    {%- when 'bottle' -%}{{ ag_icon_bottle }}
+                    {%- else -%}{{ ag_icon_leaf }}
+                  {%- endcase -%}
+                {%- endif -%}
+              </div>
+              <span class="ag-hero__benefit-text" style="color: {{ section.settings.benefit_text_color }};">{{ block.settings.text }}</span>
+            </div>
+            {%- unless forloop.last -%}<div class="ag-hero__divider"></div>{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ag-hero__btn-wrapper">
+        {%- if button_text != blank -%}
+          <a href="{{ button_url | default: '#' }}"
+             class="ag-hero__cta"
+             style="{% if button_use_gradient and button_gradient != blank %}background: {{ button_gradient }};{% else %}background-color: {{ button_bg_color }};{% endif %} color: {{ button_text_color }}; width: {{ button_width }}px; height: {{ button_height }}px; border-radius: {{ button_radius }}px;">
+            {%- if button_use_icon and button_icon_svg != blank and button_icon_pos == 'left' -%}
+              <span class="ag-hero__btn-icon">{{ button_icon_svg }}</span>
+            {%- endif -%}
+            <span>{{ button_text }}</span>
+            {%- if button_use_icon and button_icon_svg != blank and button_icon_pos == 'right' -%}
+              <span class="ag-hero__btn-icon">{{ button_icon_svg }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+
+        {%- if guarantee_text != blank -%}
+          <div class="ag-hero__guarantee">
+            <span class="ag-hero__guarantee-icon" style="color: {{ guarantee_color }};">{{ ag_icon_shield }}</span>
+            <span style="color: {{ guarantee_color }}; font-size: {{ guarantee_size }}px;">{{ guarantee_text }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>{%- comment -%} /ag-hero__content {%- endcomment -%}
+
+    <div class="ag-hero__image-col">
+      <div class="ag-hero__image-overlay" style="background: {{ section.settings.desktop_image_overlay }};"></div>
+      {%- if hero_image != blank -%}
+        {{ hero_image | image_url: width: 1200 | image_tag: loading: 'eager', class: 'ag-hero__img', sizes: '50vw', alt: hero_title }}
+      {%- endif -%}
+    </div>
+
+  </div>{%- comment -%} /ag-hero__desktop {%- endcomment -%}
+
+  {%- comment -%} ════════════════════ MOBILE ═════════════════════ {%- endcomment -%}
+  <div class="ag-hero__mobile">
+
+    {%- comment -%} Background gradient layers (top + bottom) {%- endcomment -%}
+    <div class="ag-hero__mobile-gradient">
+      <div class="ag-hero__mobile-content-gradient" style="background: {{ section.settings.mobile_content_gradient }};"></div>
+      <div class="ag-hero__mobile-image-gradient"   style="background: {{ section.settings.mobile_image_gradient }};"></div>
+    </div>
+
+    {%- comment -%}
+      All text content (reviews, title, benefits, CTA) lives in one flow
+      container with z-index: 3 so it always sits above the gradients.
+    {%- endcomment -%}
+    <div class="ag-hero__mobile-content">
+
+      {%- if show_rating -%}
+        <div class="ag-hero__mobile-reviews {{ section.settings.mobile_review_alignment }}">
+          <span class="ag-hero__stars" style="font-size: {{ section.settings.mobile_star_size }}px; color: {{ section.settings.rating_color }};">
+            {%- for i in (1..5) -%}
+              {%- if i <= rating_floor -%}
+                <span class="ag-hero__star">{{ ag_star_full }}</span>
+              {%- elsif i == rating_half_index and rating_decimal >= 0.5 -%}
+                <span class="ag-hero__star">{{ ag_star_half }}</span>
+              {%- else -%}
+                <span class="ag-hero__star">{{ ag_star_empty }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </span>
+          {%- if rating_text != blank -%}
+            <a href="{{ section.settings.review_link | default: '#' }}" class="ag-hero__review-text" style="color: {{ section.settings.rating_text_color }};">{{ rating_text }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="ag-hero__mobile-title-wrapper">
+        {%- if hero_title != blank -%}
+          {%- if show_title_gradient and title_gradient != blank -%}
+            <h1 class="ag-hero__mobile-title ag-hero__mobile-title--gradient" style="font-size: {{ section.settings.mobile_title_size }}px; background: {{ title_gradient }};">
+              {{- hero_title -}}
+            </h1>
+          {%- elsif use_colored_words and colored_words != blank -%}
+            <h1 class="ag-hero__mobile-title" style="font-size: {{ section.settings.mobile_title_size }}px;">{{ title_colored }}</h1>
+          {%- elsif use_font_words and font_words != blank -%}
+            <h1 class="ag-hero__mobile-title" style="font-size: {{ section.settings.mobile_title_size }}px;">{{ title_fonted }}</h1>
+          {%- else -%}
+            <h1 class="ag-hero__mobile-title" style="font-size: {{ section.settings.mobile_title_size }}px;">{{ hero_title }}</h1>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- if subtitle != blank -%}
+        <p class="ag-hero__mobile-subtitle">{{ subtitle }}</p>
+      {%- endif -%}
+
+      <div class="ag-hero__mobile-benefits">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'benefit' -%}
+            <div class="ag-hero__mobile-benefit-item">
+              <div class="ag-hero__benefit-icon" style="color: {{ section.settings.benefit_icon_color }};">
+                {%- if block.settings.custom_svg != blank -%}
+                  {{ block.settings.custom_svg }}
+                {%- else -%}
+                  {{ ag_icon_check }}
+                {%- endif -%}
+              </div>
+              <span class="ag-hero__benefit-text" style="color: {{ section.settings.benefit_text_color }};">{{ block.settings.text }}</span>
+            </div>
+            {%- unless forloop.last -%}
+              <div class="ag-hero__mobile-separator" style="background: {{ section.settings.mobile_separator_gradient }};"></div>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ag-hero__mobile-cta">
+        {%- if button_text != blank -%}
+          <a href="{{ button_url | default: '#' }}"
+             class="ag-hero__cta"
+             style="{% if button_use_gradient and button_gradient != blank %}background: {{ button_gradient }};{% else %}background-color: {{ button_bg_color }};{% endif %} color: {{ button_text_color }}; border-radius: {{ button_radius }}px;">
+            {%- if button_use_icon and button_icon_svg != blank and button_icon_pos == 'left' -%}
+              <span class="ag-hero__btn-icon">{{ button_icon_svg }}</span>
+            {%- endif -%}
+            <span>{{ button_text }}</span>
+            {%- if button_use_icon and button_icon_svg != blank and button_icon_pos == 'right' -%}
+              <span class="ag-hero__btn-icon">{{ button_icon_svg }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+
+        {%- if guarantee_text != blank -%}
+          <div class="ag-hero__guarantee">
+            <span class="ag-hero__guarantee-icon" style="color: {{ guarantee_color }};">{{ ag_icon_shield }}</span>
+            <span style="color: {{ guarantee_color }}; font-size: {{ guarantee_size }}px;">{{ guarantee_text }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>{%- comment -%} /ag-hero__mobile-content {%- endcomment -%}
+
+    {%- comment -%} Image anchored to bottom, responsive width {%- endcomment -%}
+    <div class="ag-hero__mobile-image-col">
+      <div class="ag-hero__mobile-image-overlay" style="background: {{ section.settings.mobile_image_overlay }};"></div>
+      {%- if mobile_image != blank -%}
+        {{ mobile_image | image_url: width: 800 | image_tag: loading: 'eager', class: 'ag-hero__mobile-img', sizes: '90vw', alt: hero_title }}
+      {%- endif -%}
+    </div>
+
+  </div>{%- comment -%} /ag-hero__mobile {%- endcomment -%}
+
+</div>{%- comment -%} /ag__{{ section.id }} {%- endcomment -%}
+
+{% schema %}
+{
+  "name": "AG - Hero #1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Général"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Lorem ipsum tempor incididunt ut labore"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "A dangerously-effective pheromone-infused perfume which synergizes with your natural scent."
+    },
+    {
+      "type": "header",
+      "content": "Espacement et Marges"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_left",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Marge gauche du contenu",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "content_padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Marge droite du contenu",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Espacement entre les éléments",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Gradients Desktop"
+    },
+    {
+      "type": "color_background",
+      "id": "desktop_content_gradient",
+      "label": "Gradient de fond (zone contenu)",
+      "default": "linear-gradient(89.9deg, #FBF4D5 20.19%, #F49C99 100%)"
+    },
+    {
+      "type": "color_background",
+      "id": "desktop_image_gradient",
+      "label": "Gradient de fond (zone image)",
+      "default": "linear-gradient(89.9deg, #F49C99 0%, rgba(243, 98, 96, 0) 100%)"
+    },
+    {
+      "type": "color_background",
+      "id": "desktop_image_overlay",
+      "label": "Overlay gradient sur l'image",
+      "default": "linear-gradient(90deg, rgba(248, 154, 151, 1) 0%, rgba(247, 97, 95, 0) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Gradients Mobile"
+    },
+    {
+      "type": "color_background",
+      "id": "mobile_content_gradient",
+      "label": "Gradient de fond (zone contenu)",
+      "default": "linear-gradient(90deg, #FBF4D5 0%, #FBF4D5 50%, #F29B98 100%)"
+    },
+    {
+      "type": "color_background",
+      "id": "mobile_image_gradient",
+      "label": "Gradient de fond (zone image)",
+      "default": "linear-gradient(0deg, rgba(247, 154, 151, 0) 100%, #F79A97 0%)"
+    },
+    {
+      "type": "color_background",
+      "id": "mobile_image_overlay",
+      "label": "Overlay gradient sur l'image mobile",
+      "default": "linear-gradient(180deg, rgba(247, 154, 151, 0.3) 0%, rgba(247, 97, 95, 0) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Gradient de Titre"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_use_gradient",
+      "label": "Utiliser un gradient pour le titre",
+      "default": false,
+      "info": "Le gradient sera appliqué directement sur le texte"
+    },
+    {
+      "type": "color_background",
+      "id": "title_gradient",
+      "label": "Dégradé du titre",
+      "default": "linear-gradient(to right, #ff0000, #0000ff)"
+    },
+    {
+      "type": "header",
+      "content": "Mots Colorés"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_colored_words",
+      "label": "Utiliser des mots colorés",
+      "default": false,
+      "info": "Alternative au gradient et aux polices personnalisées"
+    },
+    {
+      "type": "text",
+      "id": "colored_words",
+      "label": "Mots à colorer (séparés par des virgules)",
+      "default": "ipsum,labore"
+    },
+    {
+      "type": "color",
+      "id": "word_color",
+      "label": "Couleur des mots",
+      "default": "#ff0000"
+    },
+    {
+      "type": "header",
+      "content": "Police Personnalisée"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_font_words",
+      "label": "Utiliser une police personnalisée pour certains mots",
+      "default": false,
+      "info": "Alternative au gradient et aux mots colorés"
+    },
+    {
+      "type": "text",
+      "id": "font_words",
+      "label": "Mots avec police personnalisée (séparés par des virgules)",
+      "default": "ipsum,labore"
+    },
+    {
+      "type": "select",
+      "id": "custom_font",
+      "label": "Police personnalisée",
+      "options": [
+        { "value": "'Roboto', sans-serif",          "label": "Roboto"                   },
+        { "value": "'Open Sans', sans-serif",        "label": "Open Sans"                },
+        { "value": "'Lato', sans-serif",             "label": "Lato"                     },
+        { "value": "'Montserrat', sans-serif",       "label": "Montserrat"               },
+        { "value": "'Source Sans Pro', sans-serif",  "label": "Source Sans Pro"          },
+        { "value": "'Raleway', sans-serif",          "label": "Raleway"                  },
+        { "value": "'Nunito', sans-serif",           "label": "Nunito"                   },
+        { "value": "'Poppins', sans-serif",          "label": "Poppins"                  },
+        { "value": "'Inter', sans-serif",            "label": "Inter"                    },
+        { "value": "'Playfair Display', serif",      "label": "Playfair Display (Serif)" },
+        { "value": "'Oswald', sans-serif",           "label": "Oswald"                   },
+        { "value": "'Lora', serif",                  "label": "Lora (Serif)"             },
+        { "value": "'Merriweather', serif",          "label": "Merriweather (Serif)"     },
+        { "value": "'Ubuntu', sans-serif",           "label": "Ubuntu"                   },
+        { "value": "'Work Sans', sans-serif",        "label": "Work Sans"                }
+      ],
+      "default": "'Roboto', sans-serif"
+    },
+    {
+      "type": "header",
+      "content": "Avis et Évaluation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Afficher les étoiles d'évaluation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rating_value",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "label": "Note (étoiles)",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Texte d'évaluation",
+      "default": "Loved by 5,240+ happy customers"
+    },
+    {
+      "type": "color",
+      "id": "rating_color",
+      "label": "Couleur des étoiles",
+      "default": "#FFC72D"
+    },
+    {
+      "type": "color",
+      "id": "rating_text_color",
+      "label": "Couleur du texte d'évaluation",
+      "default": "#042138"
+    },
+    {
+      "type": "url",
+      "id": "review_link",
+      "label": "Lien pour le texte d'évaluation"
+    },
+    {
+      "type": "select",
+      "id": "review_alignment",
+      "label": "Alignement des étoiles (desktop)",
+      "options": [
+        { "value": "horizontal", "label": "Horizontal" },
+        { "value": "vertical",   "label": "Vertical"   }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille des étoiles (desktop)",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "mobile_review_alignment",
+      "label": "Alignement des étoiles (mobile)",
+      "options": [
+        { "value": "horizontal", "label": "Horizontal" },
+        { "value": "vertical",   "label": "Vertical"   }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "range",
+      "id": "mobile_star_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille des étoiles (mobile)",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Tailles de Titre"
+    },
+    {
+      "type": "range",
+      "id": "desktop_title_size",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille du titre (desktop)",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille du titre (mobile)",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte du bouton",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "URL du bouton"
+    },
+    {
+      "type": "range",
+      "id": "button_width",
+      "min": 150,
+      "max": 400,
+      "step": 5,
+      "unit": "px",
+      "label": "Largeur du bouton (desktop)",
+      "default": 305
+    },
+    {
+      "type": "range",
+      "id": "button_height",
+      "min": 30,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Hauteur du bouton",
+      "default": 47
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Rayon du bouton",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "button_use_gradient",
+      "label": "Utiliser un dégradé pour le bouton",
+      "default": false
+    },
+    {
+      "type": "color_background",
+      "id": "button_gradient",
+      "label": "Dégradé du bouton",
+      "default": "linear-gradient(to right, #042138, #0a4a77)"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Couleur de fond du bouton",
+      "default": "#042138"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Couleur du texte du bouton",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_use_icon",
+      "label": "Ajouter une icône au bouton",
+      "default": false
+    },
+    {
+      "type": "html",
+      "id": "button_icon_svg",
+      "label": "Code SVG de l'icône"
+    },
+    {
+      "type": "select",
+      "id": "button_icon_position",
+      "label": "Position de l'icône",
+      "options": [
+        { "value": "left",  "label": "À gauche du texte" },
+        { "value": "right", "label": "À droite du texte" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Garantie"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Texte de garantie",
+      "default": "90-DAY MONEY BACK GUARANTEE"
+    },
+    {
+      "type": "color",
+      "id": "guarantee_text_color",
+      "label": "Couleur du texte de garantie",
+      "default": "#042138"
+    },
+    {
+      "type": "range",
+      "id": "guarantee_text_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille du texte de garantie",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Bénéfices"
+    },
+    {
+      "type": "color",
+      "id": "benefit_icon_color",
+      "label": "Couleur des icônes de bénéfice",
+      "default": "#042138"
+    },
+    {
+      "type": "color",
+      "id": "benefit_text_color",
+      "label": "Couleur du texte de bénéfice",
+      "default": "#042138"
+    },
+    {
+      "type": "header",
+      "content": "Séparateurs Mobile"
+    },
+    {
+      "type": "color_background",
+      "id": "mobile_separator_gradient",
+      "label": "Couleur / Gradient du séparateur (mobile)",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Espacement Mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding haut du contenu (Mobile)",
+      "info": "Décale tout le bloc texte vers le bas",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap entre éléments (Mobile)",
+      "info": "Espace entre les étoiles, le titre, les bénéfices et le bouton",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Image (Mobile)",
+      "info": "Si non spécifié, l'image desktop sera utilisée"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bénéfice",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Bénéfice produit"
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Type d'icône prédéfinie",
+          "info": "Utilisé si aucun SVG personnalisé n'est fourni",
+          "options": [
+            { "value": "leaf",   "label": "Feuille (Ingrédients naturels)"    },
+            { "value": "expand", "label": "Expansion (Réduction lipomes)"     },
+            { "value": "bottle", "label": "Bouteille (Sans produits chimiques)" }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "html",
+          "id": "custom_svg",
+          "label": "SVG personnalisé",
+          "info": "Prioritaire sur l'icône prédéfinie"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG - Hero #1",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": { "text": "2 natural ingredients", "icon_type": "leaf"   }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Shrinks lipomas safely", "icon_type": "expand" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "No harsh chemicals",    "icon_type": "bottle" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

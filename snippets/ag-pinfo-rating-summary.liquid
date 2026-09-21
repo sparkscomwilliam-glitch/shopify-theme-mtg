@@ -1,0 +1,97 @@
+{% comment %} AG Product Info — Rating summary (stars + label). Accepts: block, section {% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+{%- assign rating_value = bs.rating | default: '4.8' -%}
+{%- assign rating_data = rating_value | replace: ',', '.' -%}
+{%- assign star_color = bs.star_color | default: '#00b87e' -%}
+{%- assign empty_color = bs.empty_color | default: '#dddddd' -%}
+{%- assign label_color = bs.label_color | default: '#000000' -%}
+
+<style>
+  .ag-rs-{{ uid }} {
+    display: flex;
+    margin-top: {{ bs.margin_top | default: 0 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+    column-gap: 10px;
+    align-items: center;
+    font-weight: {{ bs.text_weight | default: 500 }};
+    text-decoration: none;
+    background: {{ bs.bg_color | default: 'transparent' }};
+    padding: {{ bs.padding_y | default: 0 }}px {{ bs.padding_x | default: 0 }}px;
+    border-radius: {{ bs.container_radius | default: 0 }}px;
+    width: fit-content;
+  }
+  .ag-rs-{{ uid }}__stars {
+    margin: 0;
+    zoom: {{ bs.stars_zoom | default: 0.8 }};
+    display: inline-flex;
+    align-items: center;
+  }
+  .ag-rs-{{ uid }}__stars i {
+    display: inline-block;
+    width: 0;
+    height: 1.5em;
+    border-width: 0 0.75em;
+    border-style: solid;
+    border-color: {{ empty_color }};
+    border-radius: 0.22em;
+    color: transparent !important;
+    background: {{ empty_color }} !important;
+    font-style: normal;
+    line-height: 1.6em;
+    text-indent: -0.5em;
+  }
+  .ag-rs-{{ uid }}__stars[data-rating^="1"] .ag-star-1,
+  .ag-rs-{{ uid }}__stars[data-rating^="2"] .ag-star-1,
+  .ag-rs-{{ uid }}__stars[data-rating^="2"] .ag-star-2,
+  .ag-rs-{{ uid }}__stars[data-rating^="3"] .ag-star-1,
+  .ag-rs-{{ uid }}__stars[data-rating^="3"] .ag-star-2,
+  .ag-rs-{{ uid }}__stars[data-rating^="3"] .ag-star-3,
+  .ag-rs-{{ uid }}__stars[data-rating^="4"] .ag-star-1,
+  .ag-rs-{{ uid }}__stars[data-rating^="4"] .ag-star-2,
+  .ag-rs-{{ uid }}__stars[data-rating^="4"] .ag-star-3,
+  .ag-rs-{{ uid }}__stars[data-rating^="4"] .ag-star-4,
+  .ag-rs-{{ uid }}__stars[data-rating^="5"] .ag-star-1,
+  .ag-rs-{{ uid }}__stars[data-rating^="5"] .ag-star-2,
+  .ag-rs-{{ uid }}__stars[data-rating^="5"] .ag-star-3,
+  .ag-rs-{{ uid }}__stars[data-rating^="5"] .ag-star-4 {
+    border-color: {{ star_color }};
+    background: {{ star_color }} !important;
+  }
+  .ag-rs-{{ uid }}__stars[data-rating="1.5"] .ag-star-2,
+  .ag-rs-{{ uid }}__stars[data-rating="2.5"] .ag-star-3,
+  .ag-rs-{{ uid }}__stars[data-rating="3.5"] .ag-star-4,
+  .ag-rs-{{ uid }}__stars[data-rating="4.5"] .ag-star-5 {
+    background: linear-gradient(to right, {{ star_color }} 50%, {{ empty_color }} 50%) !important;
+  }
+  .ag-rs-{{ uid }}__stars[data-rating="5"] .ag-star-5 {
+    border-color: {{ star_color }};
+    background: {{ star_color }} !important;
+  }
+  .ag-rs-{{ uid }}__label {
+    color: {{ label_color }};
+    font-size: {{ bs.label_size | default: 14 }}px;
+    text-underline-offset: 1.5px;
+  }
+  .ag-rs-{{ uid }}__label strong { font-weight: 700; }
+</style>
+
+{%- if bs.link_url != blank -%}
+<a class="ag-rs-{{ uid }}" href="{{ bs.link_url }}" {{ block.shopify_attributes }}>
+{%- else -%}
+<div class="ag-rs-{{ uid }}" {{ block.shopify_attributes }}>
+{%- endif -%}
+  <span class="ag-rs-{{ uid }}__stars" data-rating="{{ rating_data }}" aria-label="Note {{ rating_data }} sur 5">
+    <i class="ag-star-1"></i>
+    <i class="ag-star-2"></i>
+    <i class="ag-star-3"></i>
+    <i class="ag-star-4"></i>
+    <i class="ag-star-5"></i>
+  </span>
+  <span class="ag-rs-{{ uid }}__label">
+    {%- if bs.prefix != blank -%}{{ bs.prefix }}{%- endif -%}
+    {%- if bs.score_text != blank -%}<strong> {{ bs.score_text }}</strong>{%- endif -%}
+    {%- if bs.suffix != blank -%} | {{ bs.suffix }}{%- endif -%}
+  </span>
+{%- if bs.link_url != blank -%}</a>{%- else -%}</div>{%- endif -%}

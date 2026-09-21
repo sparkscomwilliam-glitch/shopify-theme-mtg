@@ -1,0 +1,242 @@
+{% comment %} ag-adv-2-before-after.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.strip_bg != blank %}--ag2-cream:{{ s.strip_bg }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+  {% if s.before_label_bg != blank %}--ag2-ba-before-bg:{{ s.before_label_bg }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <div class="ag-adv-2-ba">
+    {%- if s.kicker != blank or s.heading != blank -%}
+      <div class="ag-adv-2__shead" style="margin-top:0;">
+        {%- if s.kicker != blank -%}
+          <span class="ag-adv-2__kicker">{{ s.kicker }}</span>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2>{{ s.heading }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="ag-adv-2-ba__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'ba_pair' -%}
+          <div class="ag-adv-2-ba__card" {{ block.shopify_attributes }}>
+            <div class="ag-adv-2-ba__pair">
+              <div class="ag-adv-2-ba__half">
+                <span class="ag-adv-2-ba__tag ag-adv-2-ba__tag--before"{% if s.before_label_bg != blank %} style="background:{{ s.before_label_bg }};"{% endif %}>{{ s.before_label | default: 'Avant' }}</span>
+                <div class="ag-adv-2__ph">
+                  {%- if block.settings.before_image != blank -%}
+                    <img src="{{ block.settings.before_image | image_url: width: 600 }}" alt="{{ block.settings.before_image.alt | default: 'Avant' | escape }}" loading="lazy">
+                  {%- else -%}
+                    <span>Avant</span>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="ag-adv-2-ba__half">
+                <span class="ag-adv-2-ba__tag ag-adv-2-ba__tag--after">{{ s.after_label | default: 'Après' }}</span>
+                <div class="ag-adv-2__ph">
+                  {%- if block.settings.after_image != blank -%}
+                    <img src="{{ block.settings.after_image | image_url: width: 600 }}" alt="{{ block.settings.after_image.alt | default: 'Après' | escape }}" loading="lazy">
+                  {%- else -%}
+                    <span>Après</span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+            <div class="ag-adv-2-ba__cap">
+              {%- if block.settings.name != blank -%}<b>{{ block.settings.name }}</b>{%- endif -%}
+              {%- if block.settings.duration != blank -%}<span class="ag-adv-2-ba__dur">{{ block.settings.duration }}</span>{%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Before/After",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Résultats réels"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre H2",
+      "default": "Avant & après, 8 semaines"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Label Avant",
+      "default": "Avant"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "Label Après",
+      "default": "Après"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "strip_bg",
+      "label": "Fond de la bande",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (label Après)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent profonde",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "before_label_bg",
+      "label": "Fond du label Avant",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du titre",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du nom",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur durée",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ba_pair",
+      "name": "Paire Avant/Après",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "before_image",
+          "label": "Image Avant"
+        },
+        {
+          "type": "image_picker",
+          "id": "after_image",
+          "label": "Image Après"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom et âge",
+          "default": "Camille, 52 ans"
+        },
+        {
+          "type": "text",
+          "id": "duration",
+          "label": "Durée d'utilisation",
+          "default": "8 semaines d'utilisation"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Before/After",
+      "blocks": [
+        {
+          "type": "ba_pair",
+          "settings": {
+            "name": "Camille, 52 ans",
+            "duration": "8 semaines d'utilisation"
+          }
+        },
+        {
+          "type": "ba_pair",
+          "settings": {
+            "name": "Nadia, 45 ans",
+            "duration": "6 semaines d'utilisation"
+          }
+        },
+        {
+          "type": "ba_pair",
+          "settings": {
+            "name": "Hélène, 49 ans",
+            "duration": "10 semaines d'utilisation"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

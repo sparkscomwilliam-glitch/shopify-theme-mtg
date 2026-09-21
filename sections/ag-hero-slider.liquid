@@ -1,0 +1,467 @@
+{%- comment -%}
+  AG Hero Slider Section
+  Hero with title, subtitle, dual CTAs, benefits row, and auto-scrolling image carousel.
+{%- endcomment -%}
+
+{%- liquid
+  assign benefits = section.blocks | where: 'type', 'ag_benefit'
+  assign slides = section.blocks | where: 'type', 'ag_slide_image'
+  assign speed = section.settings.slider_speed | default: 30
+-%}
+
+{%- style -%}
+
+
+  /* ================================
+   * AG Hero Slider — Scoped CSS
+   * ================================ */
+
+  .ag-hs-{{ section.id }} {
+    background: {{ section.settings.bg_gradient }};
+    color: {{ section.settings.text_color }};
+  padding: 80px 0 16px;
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+}
+
+/* --- Text content --- */
+.ag-hs-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.ag-hs-title {
+  font-family: var(--font-heading--family, 'Times New Roman', serif);
+  font-weight: var(--font-heading--weight, 400);
+  font-size: var(--ag-fs-display);
+  line-height: 1.1;
+  margin: 0 0 20px;
+  color: {{ section.settings.text_color }};
+}
+
+.ag-hs-subtitle {
+  font-size: var(--ag-fs-lead);
+  line-height: 1.6;
+  margin: 0 auto 32px;
+  opacity: 0.85;
+  max-width: 560px;
+}
+
+/* --- Buttons --- */
+.ag-hs-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.ag-hs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--ag-btn-h);
+  padding: 0 var(--ag-btn-px);
+  font-size: var(--ag-fs-cta);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: {{ section.settings.btn_radius }}px;
+  transition: transform 0.2s ease
+  , opacity 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ag-hs-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.ag-hs-btn--primary {
+  background-color: {{ section.settings.btn_color }};
+  color: {{ section.settings.btn_text_color }};
+  border: 2px solid{{ section.settings.btn_color }};
+}
+
+.ag-hs-btn--secondary {
+  background-color: transparent;
+  color: {{ section.settings.btn_color }};
+  border: 2px solid{{ section.settings.btn_color }};
+}
+
+/* --- Benefits --- */
+.ag-hs-benefits {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 48px;
+  padding: 0 24px;
+}
+
+.ag-hs-benefit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--ag-fs-small);
+  font-weight: 500;
+}
+
+.ag-hs-benefit-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.ag-hs-benefit-icon-svg {
+  width: 20px;
+  height: 20px;
+  fill: {{ section.settings.text_color }};
+  flex-shrink: 0;
+}
+
+/* --- Carousel --- */
+.ag-hs-carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.ag-hs-track {
+  display: flex;
+  gap: 16px;
+  animation: ag-hs-scroll{{ speed }}s linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+
+.ag-hs-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ag-hs-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ag-hs-slide {
+  flex: 0 0 auto;
+  width: clamp(220px, 22vw, 300px);
+}
+
+.ag-hs-slide img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: {{ section.settings.image_radius }}px;
+  display: block;
+  pointer-events: none;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .ag-hs-{{ section.id }} {
+    padding: 50px 0 16px;
+  }
+
+  .ag-hs-subtitle {
+    margin-bottom: 24px;
+  }
+
+  .ag-hs-buttons {
+    margin-bottom: 20px;
+  }
+
+  .ag-hs-benefits {
+    gap: 12px 20px;
+    margin-bottom: 32px;
+  }
+
+  .ag-hs-benefit {
+    font-size: var(--ag-fs-eyebrow);
+  }
+
+  .ag-hs-slide {
+    width: 44vw;
+  }
+
+  .ag-hs-track {
+    gap: 10px;
+  }
+}
+{%- endstyle -%}
+
+<section class="ag-hs-{{ section.id }}" id="ag-hero-slider-{{ section.id }}">
+  <div class="ag-hs-content">
+    {%- if section.settings.title != blank -%}
+      <h1 class="ag-hs-title">{{ section.settings.title | escape }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subtitle != blank -%}
+      <p class="ag-hs-subtitle">{{ section.settings.subtitle | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.btn1_text != blank or section.settings.btn2_text != blank -%}
+      <div class="ag-hs-buttons">
+        {%- if section.settings.btn1_text != blank and section.settings.btn1_link != blank -%}
+          <a href="{{ section.settings.btn1_link }}" class="ag-hs-btn ag-hs-btn--primary">
+            {{ section.settings.btn1_text | escape }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.btn2_text != blank and section.settings.btn2_link != blank -%}
+          <a href="{{ section.settings.btn2_link }}" class="ag-hs-btn ag-hs-btn--secondary">
+            {{ section.settings.btn2_text | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if benefits.size > 0 -%}
+      <div class="ag-hs-benefits">
+        {%- for block in benefits -%}
+          <div class="ag-hs-benefit" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon_image != blank -%}
+              <img
+                class="ag-hs-benefit-icon"
+                src="{{ block.settings.icon_image | image_url: width: 40 }}"
+                alt="{{ block.settings.icon_image.alt | escape }}"
+                width="20"
+                height="20"
+                loading="lazy">
+            {%- else -%}
+              <svg
+                class="ag-hs-benefit-icon-svg"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+              </svg>
+            {%- endif -%}
+            <span>{{ block.settings.benefit_text | escape }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if slides.size > 0 -%}
+    <div class="ag-hs-carousel">
+      <div class="ag-hs-track">
+        {%- comment -%} First set of slides {%- endcomment -%}
+        {%- for block in slides -%}
+          <div class="ag-hs-slide" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}">
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'ag-hs-benefit-icon-svg' }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} Duplicate set for seamless infinite loop {%- endcomment -%}
+        {%- for block in slides -%}
+          <div class="ag-hs-slide" aria-hidden="true">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                alt=""
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}">
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'ag-hs-benefit-icon-svg' }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+  {
+    "name": "AG Hero Slider",
+    "tag": "section",
+    "class": "section-ag-hero-slider",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Contenu"
+      },
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Titre (H1)",
+        "default": "Skincare Treatments Tailored to Your Needs"
+      },
+      {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sous-titre",
+        "default": "Join thousands who have transformed their skin. Science-backed formulas designed for your unique skin needs."
+      },
+      {
+        "type": "header",
+        "content": "Bouton Principal"
+      }, {
+        "type": "text",
+        "id": "btn1_text",
+        "label": "Texte du bouton 1",
+        "default": "Shop Now"
+      }, {
+        "type": "url",
+        "id": "btn1_link",
+        "label": "Lien du bouton 1"
+      }, {
+        "type": "header",
+        "content": "Bouton Secondaire"
+      }, {
+        "type": "text",
+        "id": "btn2_text",
+        "label": "Texte du bouton 2",
+        "default": "Find Your Routine"
+      }, {
+        "type": "url",
+        "id": "btn2_link",
+        "label": "Lien du bouton 2"
+      }, {
+        "type": "header",
+        "content": "Style des Boutons"
+      }, {
+        "type": "color",
+        "id": "btn_color",
+        "label": "Couleur des boutons",
+        "default": "#E84B2B"
+      }, {
+        "type": "color",
+        "id": "btn_text_color",
+        "label": "Couleur du texte (bouton principal)",
+        "default": "#ffffff"
+      }, {
+        "type": "range",
+        "id": "btn_radius",
+        "min": 0,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrondi des boutons",
+        "default": 30
+      }, {
+        "type": "header",
+        "content": "Arrière-plan & Couleurs"
+      }, {
+        "type": "color_background",
+        "id": "bg_gradient",
+        "label": "Arrière-plan (couleur ou dégradé)",
+        "info": "Couleur unie ou dégradé : choisis la direction directement dans le picker.",
+        "default": "#FAF5F0"
+      }, {
+        "type": "color",
+        "id": "text_color",
+        "label": "Couleur du texte",
+        "default": "#1a1a1a"
+      }, {
+        "type": "header",
+        "content": "Carousel d'images"
+      }, {
+        "type": "range",
+        "id": "slider_speed",
+        "min": 10,
+        "max": 60,
+        "step": 5,
+        "unit": "s",
+        "label": "Vitesse du défilement",
+        "info": "Durée d'un cycle complet (plus bas = plus rapide).",
+        "default": 30
+      }, {
+        "type": "range",
+        "id": "image_radius",
+        "min": 0,
+        "max": 30,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrondi des images",
+        "default": 12
+      }
+    ],
+    "blocks": [
+      {
+        "type": "ag_benefit",
+        "name": "Bénéfice",
+        "limit": 4,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon_image",
+            "label": "Icône personnalisée (SVG/PNG)",
+            "info": "Laissez vide pour utiliser le checkmark par défaut."
+          }, {
+            "type": "text",
+            "id": "benefit_text",
+            "label": "Texte du bénéfice",
+            "default": "Clinically Proven Formulas"
+          }
+        ]
+      }, {
+        "type": "ag_slide_image",
+        "name": "Image Carousel",
+        "limit": 10,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image (Ratio 3:4 recommandé)"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "AG Hero Slider",
+        "category": "Hero",
+        "blocks": [
+          {
+            "type": "ag_benefit",
+            "settings": {
+              "benefit_text": "Clinically Proven Formulas"
+            }
+          },
+          {
+            "type": "ag_benefit",
+            "settings": {
+              "benefit_text": "Personalized Skincare Plans"
+            }
+          },
+          {
+            "type": "ag_benefit",
+            "settings": {
+              "benefit_text": "Expert Advice & Ongoing Support"
+            }
+          },
+          {
+            "type": "ag_slide_image"
+          }, {
+            "type": "ag_slide_image"
+          }, {
+            "type": "ag_slide_image"
+          }, {
+            "type": "ag_slide_image"
+          }, {
+            "type": "ag_slide_image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

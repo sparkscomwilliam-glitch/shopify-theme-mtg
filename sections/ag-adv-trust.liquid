@@ -1,0 +1,271 @@
+{% comment %} ag-adv-trust.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+<div class="ag-adv spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  <footer class="ag-adv-trust">
+    <div class="ag-adv__wrap">
+
+      <a class="ag-adv__brand" href="{{ shop.url }}">
+        <span class="ag-adv__brand-mark">
+          {%- if section.settings.logo != blank -%}
+            <img src="{{ section.settings.logo | image_url: width: 80 }}" alt="{{ section.settings.brand_name | escape }}">
+          {%- else -%}
+            {{ section.settings.brand_mark }}
+          {%- endif -%}
+        </span>
+        <span>{{ section.settings.brand_name }}</span>
+      </a>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="ag-adv-trust__badges">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'badge' -%}
+              <span class="ag-adv-trust__badge" {{ block.shopify_attributes }}>
+                {%- if block.settings.icon != blank -%}
+                  <img src="{{ block.settings.icon | image_url: width: 28 }}" alt="" loading="lazy">
+                {%- endif -%}
+                {{ block.settings.label }}
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.payment_logos != blank -%}
+        <div class="ag-adv-trust__pay">
+          <img src="{{ section.settings.payment_logos | image_url: width: 480 }}" alt="Moyens de paiement acceptés" loading="lazy">
+        </div>
+      {%- endif -%}
+
+      <div>
+        {%- if section.settings.link_1_label != blank -%}
+          <a href="{{ section.settings.link_1_link | default: '#' }}">{{ section.settings.link_1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.link_2_label != blank -%}
+          <a href="{{ section.settings.link_2_link | default: '#' }}">{{ section.settings.link_2_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.link_3_label != blank -%}
+          <a href="{{ section.settings.link_3_link | default: '#' }}">{{ section.settings.link_3_label }}</a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.disclaimer != blank -%}
+        <div class="ag-adv-trust__fine">{{ section.settings.disclaimer }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.copyright != blank -%}
+        <div class="ag-adv-trust__fine" style="margin-top:6px;">{{ section.settings.copyright }}</div>
+      {%- endif -%}
+
+    </div>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — Trust",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Marque"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Nom de la marque",
+      "default": "NovaSleep"
+    },
+    {
+      "type": "text",
+      "id": "brand_mark",
+      "label": "Caractère du logo",
+      "default": "☾"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image (optionnel)"
+    },
+    {
+      "type": "header",
+      "content": "Liens de pied de page"
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Lien 1 — texte",
+      "default": "Privacy Policy"
+    },
+    {
+      "type": "url",
+      "id": "link_1_link",
+      "label": "Lien 1 — URL"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Lien 2 — texte",
+      "default": "Terms of Use"
+    },
+    {
+      "type": "url",
+      "id": "link_2_link",
+      "label": "Lien 2 — URL"
+    },
+    {
+      "type": "text",
+      "id": "link_3_label",
+      "label": "Lien 3 — texte",
+      "default": "Contact"
+    },
+    {
+      "type": "url",
+      "id": "link_3_link",
+      "label": "Lien 3 — URL"
+    },
+    {
+      "type": "header",
+      "content": "Moyens de paiement"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logos",
+      "label": "Logos paiement (image unique recommandée)"
+    },
+    {
+      "type": "header",
+      "content": "Disclaimer"
+    },
+    {
+      "type": "richtext",
+      "id": "disclaimer",
+      "label": "Texte légal / disclaimer",
+      "default": "<p>This is an advertisement, not a news article. Reviews are illustrative and results vary. NovaSleep Pro is a fictional product used for design demonstration.</p>"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright",
+      "default": "© 2026 NovaSleep. All rights reserved."
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge de confiance",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icône (optionnelle)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Secure Payment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — Trust",
+      "blocks": [
+        {
+          "type": "badge",
+          "settings": {
+            "label": "Secure Payment"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "SSL Encrypted"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "label": "Money-Back Guarantee"
+          }
+        }
+      ]
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

@@ -1,0 +1,410 @@
+{%- comment -%}
+  AG Hero Modern Section
+  Optimized for Horizon Theme
+{%- endcomment -%}
+
+{%- style -%}
+  {%- if section.settings.title_font != blank -%}
+    {{ section.settings.title_font | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  .ag-hero-container-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 4rem;
+    box-sizing: border-box;
+    /* Calculate min height to allow CTA to sit above the fold on mobile */
+    min-height: 100vh;
+    min-height: 100 dvh;
+    justify-content: space-between;
+  }
+
+  .ag-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .ag-hero-trust-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    font-size: var(--ag-fs-small);
+  }
+
+  .ag-hero-trust-badge .ag-stars {
+    color: #FFB800;
+    letter-spacing: 2px;
+    font-size: var(--ag-fs-lead);
+  }
+
+  .ag-hero-trust-badge .ag-trust-text p {
+    margin: 0;
+  }
+
+  .ag-hero-title {
+    margin: 0 0 1rem;
+    font-size: var(--ag-fs-display);
+    line-height: 1.1;
+    color: {{ section.settings.text_color }};
+    {%- if section.settings.title_font != blank -%}
+      font-family: {{ section.settings.title_font.family }}, 
+      {{ section.settings.title_font.fallback_families }};
+      font-weight: {{ section.settings.title_font.weight }};
+      font-style: {{ section.settings.title_font.style }};
+    {%- else -%}
+      font-family: "Playfair Display"
+      , Times
+      , serif;
+    {%- endif -%}
+  }
+
+  .ag-hero-subtitle {
+    font-size: var(--ag-fs-lead);
+    margin: 0 0 2rem;
+    opacity: 0.9;
+    max-width: 600px;
+  }
+
+  .ag-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+    text-decoration: none;
+    height: var(--ag-btn-h);
+    padding: 0 var(--ag-btn-px);
+    border-radius: var(--ag-btn-radius-pill);
+    font-weight: 600;
+    font-size: var(--ag-fs-cta);
+    transition: transform 0.2s ease
+    , opacity 0.2s ease;
+    margin-bottom: 2.5rem;
+  }
+
+  .ag-hero-cta:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .ag-hero-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .ag-hero-benefit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--ag-fs-body);
+    font-weight: 500;
+  }
+
+  .ag-hero-benefit-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit: contain;
+  }
+
+  .ag-hero-benefit-svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  .ag-hero-image-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+    align-items: flex-end;
+  }
+
+  .ag-hero-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+  }
+
+  .ag-hero-img-desktop {
+    display: block;
+    object-fit: cover;
+    object-position: bottom;
+    width: 100%;
+  }
+
+  .ag-hero-img-mobile {
+    display: none;
+  }
+
+  @media (min-width: 769px) {
+    .ag-hero-img-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ag-hero-container-{{ section.id }} {
+      padding-top: 20px;
+      padding-bottom: 0;
+    }
+    .ag-hero-title {
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .ag-hero-subtitle {
+      margin-bottom: 1.25rem;
+    }
+    .ag-hero-cta {
+      margin-bottom: 1.5rem;
+    }
+    .ag-hero-benefits {
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .ag-hero-benefit {
+      font-size: var(--ag-fs-small);
+    }
+    .ag-hero-img-desktop:not(.ag-hero-img-mobile-fallback) {
+      display: none !important;
+    }
+    .ag-hero-img-mobile-fallback {
+      width: 100%;
+      max-height: 35vh;
+      object-fit: contain;
+      object-position: bottom;
+    }
+    .ag-hero-img-mobile {
+      display: block !important;
+      width: 100%;
+      max-height: 35vh;
+      object-fit: contain;
+      object-position: bottom;
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-container ag-hero-container-{{ section.id }}" id="ag-hero-{{ section.id }}">
+  <div class="ag-hero-content">
+    {%- if section.settings.trust_text != blank -%}
+      <div class="ag-hero-trust-badge">
+        <span class="ag-stars" aria-hidden="true">★★★★★</span>
+        <div class="ag-trust-text">{{ section.settings.trust_text }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.title != blank -%}
+      <h1 class="ag-hero-title">
+        {{ section.settings.title | escape }}
+      </h1>
+    {%- endif -%}
+
+    {%- if section.settings.subtitle != blank -%}
+      <div class="ag-hero-subtitle">
+        {{ section.settings.subtitle | escape }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.btn_text != blank and section.settings.btn_link != blank -%}
+      <a href="{{ section.settings.btn_link }}" class="ag-hero-cta">
+        {{ section.settings.btn_text | escape }}
+      </a>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="ag-hero-benefits">
+        {%- for block in section.blocks -%}
+          <div class="ag-hero-benefit" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon_image != blank -%}
+              <img
+                src="{{ block.settings.icon_image | image_url: width: 50 }}"
+                alt="{{ block.settings.icon_image.alt | escape }}"
+                class="ag-hero-benefit-icon"
+                width="24"
+                height="24"
+                loading="lazy">
+            {%- else -%}
+              <svg
+                class="ag-hero-benefit-svg"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            {%- endif -%}
+            <span>{{ block.settings.benefit_text | escape }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="ag-hero-image-wrapper">
+    {%- if section.settings.image_desktop != blank -%}
+      <img
+        class="ag-hero-img-desktop {% if section.settings.image_mobile == blank %}ag-hero-img-mobile-fallback{% endif %}"
+        src="{{ section.settings.image_desktop | image_url: width: 1500 }}"
+        alt="{{ section.settings.image_desktop.alt | escape | default: section.settings.title | escape }}"
+        width="{{ section.settings.image_desktop.width }}"
+        height="{{ section.settings.image_desktop.height }}"
+        loading="eager"
+        fetchpriority="high">
+    {%- endif -%}
+
+    {%- if section.settings.image_mobile != blank -%}
+      <img
+        class="ag-hero-img-mobile"
+        src="{{ section.settings.image_mobile | image_url: width: 800 }}"
+        alt="{{ section.settings.image_mobile.alt | escape | default: section.settings.title | escape }}"
+        width="{{ section.settings.image_mobile.width }}"
+        height="{{ section.settings.image_mobile.height }}"
+        loading="eager"
+        fetchpriority="high">
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "AG Hero Modern",
+    "tag": "section",
+    "class": "section-ag-hero",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Style & Couleurs"
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Couleur de fond",
+        "default": "#f4f4f4"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Couleur du texte",
+        "default": "#111111"
+      },
+      {
+        "type": "font_picker",
+        "id": "title_font",
+        "label": "Police du titre (Serif recommandée)",
+        "default": "playfair_display_n4"
+      }, {
+        "type": "header",
+        "content": "Preuve Sociale (Haut)"
+      }, {
+        "type": "richtext",
+        "id": "trust_text",
+        "label": "Texte de confiance",
+        "default": "<p>Plus de 10 000 clients satisfaits</p>"
+      }, {
+        "type": "header",
+        "content": "Contenu Textuel"
+      }, {
+        "type": "textarea",
+        "id": "title",
+        "label": "Titre Principal (H1)",
+        "default": "Élevez Votre Quotidien"
+      }, {
+        "type": "textarea",
+        "id": "subtitle",
+        "label": "Sous-titre",
+        "default": "Découvrez notre nouvelle collection pensée pour l'élégance et le confort absolu."
+      }, {
+        "type": "header",
+        "content": "Appel à l'Action"
+      }, {
+        "type": "text",
+        "id": "btn_text",
+        "label": "Texte du bouton CTA",
+        "default": "Découvrir la collection"
+      }, {
+        "type": "url",
+        "id": "btn_link",
+        "label": "Lien du bouton CTA"
+      }, {
+        "type": "header",
+        "content": "Images"
+      }, {
+        "type": "image_picker",
+        "id": "image_desktop",
+        "label": "Image Principale (Desktop)",
+        "info": "Affichée en bas de section. Privilégier un format large ou détouré."
+      }, {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "Image Principale (Mobile optionnelle)",
+        "info": "Si laissée vide, l'image Desktop s'adaptera proportionnellement."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "benefice",
+        "name": "Bénéfice",
+        "limit": 5,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon_image",
+            "label": "Icône personnalisée (Optionnelle)"
+          }, {
+            "type": "text",
+            "id": "benefit_text",
+            "label": "Texte du bénéfice",
+            "default": "Livraison Gratuite"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "AG Hero Modern",
+        "category": "Hero",
+        "blocks": [
+          {
+            "type": "benefice",
+            "settings": {
+              "benefit_text": "Qualité Premium"
+            }
+          }, {
+            "type": "benefice",
+            "settings": {
+              "benefit_text": "Support 24/7"
+            }
+          }, {
+            "type": "benefice",
+            "settings": {
+              "benefit_text": "Retours Gratuits"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

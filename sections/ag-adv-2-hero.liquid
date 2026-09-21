@@ -1,0 +1,335 @@
+{% comment %} ag-adv-2-hero.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+  assign h1_text = s.headline
+  assign h1_em   = s.headline_em
+  assign h1_render = h1_text
+  if h1_em != blank
+    assign h1_span = '<em>' | append: h1_em | append: '</em>'
+    assign h1_render = h1_text | replace: h1_em, h1_span
+  endif
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.border_color != blank %}--ag2-line:{{ s.border_color }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  {%- if s.hero_image != blank -%}
+    <div class="ag-adv-2-hero__img ag-adv-2__ph">
+      <img src="{{ s.hero_image | image_url: width: 1800 }}"
+           srcset="{{ s.hero_image | image_url: width: 720 }} 720w,
+                   {{ s.hero_image | image_url: width: 1200 }} 1200w,
+                   {{ s.hero_image | image_url: width: 1800 }} 1800w"
+           sizes="(min-width:900px) 900px, 100vw"
+           alt="{{ s.hero_image.alt | default: h1_text | escape }}"
+           loading="lazy"
+           width="{{ s.hero_image.width }}"
+           height="{{ s.hero_image.height }}">
+    </div>
+  {%- else -%}
+    <div class="ag-adv-2-hero__img ag-adv-2__ph"><span>{{ s.hero_placeholder | default: 'Photo lifestyle' }}</span></div>
+  {%- endif -%}
+
+  <article>
+    <div class="ag-adv-2__col ag-adv-2-hero__head">
+      {%- if s.kicker != blank -%}
+        <span class="ag-adv-2__kicker">{{ s.kicker }}</span>
+      {%- endif -%}
+      {%- if h1_text != blank -%}
+        <h1 class="ag-adv-2-hero__h1">{{ h1_render }}</h1>
+      {%- endif -%}
+
+      {%- if s.author_name != blank or s.author_avatar != blank -%}
+        <div class="ag-adv-2-hero__byline">
+          <div class="ag-adv-2-hero__avatar ag-adv-2__ph">
+            {%- if s.author_avatar != blank -%}
+              <img src="{{ s.author_avatar | image_url: width: 100 }}" alt="{{ s.author_name | escape }}" loading="lazy">
+            {%- else -%}
+              <span></span>
+            {%- endif -%}
+          </div>
+          <div class="ag-adv-2-hero__byline-meta">
+            <div class="ag-adv-2-hero__author">
+              {%- if s.author_prefix != blank -%}{{ s.author_prefix }} {%- endif -%}{{ s.author_name }}
+              {%- if s.author_role != blank -%}<span> · {{ s.author_role }}</span>{%- endif -%}
+            </div>
+            {%- if s.publish_meta != blank -%}
+              <div class="ag-adv-2-hero__when">{{ s.publish_meta }}</div>
+            {%- endif -%}
+          </div>
+          {%- if s.show_share -%}
+            <div class="ag-adv-2-hero__share">
+              {%- if s.share_facebook_link != blank -%}
+                <a class="ag-adv-2-hero__sbtn" href="{{ s.share_facebook_link }}" title="{{ s.share_facebook_label | default: 'Partager sur Facebook' }}">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10h3l.5-3H13V5.2c0-.9.3-1.5 1.6-1.5H16.6V1.1C16.3 1 15.3.9 14.2.9c-2.3 0-3.9 1.4-3.9 4V7H7.5v3h2.8v8H13z"/></svg>
+                </a>
+              {%- endif -%}
+              {%- if s.share_x_link != blank -%}
+                <a class="ag-adv-2-hero__sbtn" href="{{ s.share_x_link }}" title="{{ s.share_x_label | default: 'Partager sur X' }}">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3l-6.6 7.5L21.7 21h-5.9l-4.6-6-5.3 6H3l7-8L2.5 3h6l4.1 5.5zM16.4 19.2h1.6L7.7 4.7H6z"/></svg>
+                </a>
+              {%- endif -%}
+              {%- if s.share_email_link != blank -%}
+                <a class="ag-adv-2-hero__sbtn" href="{{ s.share_email_link }}" title="{{ s.share_email_label | default: 'Partager par e-mail' }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if s.show_social_count and s.likes_count != blank or s.comments_count != blank -%}
+        <div class="ag-adv-2-hero__social-count">
+          {%- if s.likes_count != blank -%}
+            <span><span class="ic">&#10084;</span> <b>{{ s.likes_count }}</b> {{ s.likes_label | default: 'enregistrements' }}</span>
+          {%- endif -%}
+          {%- if s.comments_count != blank -%}
+            <span><span class="ic">&#128172;</span> <b>{{ s.comments_count }}</b> {{ s.comments_label | default: 'commentaires' }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </article>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Hero",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image principale"
+    },
+    {
+      "type": "text",
+      "id": "hero_placeholder",
+      "label": "Texte placeholder si pas d'image",
+      "default": "Photo lifestyle — femme, lumière naturelle, glow"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Beauté · Témoignage"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Titre principal (H1)",
+      "default": "Elle a testé toutes les crèmes anti-âge pendant 10 ans — puis sa dermatologue lui a dit d'arrêter de gaspiller son argent et d'essayer ça à la place"
+    },
+    {
+      "type": "text",
+      "id": "headline_em",
+      "label": "Mots à mettre en italique d'accent",
+      "info": "Doit exister mot-pour-mot dans le titre. Sera coloré en couleur d'accent.",
+      "default": "d'essayer ça"
+    },
+    {
+      "type": "header",
+      "content": "Auteur / Byline"
+    },
+    {
+      "type": "image_picker",
+      "id": "author_avatar",
+      "label": "Avatar auteur"
+    },
+    {
+      "type": "text",
+      "id": "author_prefix",
+      "label": "Préfixe (ex: Par)",
+      "default": "Par"
+    },
+    {
+      "type": "text",
+      "id": "author_name",
+      "label": "Nom de l'auteur",
+      "default": "Sophie Laurent"
+    },
+    {
+      "type": "text",
+      "id": "author_role",
+      "label": "Rôle de l'auteur",
+      "default": "Rédactrice Beauté"
+    },
+    {
+      "type": "text",
+      "id": "publish_meta",
+      "label": "Métadonnées (date + lecture)",
+      "default": "Publié le 2 juin 2026 · 8 min de lecture"
+    },
+    {
+      "type": "header",
+      "content": "Partage"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Afficher les boutons de partage",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "share_facebook_link",
+      "label": "Lien Facebook"
+    },
+    {
+      "type": "text",
+      "id": "share_facebook_label",
+      "label": "Label Facebook",
+      "default": "Partager sur Facebook"
+    },
+    {
+      "type": "url",
+      "id": "share_x_link",
+      "label": "Lien X"
+    },
+    {
+      "type": "text",
+      "id": "share_x_label",
+      "label": "Label X",
+      "default": "Partager sur X"
+    },
+    {
+      "type": "url",
+      "id": "share_email_link",
+      "label": "Lien e-mail"
+    },
+    {
+      "type": "text",
+      "id": "share_email_label",
+      "label": "Label e-mail",
+      "default": "Partager par e-mail"
+    },
+    {
+      "type": "header",
+      "content": "Compteur social"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_count",
+      "label": "Afficher le compteur",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "likes_count",
+      "label": "Nombre de likes",
+      "default": "14 823"
+    },
+    {
+      "type": "text",
+      "id": "likes_label",
+      "label": "Label likes",
+      "default": "enregistrements"
+    },
+    {
+      "type": "text",
+      "id": "comments_count",
+      "label": "Nombre de commentaires",
+      "default": "892"
+    },
+    {
+      "type": "text",
+      "id": "comments_label",
+      "label": "Label commentaires",
+      "default": "commentaires"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du titre",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent — italique",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur secondaire (byline)",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Couleur des bordures",
+      "default": "#ececec"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Hero"
+    }
+  ]
+}
+{% endschema %}

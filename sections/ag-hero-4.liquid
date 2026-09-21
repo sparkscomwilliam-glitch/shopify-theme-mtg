@@ -1,0 +1,511 @@
+{%- comment -%}
+  AG Hero 4 Section
+  Inspired by Figma Design for "Turkey Tail+" or similar direct-response products.
+  Features: Gradient background, review stars, title/subtitle, benefits list, CTA with guarantee badge, and a main product image.
+{%- endcomment -%}
+
+{%- style -%}
+  /* --- Section Variables & Background --- */
+  .ag-hero4-section-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    /* Default mobile gradient: top to bottom */
+    background: linear-gradient(
+      180deg,
+      {{ section.settings.bg_color_start }} 0%,
+      {{ section.settings.bg_color_mid }} 50%,
+      {{ section.settings.bg_color_end }} 100%
+    );
+    color: {{ section.settings.text_color }};
+    padding: 60px 0 0 0; /* Space at top, image blends at bottom */
+    z-index: 1;
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-section-{{ section.id }} {
+      /* Desktop gradient: left to right */
+      background: linear-gradient(
+        90deg,
+        {{ section.settings.bg_color_start }} 0%,
+        {{ section.settings.bg_color_mid }} 40%,
+        {{ section.settings.bg_color_end }} 80%
+      );
+      padding: 80px 0;
+    }
+  }
+
+  /* --- Container & Layout --- */
+  .ag-hero4-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-container {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+    }
+  }
+
+  /* --- Content Block (Left) --- */
+  .ag-hero4-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 0 20px;
+    z-index: 2;
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-content {
+      align-items: flex-start;
+      text-align: left;
+      padding-left: 5%;
+    }
+  }
+
+  /* --- Reviews Banner --- */
+  .ag-hero4-reviews {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    font-size: var(--ag-fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .ag-hero4-stars {
+    display: flex;
+    gap: 2px;
+    color: #FFD700; /* Yellow stars */
+  }
+
+  .ag-hero4-stars svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  /* --- Title --- */
+  .ag-hero4-title {
+    font-family: var(--font-heading-family, 'Arial', sans-serif);
+    font-weight: 800;
+    font-size: var(--ag-fs-display);
+    line-height: 1.15;
+    margin: 0 0 20px 0;
+    color: {{ section.settings.text_color }};
+    letter-spacing: -0.5px;
+  }
+
+  /* --- Subtitle --- */
+  .ag-hero4-subtitle {
+    font-size: var(--ag-fs-lead);
+    line-height: 1.5;
+    margin: 0 0 30px 0;
+    color: {{ section.settings.text_color }};
+    opacity: 0.9;
+  }
+
+  .ag-hero4-subtitle em,
+  .ag-hero4-subtitle i {
+    font-style: italic;
+  }
+
+  /* --- Benefits List --- */
+  .ag-hero4-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
+    justify-content: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 20px;
+    width: 100%;
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-benefits {
+      justify-content: flex-start;
+      gap: 25px;
+      border-top: none;
+      padding-top: 0;
+      border-left: 1px solid transparent; /* Align visually */
+    }
+  }
+
+  .ag-hero4-benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--ag-fs-body);
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    flex: 1 1 100%; /* Default stack on mobile */
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-benefit-item {
+      flex: 0 0 auto;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      padding-right: 25px;
+    }
+    .ag-hero4-benefit-item:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+  }
+
+  .ag-hero4-benefit-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ag-hero4-benefit-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ section.settings.text_color }};
+  }
+
+  .ag-hero4-benefit-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* --- CTA & Guarantee --- */
+  .ag-hero4-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media (min-width: 990px) {
+    .ag-hero4-action {
+      align-items: flex-start;
+    }
+  }
+
+  .ag-hero4-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    height: var(--ag-btn-h);
+    padding: 0 var(--ag-btn-px);
+    font-size: var(--ag-fs-cta);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    border-radius: var(--ag-btn-radius-pill);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .ag-hero4-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .ag-hero4-guarantee {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--ag-fs-eyebrow);
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    opacity: 0.85;
+  }
+
+  .ag-hero4-guarantee svg {
+    width: 14px;
+    height: 14px;
+    fill: {{ section.settings.text_color }};
+  }
+
+  /* --- Image Wrapper (Right) --- */
+  .ag-hero4-image-wrapper {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: flex-end; /* Align image towards right edge */
+    align-items: flex-end; /* Align to bottom for bleeding effect */
+    z-index: 2;
+  }
+
+  .ag-hero4-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    /* Optional shadow/glow on the image itself if transparent PNG */
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.05));
+  }
+{%- endstyle -%}
+
+<section id="ag-hero4-{{ section.id }}" class="ag-hero4-section-{{ section.id }}">
+  <div class="ag-hero4-container">
+    
+    <!-- Left Content -->
+    <div class="ag-hero4-content">
+      
+      {%- if section.settings.reviews_text != blank -%}
+      <div class="ag-hero4-reviews">
+        <div class="ag-hero4-stars" aria-hidden="true">
+          {%- for i in (1..5) -%}
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"/>
+            </svg>
+          {%- endfor -%}
+        </div>
+        <span>{{ section.settings.reviews_text | escape }}</span>
+      </div>
+      {%- endif -%}
+
+      {%- if section.settings.title != blank -%}
+      <h1 class="ag-hero4-title">{{ section.settings.title | newline_to_br }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subtitle != blank -%}
+      <div class="ag-hero4-subtitle">{{ section.settings.subtitle }}</div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+      <div class="ag-hero4-benefits">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'ag_hero4_benefit' -%}
+          <div class="ag-hero4-benefit-item" {{ block.shopify_attributes }}>
+            <div class="ag-hero4-benefit-icon">
+              {%- if block.settings.custom_icon != blank -%}
+                <img src="{{ block.settings.custom_icon | image_url: width: 40 }}" alt="{{ block.settings.benefit_text | escape }}" loading="lazy" width="20" height="20">
+              {%- else -%}
+                {%- case forloop.index -%}
+                  {%- when 1 -%}
+                    <!-- Leaf SVG Default -->
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 8C8 10 5.9 16.19 5 20c1.05-.13 7.85-1.5 13.91-7.56C20.66 10.5 22 8 22 8s-3.08-1-5-1zm-6.66 8.54c1.17-.61 2.5-1.28 4.02-2.12L12 12l-1.66 2.54z" /></svg>
+                  {%- when 2 -%}
+                    <!-- Shrink Arrows SVG Default -->
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 3l-5 5 2 2H12V3l2 2 5-5zM2 21l5-5-2-2h7v7l-2-2-5 5z"/></svg>
+                  {%- else -%}
+                    <!-- Plus/Medical SVG Default -->
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" /></svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </div>
+            <span>{{ block.settings.benefit_text | escape }}</span>
+          </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+
+      <div class="ag-hero4-action">
+        {%- if section.settings.btn_text != blank and section.settings.btn_link != blank -%}
+        <a href="{{ section.settings.btn_link }}" class="ag-hero4-btn">
+          {{ section.settings.btn_text | escape }}
+        </a>
+        {%- endif -%}
+
+        {%- if section.settings.guarantee_text != blank -%}
+        <div class="ag-hero4-guarantee">
+          <!-- Shield Check SVG Default -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          <span>{{ section.settings.guarantee_text | escape }}</span>
+        </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+
+    <!-- Right Content (Image) -->
+    <div class="ag-hero4-image-wrapper">
+      {%- if section.settings.image_desktop != blank -%}
+        {%- assign img_url = section.settings.image_desktop | image_url: width: 1000 -%}
+        <img 
+          src="{{ img_url }}" 
+          alt="{{ section.settings.title | escape }}" 
+          class="ag-hero4-image"
+          loading="eager"
+          width="{{ section.settings.image_desktop.width }}"
+          height="{{ section.settings.image_desktop.height }}"
+        >
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'ag-hero4-image placeholder-svg' }}
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AG Hero 4",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Couleurs d'Arrière-plan (Dégradé)"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_start",
+      "label": "Couleur Début",
+      "default": "#FAE3D4"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_mid",
+      "label": "Couleur Milieu",
+      "default": "#FBE3D5"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_end",
+      "label": "Couleur Fin",
+      "default": "#F69D99"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du Texte",
+      "default": "#042138"
+    },
+    {
+      "type": "header",
+      "content": "Avis"
+    },
+    {
+      "type": "text",
+      "id": "reviews_text",
+      "label": "Texte Avis (à côté des étoiles)",
+      "default": "Loved by 5,240+ happy doggos"
+    },
+    {
+      "type": "header",
+      "content": "Contenu Principal"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre Principal",
+      "default": "The Non-Invasive,\nvet endorsed Way to\nShrink Dog Lumps"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Sous-titre / Description",
+      "default": "A <em>“dangerously-effective”</em> pheromone-infused perfume which synergizes with your natural scent to make him crave your attention."
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA & Garantie"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Texte du Bouton",
+      "default": "SHOP TURKEY TAIL+"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Lien du Bouton"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Couleur Fond Bouton",
+      "default": "#042138"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Couleur Texte Bouton",
+      "default": "#F4FBFE"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Texte Garantie",
+      "default": "90-DAY MONEY BACK GUARANTEE"
+    },
+    {
+      "type": "header",
+      "content": "Image du Produit"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Image Produit (PNG transparent recommandé)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ag_hero4_benefit",
+      "name": "Bénéfice",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Icône personnalisée",
+          "info": "Si vide, utilise les icônes par défaut (Feuille, Flèches, Croix)."
+        },
+        {
+          "type": "text",
+          "id": "benefit_text",
+          "label": "Texte",
+          "default": "2 natural ingredients"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero 4",
+      "blocks": [
+        {
+          "type": "ag_hero4_benefit",
+          "settings": {
+            "benefit_text": "2 natural ingredients"
+          }
+        },
+        {
+          "type": "ag_hero4_benefit",
+          "settings": {
+            "benefit_text": "Shrinks lipomas safely"
+          }
+        },
+        {
+          "type": "ag_hero4_benefit",
+          "settings": {
+            "benefit_text": "No harsh chemicals"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,331 @@
+{% comment %} ag-announcement-bar-section.liquid — propriété de James Sparks {% endcomment %}
+{% liquid
+  assign enable_italic   = section.settings.italic
+  assign margin_top      = section.settings.margin_top
+  assign margin_bottom   = section.settings.margin_bottom
+  assign padding         = section.settings.padding
+  assign border_style    = section.settings.border_style
+  assign border_size     = section.settings.border_size
+  assign border_color    = section.settings.border_color
+  assign font            = section.settings.font
+%}
+
+<style>
+  {{ font | font_face: font_display: 'swap' }}
+
+  #ag__{{ section.id }} {
+    --animation-duration: {{ section.settings.duration }}s;
+    margin-top: {{ margin_top }}px;
+    margin-bottom: {{ margin_bottom }}px;
+    border-top: {{ border_size }}px {{ border_style }} {{ border_color }};
+    border-bottom: {{ border_size }}px {{ border_style }} {{ border_color }};
+  }
+
+  #ag__{{ section.id }} * {
+    font-family: {{ font.family }}, {{ font.fallback_families }};
+  }
+
+  #ag__{{ section.id }} .ag-bar {
+    overflow: hidden;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  #ag__{{ section.id }} .ag-bar:hover {
+    opacity: 0.90;
+  }
+
+  #ag__{{ section.id }} .ag-bar__link {
+    display: block;
+    width: 100%;
+    padding: {{ padding }}px 0;
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    line-height: normal;
+    font-size: {{ section.settings.text_size }}px;
+    font-weight: {{ section.settings.text_weight }};
+  }
+
+  #ag__{{ section.id }} .ag-bar__link:hover {
+    color: {{ section.settings.text_color }};
+  }
+
+  #ag__{{ section.id }} .ag-marq {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  @keyframes ag-marquee-{{ section.id }} {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0%);   }
+  }
+
+  @keyframes ag-marquee-reverse-{{ section.id }} {
+    from { transform: translateX(0%);   }
+    to   { transform: translateX(-50%); }
+  }
+
+  #ag__{{ section.id }} .ag-orig {
+    display: inline-block;
+    animation: ag-marquee-{{ section.id }} var(--animation-duration, 45s) infinite linear;
+  }
+
+  #ag__{{ section.id }} .ag-orig.reverse {
+    animation: ag-marquee-reverse-{{ section.id }} var(--animation-duration, 45s) infinite linear !important;
+  }
+
+  #ag__{{ section.id }} .ag-message {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    list-style: none;
+  }
+
+  #ag__{{ section.id }} .ag-message li {
+    line-height: 1;
+    font-size: {{ section.settings.text_size }}px;
+    font-weight: {{ section.settings.text_weight }};
+    display: inline-block;
+    padding-right: 114px;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  #ag__{{ section.id }} .ag-message li a {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+  }
+
+  #ag__{{ section.id }} .ag-message li::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background-color: {{ section.settings.text_color }};
+    opacity: 0.4;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 50px;
+  }
+
+  @media (max-width: 480px) {
+    #ag__{{ section.id }} .ag-marq {
+      max-height: 40px;
+    }
+    #ag__{{ section.id }} .ag-message li {
+      padding-right: 55px;
+    }
+    #ag__{{ section.id }} .ag-message li::after {
+      right: 25px;
+    }
+  }
+</style>
+
+<div id="ag__{{ section.id }}">
+  <div class="ag-bar" aria-label="Announcement">
+    <div class="ag-bar__link">
+      <div class="ag-marq">
+        <div class="ag-orig{% if section.settings.reverse %} reverse{% endif %}">
+          <ul class="ag-message">
+            {% for i in (1..30) %}
+              {% for block in section.blocks %}
+                <li>
+                  {% if block.settings.item_link != blank %}<a href="{{ block.settings.item_link }}">{% endif %}
+                  {% if enable_italic %}<i>{% endif %}
+                    {{ block.settings.item }}
+                  {% if enable_italic %}</i>{% endif %}
+                  {% if block.settings.item_link != blank %}</a>{% endif %}
+                </li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG - Announcement Bar #1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text Weight",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold",   "label": "Bold"   }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "checkbox",
+      "id": "italic",
+      "label": "Enable Italic",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font",
+      "default": "josefin_sans_n4"
+    },
+    {
+      "type": "header",
+      "content": "Background & Border"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border Style",
+      "default": "none",
+      "options": [
+        { "label": "None",   "value": "none"   },
+        { "label": "Solid",  "value": "solid"  },
+        { "label": "Dotted", "value": "dotted" },
+        { "label": "Dashed", "value": "dashed" },
+        { "label": "Double", "value": "double" },
+        { "label": "Groove", "value": "groove" },
+        { "label": "Ridge",  "value": "ridge"  }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_size",
+      "label": "Border Thickness",
+      "default": 0,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical Padding",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "number",
+      "id": "duration",
+      "label": "Scroll Duration (seconds)",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse Direction",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner Item",
+      "settings": [
+        {
+          "type": "text",
+          "label": "Text",
+          "id": "item",
+          "default": "FREE SHIPPING"
+        },
+        {
+          "type": "url",
+          "label": "Link",
+          "id": "item_link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG - Announcement Bar #1",
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": { "item": "Lorem ipsum dolor sit amet" }
+        },
+        {
+          "type": "banner",
+          "settings": { "item": "Ut enim ad minima veniam" }
+        },
+        {
+          "type": "banner",
+          "settings": { "item": "Neque porro quisquam est" }
+        },
+        {
+          "type": "banner",
+          "settings": { "item": "At vero eos et accusamus" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

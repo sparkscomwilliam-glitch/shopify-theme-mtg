@@ -1,0 +1,149 @@
+/* =====================================================
+   SECTION-PRODUCT-INFORMATION — Figma Alignment Layer
+   Superposed over ag-product-premium.css (unchanged).
+   Scoped under .ag-premium-product to avoid conflicts.
+   Figma source: node 1:262, file Oc2txOcxgPzYcKpUSQJO54
+   ===================================================== */
+
+/* =====================
+   LAYOUT — Column gap (Figma: 80px desktop)
+   ===================== */
+
+@media screen and (min-width: 750px) {
+  .ag-premium-product .product-information {
+    --gap: 80px;
+  }
+
+  .ag-premium-product .product-details {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* =====================
+   TYPOGRAPHY — Figma tokens
+   ===================== */
+
+/* Price — Figma: heading-5, bold, 24px desktop / 20px mobile */
+.ag-premium-product .price-item--regular,
+.ag-premium-product .price__regular .price-item {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Rating / reviews row — Figma: text-small, 14px */
+.ag-premium-product .product-details .rating__count,
+.ag-premium-product .product-details [class*="review-count"] {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Product description body — Figma: text-regular, 16px, leading 1.5 */
+.ag-premium-product .product-details .rte,
+.ag-premium-product .product-details .product__description {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* =====================
+   FORM — Figma spacing (gap 24px, submit pt 8px)
+   ===================== */
+
+/* Gap between form rows — uses adjacent sibling to avoid overriding grid */
+.ag-premium-product .product-form__input + .product-form__input {
+  margin-top: 24px;
+}
+
+.ag-premium-product .product-form__buttons {
+  padding-top: 8px;
+  gap: 16px !important;
+}
+
+/* Free shipping / info line — Figma: text-tiny, 12px, centered */
+.ag-premium-product .product-form__info-list {
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.5;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.ag-premium-product .ag-installment-info {
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* =====================
+   ACCORDION — Figma dividers + spacing
+   Targets both class-based and native <details> patterns.
+   If selectors don't match, inspect actual markup and adjust.
+   ===================== */
+
+/* Bottom border on accordion group */
+.ag-premium-product .accordion,
+.ag-premium-product details.product__accordion {
+  border-bottom: 1px solid var(--color-border, rgb(var(--color-foreground-rgb) / 0.1));
+}
+
+/* Top border on first accordion only — prevents double-border */
+.ag-premium-product .accordion:first-of-type,
+.ag-premium-product details.product__accordion:first-of-type {
+  border-top: 1px solid var(--color-border, rgb(var(--color-foreground-rgb) / 0.1));
+}
+
+/* Accordion header: py 16px + semibold */
+.ag-premium-product .accordion__title,
+.ag-premium-product details.product__accordion > summary {
+  padding-block: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  background: none;
+  width: 100%;
+}
+
+/* Accordion body: pb 24px desktop */
+.ag-premium-product .accordion__content,
+.ag-premium-product details.product__accordion > .accordion__content {
+  padding-bottom: 24px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Mobile accordion adjustments — Figma: 16px header, pb 20px body */
+@media screen and (max-width: 749px) {
+  .ag-premium-product .accordion__title,
+  .ag-premium-product details.product__accordion > summary {
+    font-size: 1rem;
+  }
+
+  .ag-premium-product .accordion__content,
+  .ag-premium-product details.product__accordion > .accordion__content {
+    padding-bottom: 20px;
+  }
+}
+
+/* =====================
+   SECTION PADDING — Figma: 80px desktop / 48px mobile
+   Only adjusts block (vertical) padding; inline handled by existing grid.
+   ===================== */
+
+@media screen and (min-width: 750px) {
+  .ag-premium-product .product-information.section {
+    padding-block: 80px;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .ag-premium-product .product-information.section {
+    padding-block: 48px;
+  }
+}

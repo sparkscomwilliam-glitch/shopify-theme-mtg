@@ -1,0 +1,656 @@
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+
+  .ag-hero-9-{{ section.id }} {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    box-sizing: border-box;
+
+    --heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-weight: {{ section.settings.heading_font.weight | default: 700 }};
+    --body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    --body-weight: {{ section.settings.body_font.weight | default: 400 }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+  }
+
+  /* Background Media */
+  .ag-hero-9__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .ag-hero-9__bg-mobile {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  
+  .ag-hero-9__bg-desktop {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Gradients */
+  .ag-hero-9__gradient {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background: {{ section.settings.gradient_mobile }};
+  }
+
+  /* Content Wrapper */
+  .ag-hero-9__content-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center on mobile */
+    padding: clamp(100px, 15vh, 140px) 20px clamp(40px, 5vh, 60px) 20px;
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  .ag-hero-9__text-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 616px;
+    gap: clamp(16px, 2vh, 20px);
+  }
+
+  /* Review Summary */
+  .ag-hero-9__top-review {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .ag-hero-9__stars {
+    display: flex;
+    gap: 2px;
+    color: {{ section.settings.review_stars_color | default: '#5bf8c9' }};
+  }
+  
+  .ag-hero-9__stars svg {
+    width: 25px;
+    height: 25px;
+    fill: currentColor;
+  }
+
+  .ag-hero-9__review-text {
+    font-family: var(--body-font);
+    font-size: var(--ag-fs-lead);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  /* Main Heading */
+  .ag-hero-9__heading {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-display);
+    line-height: 1.1;
+    color: var(--text-color);
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  .text-gradient-highlight {
+    background: {{ section.settings.heading_highlight_gradient }};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic; /* as shown in figma */
+  }
+
+  /* Stat Blocks */
+  .ag-hero-9__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 20px);
+    width: 100%;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .ag-hero-9__stat-card {
+    background: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: calc(50% - max(5px, 1vw)); /* 2 per row on mobile */
+    max-width: 150px;
+    aspect-ratio: 1;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .ag-hero-9__stat-val {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-stat);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .ag-hero-9__stat-label {
+    font-family: var(--body-font);
+    font-weight: 500;
+    font-size: var(--ag-fs-small);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  /* CTA Container */
+  .ag-hero-9__cta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 40px;
+  }
+
+  .ag-hero-9__cta-btn {
+    background: {{ section.settings.cta_bg_color | default: '#5bf8c9' }};
+    border-radius: var(--ag-btn-radius-pill);
+    height: var(--ag-btn-h-lg);
+    padding: 0 var(--ag-btn-px-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    color: {{ section.settings.cta_text_color | default: '#003827' }};
+    font-family: var(--body-font);
+    font-weight: 600;
+    font-size: var(--ag-fs-cta-lg);
+    text-transform: uppercase;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    width: 100%;
+    max-width: 576px;
+  }
+  
+  .ag-hero-9__cta-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  .ag-hero-9__cta-btn svg {
+    width: 50px;
+    height: auto;
+    fill: currentColor;
+  }
+
+  /* Avatar Block */
+  .ag-hero-9__avatar-block {
+    background: rgba(0, 0, 0, {{ section.settings.avatar_bg_opacity | divided_by: 100.0 }});
+    backdrop-filter: blur(5px);
+    border-radius: 31px;
+    padding: clamp(8px, 1.5vh, 12px) clamp(16px, 4vw, 30px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 447px;
+  }
+
+  .ag-hero-9__avatars {
+    display: flex;
+    align-items: center;
+  }
+
+  .ag-hero-9__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 100px;
+    border: 2px solid transparent; /* Optionally add a small stroke */
+    background: #ccc;
+    position: relative;
+    margin-left: -12px;
+    overflow: hidden;
+  }
+  
+  .ag-hero-9__avatar:first-child {
+    margin-left: 0;
+  }
+  
+  .ag-hero-9__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ag-hero-9__avatar-text {
+    font-family: var(--body-font);
+    font-weight: 400;
+    font-size: var(--ag-fs-small);
+    color: var(--text-color);
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .avatar-text-highlight {
+    background: {{ section.settings.avatar_highlight_gradient }};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: var(--heading-weight);
+  }
+
+  /* Desktop Adjustments */
+  @media (min-width: 768px) {
+    .ag-hero-9-{{ section.id }} {
+      min-height: 628px;
+    }
+
+    .ag-hero-9__bg-mobile { display: none; }
+    .ag-hero-9__bg-desktop { display: block; }
+    
+    .ag-hero-9__gradient {
+      background: {{ section.settings.gradient_desktop }};
+    }
+
+    .ag-hero-9__content-wrapper {
+      align-items: flex-start; /* Align left on desktop */
+      padding: 160px {{ section.settings.desktop_padding_horizontal }}rem 80px {{ section.settings.desktop_padding_horizontal }}rem; 
+    }
+
+    .ag-hero-9__text-group {
+      align-items: flex-start;
+      text-align: left;
+      margin-left: 0;
+    }
+
+    .ag-hero-9__top-review {
+      justify-content: flex-start;
+    }
+
+    .ag-hero-9__stats {
+      justify-content: flex-start;
+      gap: 20px;
+    }
+
+    .ag-hero-9__stat-card {
+      width: 132px;
+      height: 116px;
+      aspect-ratio: auto;
+    }
+
+    .ag-hero-9__stat-label {
+      font-size: var(--ag-fs-body);
+    }
+
+    .ag-hero-9__cta-container {
+      align-items: flex-start;
+      margin-top: 40px;
+      padding-top: 0;
+      margin-left: 0;
+    }
+
+    .ag-hero-9__avatar-block {
+      padding: 0 var(--ag-btn-px-lg);
+    }
+
+    .ag-hero-9__avatar {
+      width: 40px;
+      height: 40px;
+      margin-left: -20px;
+    }
+
+    .ag-hero-9__avatar-text {
+      font-size: var(--ag-fs-body);
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-9 ag-hero-9-{{ section.id }}">
+  <div class="ag-hero-9__bg">
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 800 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-9__bg-mobile" loading="lazy" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}">
+    {%- else -%}
+      <div class="ag-hero-9__bg-mobile" style="background:#ddd;"></div>
+    {%- endif -%}
+    
+    {%- if section.settings.image_desktop != blank -%}
+      <img src="{{ section.settings.image_desktop | image_url: width: 1600 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-9__bg-desktop" loading="lazy" width="{{ section.settings.image_desktop.width }}" height="{{ section.settings.image_desktop.height }}">
+    {%- else -%}
+      <div class="ag-hero-9__bg-desktop" style="background:#eee;"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="ag-hero-9__gradient"></div>
+
+  <div class="ag-hero-9__content-wrapper">
+    <div class="ag-hero-9__text-group">
+      {%- if section.settings.review_text != blank -%}
+        <div class="ag-hero-9__top-review">
+          <div class="ag-hero-9__stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+              </svg>
+            {%- endfor -%}
+          </div>
+          <p class="ag-hero-9__review-text">{{ section.settings.review_text }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ag-hero-9__heading">
+          {%- liquid
+            assign heading_content = section.settings.heading | escape
+            if section.settings.highlight_word != blank
+              assign highlight_html = '<span class="text-gradient-highlight">' | append: section.settings.highlight_word | append: '</span>'
+              assign heading_content = heading_content | replace: section.settings.highlight_word, highlight_html
+            endif
+            echo heading_content | newline_to_br
+          -%}
+        </h2>
+      {%- endif -%}
+
+      <div class="ag-hero-9__stats">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stat' -%}
+            <div class="ag-hero-9__stat-card" {{ block.shopify_attributes }}>
+              <p class="ag-hero-9__stat-val">{{ block.settings.stat_value }}</p>
+              <p class="ag-hero-9__stat-label">{{ block.settings.stat_label | newline_to_br }}</p>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="ag-hero-9__cta-container">
+      {%- if section.settings.cta_text != blank -%}
+        <a href="{{ section.settings.cta_link | default: '#' }}" class="ag-hero-9__cta-btn">
+          {{ section.settings.cta_text }}
+          {%- if section.settings.show_cta_arrow -%}
+            <svg width="71" height="23" viewBox="0 0 71 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M69.0607 12.5607C69.6464 11.9749 69.6464 11.0251 69.0607 10.4393L59.5147 0.893398C58.9289 0.307611 57.9792 0.307611 57.3934 0.893398C56.8076 1.47918 56.8076 2.42893 57.3934 3.01472L65.8787 11.5L57.3934 19.9853C56.8076 20.5711 56.8076 21.5208 57.3934 22.1066C57.9792 22.6924 58.9289 22.6924 59.5147 22.1066L69.0607 12.5607ZM0 13H68V10H0V13Z" fill="currentColor"/>
+            </svg>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.avatar_text != blank -%}
+        <div class="ag-hero-9__avatar-block">
+          <div class="ag-hero-9__avatars">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'avatar' -%}
+                <div class="ag-hero-9__avatar" {{ block.shopify_attributes }}>
+                  {%- if block.settings.image != blank -%}
+                    <img src="{{ block.settings.image | image_url: width: 100 }}" alt="Reviewer" loading="lazy" width="40" height="40">
+                  {%- else -%}
+                    <div style="width:100%;height:100%;background:#eee;"></div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          
+          <p class="ag-hero-9__avatar-text">
+            {%- liquid
+              assign avatar_content = section.settings.avatar_text | escape
+              if section.settings.avatar_highlight_word != blank
+                assign highlight_html = '<span class="avatar-text-highlight">' | append: section.settings.avatar_highlight_word | append: '</span>'
+                assign avatar_content = avatar_content | replace: section.settings.avatar_highlight_word, highlight_html
+              endif
+              echo avatar_content
+            -%}
+          </p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero 9 (Gradient)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images & Overlays"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_desktop",
+      "label": "Desktop Gradient Overlay",
+      "default": "linear-gradient(90deg, rgb(75, 96, 69) 6.09%, rgba(100, 114, 96, 0.77) 28.8%, rgba(108, 116, 106, 0.47) 45.87%, rgba(255, 255, 255, 0) 65.38%)"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_mobile",
+      "label": "Mobile Gradient Overlay",
+      "default": "linear-gradient(180deg, rgba(75, 96, 69, 0.8) 0%, rgba(108, 116, 106, 0.5) 45%, rgba(255, 255, 255, 0) 100%)"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_horizontal",
+      "label": "Desktop Horizontal Padding",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "default": 5,
+      "unit": "rem"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "General Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Top Review"
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Review Text",
+      "default": "Excellent | 5,760+ Reviews"
+    },
+    {
+      "type": "color",
+      "id": "review_stars_color",
+      "label": "Stars Color",
+      "default": "#5bf8c9"
+    },
+    {
+      "type": "header",
+      "content": "Main Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE toothbrush for healthier smiles."
+    },
+    {
+      "type": "text",
+      "id": "highlight_word",
+      "label": "Word to Highlight",
+      "default": "healthier smiles.",
+      "info": "Must exactly match a portion of the heading text above."
+    },
+    {
+      "type": "color_background",
+      "id": "heading_highlight_gradient",
+      "label": "Highlight Gradient",
+      "default": "linear-gradient(90deg, #5bf8c9 0%, #5bf8c9 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Call To Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "Upgrade To Quip"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button Background Color",
+      "default": "#5bf8c9"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button Text Color",
+      "default": "#003827"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_arrow",
+      "label": "Show Arrow SVG",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Avatar Review Box"
+    },
+    {
+      "type": "text",
+      "id": "avatar_text",
+      "label": "Avatar Text",
+      "default": "Join 3,000,000+ Happy brushers"
+    },
+    {
+      "type": "text",
+      "id": "avatar_highlight_word",
+      "label": "Word to Highlight",
+      "default": "3,000,000+"
+    },
+    {
+      "type": "color_background",
+      "id": "avatar_highlight_gradient",
+      "label": "Highlight Gradient",
+      "default": "linear-gradient(90deg, #5bf8c9 0%, #5bf8c9 100%)"
+    },
+    {
+      "type": "range",
+      "id": "avatar_bg_opacity",
+      "label": "Avatar Box Background Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 16,
+      "unit": "%"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic Block",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "Statistic Value",
+          "default": "92%"
+        },
+        {
+          "type": "textarea",
+          "id": "stat_label",
+          "label": "Statistic Label",
+          "default": "Fresher Breath"
+        }
+      ]
+    },
+    {
+      "type": "avatar",
+      "name": "Avatar Image",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Avatar Profile Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero 9 (Gradient)",
+      "blocks": [
+        { "type": "stat", "settings": { "stat_value": "92%", "stat_label": "Fresher Breath" } },
+        { "type": "stat", "settings": { "stat_value": "89%", "stat_label": "Love Our\nAuto-Refills" } },
+        { "type": "stat", "settings": { "stat_value": "91%", "stat_label": "Improved\nGum Health" } },
+        { "type": "avatar" },
+        { "type": "avatar" },
+        { "type": "avatar" },
+        { "type": "avatar" }
+      ]
+    }
+  ]
+}
+{% endschema %}

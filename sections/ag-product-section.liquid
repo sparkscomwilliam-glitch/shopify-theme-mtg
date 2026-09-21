@@ -1,0 +1,232 @@
+{{ 'ag-product-section.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ag-product-section.js' | asset_url }}" defer></script>
+
+{%- comment -%} Google Fonts: only loaded if user enables them in section settings {%- endcomment -%}
+{%- if section.settings.load_google_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+{%- endif -%}
+
+{%- comment -%} Structured data for product {%- endcomment -%}
+{%- if closest.product != blank -%}
+  <script type="application/ld+json">
+    {{ closest.product | structured_data }}
+  </script>
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+  assign theme_attr = ''
+  if s.palette != 'apothicaire'
+    assign theme_attr = s.palette
+  endif
+
+  assign cta_shape = s.cta_shape
+  assign media_position = s.media_position
+
+  case s.display_font
+    when 'spectral'
+      assign font_display_css = "'Spectral', Georgia, 'Times New Roman', serif"
+    when 'libre-caslon'
+      assign font_display_css = "'Libre Caslon Display', Georgia, 'Times New Roman', serif"
+    else
+      assign font_display_css = "'Newsreader', Georgia, 'Times New Roman', serif"
+  endcase
+-%}
+
+<div
+  class="ag-product-section section--{% if s.content_width == 'full' %}full-width{% else %}page-width{% endif %} color-{{ s.color_scheme }}"
+  {% if theme_attr != '' %}data-theme="{{ theme_attr }}"{% endif %}
+  data-cta-shape="{{ cta_shape }}"
+  data-media-position="{{ media_position }}"
+  style="--ag-font-display: {{ font_display_css }}; --ag-section-padding-top: {{ s.padding_block_start }}px; --ag-section-padding-bottom: {{ s.padding_block_end }}px;"
+>
+  <div class="ag-product-section__wrap" style="padding-top: var(--ag-section-padding-top); padding-bottom: var(--ag-section-padding-bottom);">
+    <div class="ag-product-section__product" data-media-position="{{ media_position }}">
+
+      {%- comment -%} === GALLERY COLUMN (modulable, blocs réordonnables) === {%- endcomment -%}
+      {% content_for 'block',
+        type: '_ag-gallery-column',
+        id: 'ag-gallery-column',
+        closest.product: closest.product
+      %}
+
+      {%- comment -%} === INFO COLUMN (modulable, blocs réordonnables) === {%- endcomment -%}
+      {% content_for 'block',
+        type: '_ag-info-column',
+        id: 'ag-info-column',
+        closest.product: closest.product
+      %}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Product Section",
+  "tag": "section",
+  "class": "ag-product-section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    { "type": "_ag-gallery-column" },
+    { "type": "_ag-info-column" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Design"
+    },
+    {
+      "type": "select",
+      "id": "palette",
+      "label": "Palette",
+      "options": [
+        { "value": "apothicaire", "label": "Apothicaire (warm cream)" },
+        { "value": "clinique", "label": "Clinique (cool blue)" },
+        { "value": "energie", "label": "Énergie (dark assertive)" }
+      ],
+      "default": "apothicaire"
+    },
+    {
+      "type": "select",
+      "id": "display_font",
+      "label": "Display font",
+      "options": [
+        { "value": "newsreader", "label": "Newsreader" },
+        { "value": "spectral", "label": "Spectral" },
+        { "value": "libre-caslon", "label": "Libre Caslon" }
+      ],
+      "default": "newsreader"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_google_fonts",
+      "label": "Load Google Fonts (Newsreader/Spectral/Libre Caslon/Hanken/Mono)",
+      "default": true,
+      "info": "Disable if you use Shopify font_picker or self-host fonts."
+    },
+    {
+      "type": "select",
+      "id": "cta_shape",
+      "label": "CTA shape",
+      "options": [
+        { "value": "net", "label": "Net (square)" },
+        { "value": "rounded", "label": "Rounded" },
+        { "value": "pill", "label": "Pill (capsule)" }
+      ],
+      "default": "rounded"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Width",
+      "options": [
+        { "value": "page", "label": "Page (constrained 1320px)" },
+        { "value": "full", "label": "Full width (100%)" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position (desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "info": "Used for Horizon native blocks (variant picker, buy buttons, accordion). The palette setting controls AG-specific styling."
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_start",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Product Section",
+      "blocks": {
+        "ag-gallery-column": {
+          "type": "_ag-gallery-column",
+          "static": true,
+          "blocks": {
+            "media-gallery": {
+              "type": "_product-media-gallery"
+            },
+            "macro-cards": {
+              "type": "ag-macro-cards"
+            }
+          },
+          "block_order": ["media-gallery", "macro-cards"]
+        },
+        "ag-info-column": {
+          "type": "_ag-info-column",
+          "static": true,
+          "blocks": {
+            "promo-badge": { "type": "ag-promo-badge" },
+            "reviews-stars": { "type": "ag-reviews-stars" },
+            "title": { "type": "product-title" },
+            "tagline": { "type": "ag-product-tagline" },
+            "pills": { "type": "ag-benefit-pills" },
+            "variant-picker": { "type": "variant-picker" },
+            "price": { "type": "price" },
+            "buy-buttons": { "type": "buy-buttons" },
+            "trust-badges": { "type": "ag-trust-badges" },
+            "accordion": { "type": "accordion" }
+          },
+          "block_order": [
+            "promo-badge",
+            "reviews-stars",
+            "title",
+            "tagline",
+            "pills",
+            "variant-picker",
+            "price",
+            "buy-buttons",
+            "trust-badges",
+            "accordion"
+          ]
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

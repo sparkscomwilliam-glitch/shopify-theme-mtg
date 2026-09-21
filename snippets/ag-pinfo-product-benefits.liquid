@@ -1,0 +1,42 @@
+{% comment %} AG Product Info — Product benefits pills. Accepts: block, section {% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+
+<style>
+  .ag-pb-{{ uid }} {
+    display: flex;
+    flex-direction: {% if bs.layout == 'horizontal' %}row{% else %}column{% endif %};
+    flex-wrap: wrap;
+    gap: {{ bs.gap | default: 8 }}px;
+    margin-top: {{ bs.margin_top | default: 0 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+  }
+  .ag-pb-{{ uid }}__item {
+    padding: {{ bs.padding_y | default: 16 }}px {{ bs.padding_x | default: 16 }}px;
+    border-radius: {{ bs.radius | default: 8 }}px;
+    background: {{ bs.bg_color | default: '#fde4ed' }};
+    color: {{ bs.text_color | default: '#ff566a' }};
+    margin: 0;
+    display: inline-flex;
+    width: fit-content;
+    font-weight: {{ bs.text_weight | default: 500 }};
+    font-size: {{ bs.text_size | default: 14 }}px;
+    align-items: center;
+    gap: 6px;
+  }
+  .ag-pb-{{ uid }}__item strong {
+    color: {{ bs.highlight_color | default: bs.text_color | default: '#ff566a' }};
+    font-weight: 700;
+  }
+</style>
+
+<div class="ag-pb-{{ uid }}" {{ block.shopify_attributes }}>
+  {%- for i in (1..6) -%}
+    {%- assign key = 'benefit_' | append: i -%}
+    {%- assign val = bs[key] -%}
+    {%- if val != blank -%}
+      <p class="ag-pb-{{ uid }}__item">{{ val }}</p>
+    {%- endif -%}
+  {%- endfor -%}
+</div>

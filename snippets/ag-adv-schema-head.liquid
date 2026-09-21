@@ -1,0 +1,7 @@
+{% comment %}
+  ag-adv-schema-head.liquid — propriété de James Sparks
+  Rendered at the top of every ag-adv-* section. Browsers dedupe the asset
+  request, so multiple renders only cost a tiny amount of extra parsing.
+  Fonts inherit from the theme settings (Online Store > Theme > Customize > Typography).
+{% endcomment %}
+{{ 'ag-advertorial.css' | asset_url | stylesheet_tag }}

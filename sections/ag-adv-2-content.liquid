@@ -1,0 +1,218 @@
+{% comment %} ag-adv-2-content.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'paragraphs' -%}
+          <div class="ag-adv-2__col ag-adv-2-content__body{% if block.settings.is_lead %} is-lead{% endif %}" {{ block.shopify_attributes }}>
+            {{ block.settings.content }}
+          </div>
+        {%- when 'float_image' -%}
+          <figure class="ag-adv-2-content__fig" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <div class="ag-adv-2__ph" style="aspect-ratio:3/3.6;border-radius:10px;">
+                <img src="{{ block.settings.image | image_url: width: 600 }}"
+                     alt="{{ block.settings.image.alt | default: block.settings.caption | escape }}"
+                     loading="lazy"
+                     width="{{ block.settings.image.width }}"
+                     height="{{ block.settings.image.height }}">
+              </div>
+            {%- else -%}
+              <div class="ag-adv-2__ph"><span>{{ block.settings.placeholder | default: 'Photo' }}</span></div>
+            {%- endif -%}
+            {%- if block.settings.caption != blank -%}
+              <figcaption class="ag-adv-2-content__fig-cap">{{ block.settings.caption }}</figcaption>
+            {%- endif -%}
+          </figure>
+        {%- when 'pullquote' -%}
+          <div class="ag-adv-2__col" {{ block.shopify_attributes }}>
+            <div class="ag-adv-2-content__pullquote">
+              {%- if block.settings.quote != blank -%}
+                <p>{{ block.settings.quote }}</p>
+              {%- endif -%}
+              {%- if block.settings.cite != blank -%}
+                <span class="ag-adv-2-content__cite">{{ block.settings.cite }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Content",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur des titres/strong",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du corps de texte",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent — profonde",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur secondaire",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraphs",
+      "name": "Paragraphes",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "is_lead",
+          "label": "Bloc d'accroche (lead)",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Saisissez votre paragraphe ici. Vous pouvez utiliser <strong>gras</strong> et <em>italique</em>.</p>"
+        }
+      ]
+    },
+    {
+      "type": "float_image",
+      "name": "Image flottante",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Texte placeholder",
+          "default": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Légende"
+        }
+      ]
+    },
+    {
+      "type": "pullquote",
+      "name": "Citation",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Citation",
+          "default": "« Vous ne payez pas pour un meilleur produit. Vous payez pour un plus joli flacon et un meilleur marketing. »"
+        },
+        {
+          "type": "text",
+          "id": "cite",
+          "label": "Source",
+          "default": "— Ma dermatologue, ce jour-là"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Content",
+      "blocks": [
+        {
+          "type": "paragraphs",
+          "settings": {
+            "is_lead": true,
+            "content": "<p>Je vais être honnête avec vous, et ce n'est pas facile à admettre quand on écrit sur la beauté pour vivre : <strong>pendant dix ans, j'ai dépensé une petite fortune en sérums anti-âge.</strong></p>"
+          }
+        },
+        {
+          "type": "pullquote",
+          "settings": {
+            "quote": "« Vous ne payez pas pour un meilleur produit. Vous payez pour un plus joli flacon et un meilleur marketing. »",
+            "cite": "— Ma dermatologue, ce jour-là"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

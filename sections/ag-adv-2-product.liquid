@@ -1,0 +1,283 @@
+{% comment %} ag-adv-2-product.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.card_bg != blank %}--ag2-coral-wash:{{ s.card_bg }};{% endif %}
+  {% if s.card_border != blank %}--ag2-coral-tint:{{ s.card_border }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <div class="ag-adv-2__col">
+    <div class="ag-adv-2-product__break">
+      {%- if s.show_seal -%}
+        <div class="ag-adv-2-product__seal">
+          {%- if s.seal_top != blank -%}{{ s.seal_top }}{%- endif -%}
+          {%- if s.seal_big != blank -%}<b>{{ s.seal_big }}</b>{%- endif -%}
+          {%- if s.seal_bottom != blank -%}{{ s.seal_bottom }}{%- endif -%}
+        </div>
+      {%- endif -%}
+      {%- if s.kicker != blank -%}
+        <span class="ag-adv-2__kicker ag-adv-2-product__pb-label">{{ s.kicker }}</span>
+      {%- endif -%}
+      <div class="ag-adv-2-product__grid">
+        <div class="ag-adv-2__ph">
+          {%- if s.product_image != blank -%}
+            <img src="{{ s.product_image | image_url: width: 400 }}"
+                 alt="{{ s.product_image.alt | default: s.product_name | escape }}"
+                 loading="lazy"
+                 width="{{ s.product_image.width }}"
+                 height="{{ s.product_image.height }}">
+          {%- else -%}
+            <span>{{ s.image_placeholder | default: 'Packshot produit' }}</span>
+          {%- endif -%}
+        </div>
+        <div>
+          {%- if s.product_name != blank -%}
+            <h3>{{ s.product_name }}</h3>
+          {%- endif -%}
+          {%- if s.product_tag != blank -%}
+            <div class="ag-adv-2-product__tag">{{ s.product_tag }}</div>
+          {%- endif -%}
+          {%- if section.blocks.size > 0 -%}
+            <ul class="ag-adv-2-product__benefits">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'benefit' and block.settings.text != blank -%}
+                  <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if s.cta_text != blank -%}
+            <a href="{{ s.cta_link | default: '#offre' }}" class="ag-adv-2__btn ag-adv-2__btn--coral">
+              {{ s.cta_text }} <span class="ag-adv-2__arr">&rarr;</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Product",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Seal (badge rond)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_seal",
+      "label": "Afficher le seal",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "seal_top",
+      "label": "Ligne du haut",
+      "default": "SEULEMENT"
+    },
+    {
+      "type": "text",
+      "id": "seal_big",
+      "label": "Chiffre central",
+      "default": "847"
+    },
+    {
+      "type": "text",
+      "id": "seal_bottom",
+      "label": "Ligne du bas",
+      "default": "EN STOCK"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "La découverte"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Image produit"
+    },
+    {
+      "type": "text",
+      "id": "image_placeholder",
+      "label": "Texte placeholder image",
+      "default": "Packshot produit — flacon Lumira sur fond neutre"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Nom du produit",
+      "default": "Lumira Bio-Restore Serum"
+    },
+    {
+      "type": "textarea",
+      "id": "product_tag",
+      "label": "Tagline",
+      "default": "Le sérum aux céramides que les dermatologues gardaient pour eux."
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Découvrir Lumira"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond de la section",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color_background",
+      "id": "card_bg",
+      "label": "Couleur de fond de la carte",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#fff9f8"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Couleur de bordure de la carte",
+      "default": "#fff4f3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (seal, puces)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent profonde (tagline)",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur des titres",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du texte courant",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bénéfice",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte du bénéfice",
+          "default": "Relance la production naturelle de céramides en 14 jours"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Product",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Relance la production naturelle de céramides en 14 jours"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Complexe de 5 peptides à concentration clinique"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Repulpe visiblement les ridules sans effet « masque »"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Formulé sans parfum, testé sous contrôle dermatologique"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "text": "Un flacon = 8 semaines (moins cher que votre café quotidien)"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

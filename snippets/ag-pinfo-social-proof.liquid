@@ -1,0 +1,79 @@
+{% comment %} AG Product Info — Social proof with avatars. Accepts: block, section {% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+
+<style>
+  .ag-sp-{{ uid }} {
+    background-color: {{ bs.bg_color | default: '#f3f3f3' }};
+    border-radius: {{ bs.radius | default: 7 }}px;
+    padding: {{ bs.padding_y | default: 8 }}px {{ bs.padding_x | default: 10 }}px;
+    margin-top: {{ bs.margin_top | default: 0 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+    overflow: hidden;
+  }
+  .ag-sp-{{ uid }}__body { display: flex; align-items: center; gap: 15px; }
+  .ag-sp-{{ uid }}__images { display: flex; align-items: center; flex-shrink: 0; }
+  .ag-sp-{{ uid }}__image {
+    overflow: hidden;
+    width: {{ bs.avatar_size | default: 30 }}px;
+    height: {{ bs.avatar_size | default: 30 }}px;
+    position: relative;
+    border-radius: 100px;
+    border: {{ bs.avatar_border | default: 0 }}px solid {{ bs.avatar_border_color | default: '#ffffff' }};
+    background-color: #afafaf;
+  }
+  .ag-sp-{{ uid }}__image:nth-child(1) { z-index: 3; transform: translate(8px); }
+  .ag-sp-{{ uid }}__image:nth-child(2) { z-index: 2; transform: translate(4px); }
+  .ag-sp-{{ uid }}__image:nth-child(3) { z-index: 1; transform: translate(0); }
+  .ag-sp-{{ uid }}__image img,
+  .ag-sp-{{ uid }}__image svg {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+  }
+  .ag-sp-{{ uid }}__text {
+    text-align: left;
+    margin: 0;
+    font-size: {{ bs.text_size | default: 13 }}px;
+    color: {{ bs.text_color | default: '#404040' }};
+    line-height: 1.5;
+    word-break: break-word;
+  }
+  .ag-sp-{{ uid }}__text strong { font-weight: 700; }
+  .ag-sp-{{ uid }}__text svg {
+    display: inline; width: 13px; height: 13px; transform: translateY(15%);
+  }
+  .ag-sp-{{ uid }}__text svg path { fill: {{ bs.badge_color | default: '#4c8ae7' }}; }
+</style>
+
+<div class="ag-sp-{{ uid }}" {{ block.shopify_attributes }}>
+  <div class="ag-sp-{{ uid }}__body">
+    <div class="ag-sp-{{ uid }}__images" aria-hidden="true">
+      {%- for i in (1..3) -%}
+        {%- assign key_img = 'avatar_' | append: i -%}
+        {%- assign key_url = 'avatar_' | append: i | append: '_url' -%}
+        {%- assign img = bs[key_img] -%}
+        {%- assign url = bs[key_url] -%}
+        <div class="ag-sp-{{ uid }}__image">
+          {%- if img != blank -%}
+            {{ img | image_url: width: 150 | image_tag: loading: 'lazy', alt: '' }}
+          {%- elsif url != blank -%}
+            <img src="{{ url }}" alt="" loading="lazy" width="{{ bs.avatar_size | default: 30 }}" height="{{ bs.avatar_size | default: 30 }}">
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="ag-sp-{{ uid }}__text">
+      <p>
+        {%- if bs.name != blank -%}<strong>{{ bs.name }}</strong>{%- endif -%}
+        {%- if bs.show_badge -%}
+          <span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M11.36 5.175l-.92-.74a.62.62 0 0 1-.2-.5l.125-1.17a.74.74 0 0 0-.84-.84l-1.175.125a.62.62 0 0 1-.5-.2L7.13.95a.74.74 0 0 0-1.13 0L5.185.95a.62.62 0 0 1-.5.2L3.555 1.025a.74.74 0 0 0-.84.84l.125 1.17a.62.62 0 0 1-.2.5l-.92.74a.74.74 0 0 0 0 1.13l.92.74c.14.116.215.295.2.47l-.125 1.175a.74.74 0 0 0 .84.84L4.73 8.755a.62.62 0 0 1 .5.2l.74.92a.74.74 0 0 0 1.13 0l.74-.92a.62.62 0 0 1 .5-.2l1.175.125a.74.74 0 0 0 .84-.84l-.125-1.175a.62.62 0 0 1 .2-.5l.92-.74a.74.74 0 0 0 0-1.13zM5.5 7.5L3 5l.7-.7L5.5 6.1l3.8-3.8.7.7L5.5 7.5z"/>
+            </svg>
+          </span>
+        {%- endif -%}
+        {{ bs.message }}
+      </p>
+    </div>
+  </div>
+</div>

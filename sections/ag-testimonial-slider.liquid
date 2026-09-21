@@ -1,0 +1,559 @@
+{%- comment -%}
+  AG Testimonial Slider Section
+  Optimized for Horizon Theme
+{%- endcomment -%}
+
+{%- style -%}
+  .ag-testi-section-{{ section.id }} {
+    padding: 60px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .ag-testi-slider {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ag-testi-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+    padding-bottom: 10px;
+  }
+
+  .ag-testi-track::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+
+  .ag-testi-card {
+    flex: 0 0 calc(33.333% - 13.33px);
+    scroll-snap-align: start;
+    {% if section.settings.show_outer_border %}
+      border: 2px solid{{ section.settings.outer_border_color }};
+    {% else %}
+      border: none;
+    {% endif %}
+    border-radius: {{ section.settings.outer_border_radius }}px;
+    background: #fff;
+    padding: 24px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .ag-testi-images {
+    display: flex;
+    gap: 0;
+    /* No gap between Before/After to match style */
+    margin-bottom: 20px;
+  }
+
+  .ag-testi-img-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .ag-testi-img-col img,
+  .ag-testi-img-col svg.ag-placeholder-svg {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: #f4f4f4;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  /* Optional separator between the two images if gap is 0 */
+  .ag-testi-img-col + .ag-testi-img-col {
+    border-left: 2px solid #fff;
+  }
+
+  .ag-testi-label {
+    text-align: center;
+    padding: 8px 5px;
+    font-size: var(--ag-fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    background: {{ section.settings.before_after_bg }};
+    color: {{ section.settings.before_after_text_color }};
+  }
+
+
+  /*
+   Specific override for BEFORE label to match screenshot style if possible,
+   but we use the single setting defined in schema as fallback
+*/
+  .ag-testi-img-col:first-child .ag-testi-label {
+    background: #e5e5e5;
+    color: #111;
+  }
+  .ag-testi-img-col:last-child .ag-testi-label {
+    background: {{ section.settings.before_after_bg }};
+    color: {{ section.settings.before_after_text_color }};
+  }
+
+  .ag-testi-content {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ag-testi-stars {
+    color: {{ section.settings.stars_color }};
+    font-size: var(--ag-fs-h3);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+
+  .ag-testi-name {
+    font-weight: 700;
+    font-size: var(--ag-fs-lead);
+    margin-bottom: 16px;
+    color: #111;
+  }
+
+  .ag-testi-text {
+    font-size: var(--ag-fs-body);
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+
+  .ag-testi-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: var(--ag-fs-small);
+    font-weight: 600;
+    color: #111;
+    margin-top: auto;
+  }
+
+  .ag-testi-badge img,
+  .ag-testi-badge svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .ag-testi-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 30px;
+  }
+
+  .ag-testi-arrow {
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s
+    , transform 0.2s;
+  }
+
+  .ag-testi-arrow:hover {
+    transform: scale(1.05);
+  }
+
+  .ag-testi-arrow svg {
+    fill: currentColor;
+    width: 22px;
+    height: 22px;
+  }
+
+  .ag-testi-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .ag-testi-dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ag-testi-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d1d1d1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .ag-testi-dot.ag-active {
+    background: #111;
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 990px) {
+    .ag-testi-card {
+      flex: 0 0 calc(50% - 10px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ag-testi-section-{{ section.id }} {
+      padding: 40px 0;
+    }
+    .ag-testi-slider {
+      overflow: hidden;
+      width: 100%;
+    }
+    .ag-testi-track {
+      padding-left: 7.5vw;
+      padding-right: 7.5vw;
+      gap: 16px;
+      scroll-padding-left: 7.5vw;
+    }
+    .ag-testi-card {
+      flex: 0 0 85vw;
+      scroll-snap-align: center;
+      margin: 0;
+    }
+    .ag-testi-controls {
+      width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      justify-content: center;
+      margin-top: 24px;
+    }
+  }
+{%- endstyle -%}
+
+<ag-testimonial-slider id="ag-testimonial-slider-{{ section.id }}" class="ag-testi-section-{{ section.id }}">
+  <div class="ag-testi-slider">
+    <div class="ag-testi-track">
+      {%- for block in section.blocks -%}
+        <div class="ag-testi-card" {{ block.shopify_attributes }}>
+          <div class="ag-testi-images">
+            <div class="ag-testi-img-col">
+              {%- if block.settings.image_before != blank -%}
+                <img
+                  src="{{ block.settings.image_before | image_url: width: 400 }}"
+                  alt="{{ block.settings.image_before.alt | escape }}"
+                  loading="lazy"
+                  width="{{ block.settings.image_before.width }}"
+                  height="{{ block.settings.image_before.height }}">
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'ag-placeholder-svg' }}
+              {%- endif -%}
+              <div class="ag-testi-label">BEFORE</div>
+            </div>
+
+            <div class="ag-testi-img-col">
+              {%- if block.settings.image_after != blank -%}
+                <img
+                  src="{{ block.settings.image_after | image_url: width: 400 }}"
+                  alt="{{ block.settings.image_after.alt | escape }}"
+                  loading="lazy"
+                  width="{{ block.settings.image_after.width }}"
+                  height="{{ block.settings.image_after.height }}">
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'ag-placeholder-svg' }}
+              {%- endif -%}
+              <div class="ag-testi-label">AFTER</div>
+            </div>
+          </div>
+
+          <div class="ag-testi-content">
+            <div class="ag-testi-stars" aria-label="{{ block.settings.star_rating }} stars out of 5">
+              {%- for i in (1..5) -%}
+                {%- if i <= block.settings.star_rating -%}
+                  ★
+                {%- else -%}
+                  ☆
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+            {%- if block.settings.testimonial_name != blank -%}
+              <div class="ag-testi-name">{{ block.settings.testimonial_name | escape }}</div>
+            {%- endif -%}
+
+            {%- if block.settings.testimonial_text != blank -%}
+              <div class="ag-testi-text">{{ block.settings.testimonial_text | escape }}</div>
+            {%- endif -%}
+
+            {%- if block.settings.enable_badge -%}
+              <div class="ag-testi-badge">
+                {%- if section.settings.global_badge_icon != blank -%}
+                  <img
+                    src="{{ section.settings.global_badge_icon | image_url: width: 36 }}"
+                    alt="{{ section.settings.global_badge_icon.alt | escape }}"
+                    loading="lazy"
+                    width="18"
+                    height="18">
+                {%- else -%}
+                  <!-- Default Verification SVG -->
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                  </svg>
+                {%- endif -%}
+                <span>{{ section.settings.global_badge_text | escape }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="ag-testi-controls">
+        <button class="ag-testi-arrow ag-testi-prev" aria-label="Previous testimonial">
+          <!-- Left Arrow SVG -->
+          <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" /></svg>
+        </button>
+
+        <div class="ag-testi-dots">
+          {%- for block in section.blocks -%}
+            <button class="ag-testi-dot {% if forloop.first %}ag-active{% endif %}" aria-label="Go to testimonial {{ forloop.index }}"></button>
+          {%- endfor -%}
+        </div>
+
+        <button class="ag-testi-arrow ag-testi-next" aria-label="Next testimonial">
+          <!-- Right Arrow SVG -->
+          <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" /></svg>
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+</ag-testimonial-slider>
+
+<script>
+  if (!customElements.get('ag-testimonial-slider')) {
+    class AgTestimonialSlider extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.ag-testi-track');
+        this.prevBtn = this.querySelector('.ag-testi-prev');
+        this.nextBtn = this.querySelector('.ag-testi-next');
+        this.dots = this.querySelectorAll('.ag-testi-dot');
+        
+        if (!this.track) return;
+        
+        this.updateControls = this.updateControls.bind(this);
+        
+        // Listeners for track scroll and resize
+        this.track.addEventListener('scroll', this.updateControls);
+        window.addEventListener('resize', this.updateControls);
+        
+        // Arrow listeners
+        if (this.prevBtn) {
+          this.prevBtn.addEventListener('click', () => this.scrollTrack(-1));
+        }
+        if (this.nextBtn) {
+          this.nextBtn.addEventListener('click', () => this.scrollTrack(1));
+        }
+        
+        // Dot listeners
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => this.scrollToIndex(index));
+        });
+        
+        // Initial setup timeout for layout rendering
+        setTimeout(this.updateControls, 100);
+      }
+      
+      getScrollItemWidth() {
+        const card = this.track.querySelector('.ag-testi-card');
+        if (!card) return 0;
+        const gap = parseInt(window.getComputedStyle(this.track).gap) || 0;
+        return card.offsetWidth + gap;
+      }
+      
+      scrollTrack(direction) {
+        const scrollAmount = this.getScrollItemWidth();
+        this.track.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+      }
+      
+      scrollToIndex(index) {
+        const scrollAmount = this.getScrollItemWidth();
+        this.track.scrollTo({ left: scrollAmount * index, behavior: 'smooth' });
+      }
+      
+      updateControls() {
+        if (!this.track) return;
+        
+        const scrollLeft = this.track.scrollLeft;
+        const itemWidth = this.getScrollItemWidth();
+        if (!itemWidth) return;
+        
+        // Calculate active index (round to closest visible item)
+        const index = Math.round(scrollLeft / itemWidth);
+        
+        // Update Dots
+        this.dots.forEach((dot, i) => {
+          dot.classList.toggle('ag-active', i === index);
+        });
+        
+        // Update Arrows Disabled State
+        if (this.prevBtn) {
+          this.prevBtn.disabled = scrollLeft <= 0;
+        }
+        if (this.nextBtn) {
+          // Add a 5px threshold to account for decimal scaling/rounding issues
+          this.nextBtn.disabled = scrollLeft >= (this.track.scrollWidth - this.track.clientWidth - 5);
+        }
+      }
+      
+      disconnectedCallback() {
+        this.track.removeEventListener('scroll', this.updateControls);
+        window.removeEventListener('resize', this.updateControls);
+      }
+    }
+    
+    customElements.define('ag-testimonial-slider', AgTestimonialSlider);
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "AG Testimonial Slider",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Couleurs"
+      },
+      {
+        "type": "color",
+        "id": "stars_color",
+        "label": "Couleur des étoiles",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "before_after_bg",
+        "label": "Fond étiquette AFTER",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "before_after_text_color",
+        "label": "Texte étiquette AFTER",
+        "default": "#ffffff"
+      }, {
+        "type": "header",
+        "content": "Bordure des Cartes"
+      }, {
+        "type": "checkbox",
+        "id": "show_outer_border",
+        "label": "Afficher la bordure extérieure",
+        "default": true
+      }, {
+        "type": "color",
+        "id": "outer_border_color",
+        "label": "Couleur de la bordure",
+        "default": "#111111"
+      }, {
+        "type": "range",
+        "id": "outer_border_radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Arrondi de la bordure",
+        "default": 0
+      }, {
+        "type": "header",
+        "content": "Badge de Vérification (Global)"
+      }, {
+        "type": "text",
+        "id": "global_badge_text",
+        "label": "Texte du badge",
+        "default": "Verified Purchase"
+      }, {
+        "type": "image_picker",
+        "id": "global_badge_icon",
+        "label": "Icône du badge (Optionnelle)",
+        "info": "Si vide, un SVG checkmark par défaut sera utilisé."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "ag_testimonial",
+        "name": "Témoignage",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image_before",
+            "label": "Image Avant (Ratio 4:5)"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_after",
+            "label": "Image Après (Ratio 4:5)"
+          },
+          {
+            "type": "range",
+            "id": "star_rating",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Note (Étoiles)",
+            "default": 5
+          },
+          {
+            "type": "text",
+            "id": "testimonial_name",
+            "label": "Nom de l'auteur",
+            "default": "Steve (1 month)"
+          }, {
+            "type": "textarea",
+            "id": "testimonial_text",
+            "label": "Texte du témoignage",
+            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          }, {
+            "type": "checkbox",
+            "id": "enable_badge",
+            "label": "Afficher le badge de vérification",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "AG Testimonial Slider",
+        "category": "Testimonials",
+        "blocks": [
+          {
+            "type": "ag_testimonial"
+          }, {
+            "type": "ag_testimonial"
+          }, {
+            "type": "ag_testimonial"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

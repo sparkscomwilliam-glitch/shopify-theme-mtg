@@ -1,0 +1,680 @@
+{% comment %} ag-feature-2.liquid — propriété de James Sparks {% endcomment %}
+{%- liquid
+  assign media_type   = section.settings.media_type
+  assign media_image  = section.settings.image
+  assign media_video  = section.settings.video
+  assign media_url    = section.settings.video_url
+
+  assign title         = section.settings.title
+  assign description   = section.settings.description
+  assign checklist_lbl = section.settings.checklist_title
+
+  assign btn_text       = section.settings.button_text
+  assign btn_url        = section.settings.button_url
+  assign btn_bg         = section.settings.button_bg
+  assign btn_color      = section.settings.button_text_color
+  assign btn_icon_left  = section.settings.button_icon_left
+  assign btn_icon_right = section.settings.button_icon_right
+
+  assign bg               = section.settings.bg_color
+  assign text_color       = section.settings.text_color
+  assign accent_color     = section.settings.accent_color
+
+  assign media_position   = section.settings.media_position
+  assign media_h_desktop  = section.settings.media_height_desktop
+  assign media_aspect     = section.settings.media_aspect_mobile
+  assign section_padding  = section.settings.section_padding
+
+  # ── Build embed URL for external video providers ─────────────────────
+  assign embed_url = ''
+  if media_type == 'video_url' and media_url != blank
+    assign embed_url = media_url
+    if media_url contains 'youtube.com/watch'
+      assign yt_id   = media_url | split: 'v=' | last | split: '&' | first
+      assign embed_url = 'https://www.youtube.com/embed/' | append: yt_id
+    elsif media_url contains 'youtu.be/'
+      assign yt_id   = media_url | split: 'youtu.be/' | last | split: '?' | first | split: '&' | first
+      assign embed_url = 'https://www.youtube.com/embed/' | append: yt_id
+    elsif media_url contains 'player.vimeo'
+      # Already a Vimeo embed URL — keep as-is
+    elsif media_url contains 'vimeo.com/'
+      assign vm_id   = media_url | split: 'vimeo.com/' | last | split: '?' | first | split: '/' | first
+      assign embed_url = 'https://player.vimeo.com/video/' | append: vm_id
+    endif
+
+    if section.settings.video_autoplay or section.settings.video_loop
+      assign params = ''
+      if section.settings.video_autoplay
+        assign params = params | append: 'autoplay=1&mute=1&'
+      endif
+      if section.settings.video_loop
+        assign params = params | append: 'loop=1&'
+      endif
+      if embed_url contains '?'
+        assign embed_url = embed_url | append: '&' | append: params
+      else
+        assign embed_url = embed_url | append: '?' | append: params
+      endif
+    endif
+  endif
+
+  # ── Count blocks per type so we can hide empty wrappers ──────────────
+  assign benefit_count = 0
+  assign check_count   = 0
+  for block in section.blocks
+    if block.type == 'benefit'
+      assign benefit_count = benefit_count | plus: 1
+    elsif block.type == 'check'
+      assign check_count = check_count | plus: 1
+    endif
+  endfor
+
+  # ── Desktop row direction (media left or right) ──────────────────────
+  assign row_dir = 'row'
+  if media_position == 'right'
+    assign row_dir = 'row-reverse'
+  endif
+-%}
+
+<style>
+  #ag-f2-{{ section.id }} *,
+  #ag-f2-{{ section.id }} *::before,
+  #ag-f2-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #ag-f2-{{ section.id }} {
+    background: {{ bg }};
+    color: {{ text_color }};
+    padding: 24px 16px;
+    width: 100%;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* ── Media block ─────────────────────────────────────────────────── */
+  #ag-f2-{{ section.id }} .ag-f2__media {
+    position: relative;
+    width: 100%;
+    background: #e5e7eb;
+    overflow: hidden;
+    aspect-ratio: 100 / {{ media_aspect }};
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__media img,
+  #ag-f2-{{ section.id }} .ag-f2__media video,
+  #ag-f2-{{ section.id }} .ag-f2__media iframe,
+  #ag-f2-{{ section.id }} .ag-f2__placeholder svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+  }
+
+  /* ── Content column ──────────────────────────────────────────────── */
+  #ag-f2-{{ section.id }} .ag-f2__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__title {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+    margin: 0;
+    color: inherit;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__desc {
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+    color: inherit;
+  }
+
+  /* ── Benefits grid (icon + label) ────────────────────────────────── */
+  #ag-f2-{{ section.id }} .ag-f2__benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 40px;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__benefit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__benefit-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ accent_color }};
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__benefit-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__benefit-label {
+    font-size: 16px;
+    line-height: 24px;
+    color: inherit;
+  }
+
+  /* ── Checklist ───────────────────────────────────────────────────── */
+  #ag-f2-{{ section.id }} .ag-f2__checklist-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__checklist-title {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: inherit;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__check {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__check-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ accent_color }};
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__check-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__check-text {
+    font-size: 16px;
+    line-height: 24px;
+    color: inherit;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ── CTA ─────────────────────────────────────────────────────────── */
+  #ag-f2-{{ section.id }} .ag-f2__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 48px;
+    padding: 5px 16px;
+    border-radius: 4px;
+    background: {{ btn_bg }};
+    color: {{ btn_color }};
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__cta:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__cta-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #ag-f2-{{ section.id }} .ag-f2__cta-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Mobile-specific order: CTA above checklist ──────────────────── */
+  @media (max-width: 768px) {
+    #ag-f2-{{ section.id }} .ag-f2__cta            { order: 3; }
+    #ag-f2-{{ section.id }} .ag-f2__checklist-section { order: 4; }
+  }
+
+  /* ── Desktop layout ──────────────────────────────────────────────── */
+  @media (min-width: 769px) {
+    #ag-f2-{{ section.id }} {
+      padding: {{ section_padding }}px;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__inner {
+      flex-direction: {{ row_dir }};
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__media {
+      flex: 1 1 0;
+      min-width: 0;
+      height: {{ media_h_desktop }}px;
+      aspect-ratio: auto;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__content {
+      flex: 1 1 0;
+      min-width: 0;
+      align-self: center;
+      padding: 30px 20px;
+      gap: 36px;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__title {
+      font-size: 36px;
+      line-height: 40px;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__benefits {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px 60px;
+    }
+
+    #ag-f2-{{ section.id }} .ag-f2__cta {
+      width: 333px;
+    }
+  }
+</style>
+
+<section id="ag-f2-{{ section.id }}" class="ag-f2">
+  <div class="ag-f2__inner">
+
+    {%- comment -%} ── Media (image / Shopify video / external URL) ─── {%- endcomment -%}
+    <div class="ag-f2__media">
+      {%- case media_type -%}
+        {%- when 'image' -%}
+          {%- if media_image != blank -%}
+            {{ media_image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width:769px) 50vw, 100vw', alt: media_image.alt | default: title }}
+          {%- else -%}
+            <div class="ag-f2__placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+          {%- endif -%}
+
+        {%- when 'video_shopify' -%}
+          {%- if media_video != blank -%}
+            <video
+              {%- if media_video.preview_image != blank %} poster="{{ media_video.preview_image | image_url: width: 1600 }}"{%- endif %}
+              {%- unless section.settings.video_autoplay %} controls{%- endunless %}
+              {%- if section.settings.video_autoplay %} autoplay muted{%- endif %}
+              {%- if section.settings.video_loop %} loop{%- endif %}
+              playsinline
+            >
+              {%- for source in media_video.sources -%}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {%- endfor -%}
+            </video>
+          {%- else -%}
+            <div class="ag-f2__placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+          {%- endif -%}
+
+        {%- when 'video_url' -%}
+          {%- if embed_url != blank -%}
+            <iframe
+              src="{{ embed_url }}"
+              title="{{ title | escape }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          {%- else -%}
+            <div class="ag-f2__placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+          {%- endif -%}
+      {%- endcase -%}
+    </div>
+
+    {%- comment -%} ── Content column ─────────────────────────────────── {%- endcomment -%}
+    <div class="ag-f2__content">
+      <div class="ag-f2__header">
+        {%- if title != blank -%}
+          <h2 class="ag-f2__title">{{ title }}</h2>
+        {%- endif -%}
+        {%- if description != blank -%}
+          <p class="ag-f2__desc">{{ description }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if benefit_count > 0 -%}
+        <div class="ag-f2__benefits">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'benefit' -%}
+              <div class="ag-f2__benefit" {{ block.shopify_attributes }}>
+                {%- if block.settings.icon_svg != blank -%}
+                  <span class="ag-f2__benefit-icon">{{ block.settings.icon_svg }}</span>
+                {%- endif -%}
+                <span class="ag-f2__benefit-label">{{ block.settings.label }}</span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if check_count > 0 -%}
+        <div class="ag-f2__checklist-section">
+          {%- if checklist_lbl != blank -%}
+            <h3 class="ag-f2__checklist-title">{{ checklist_lbl }}</h3>
+          {%- endif -%}
+          <ul class="ag-f2__checklist">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'check' -%}
+                <li class="ag-f2__check" {{ block.shopify_attributes }}>
+                  <span class="ag-f2__check-icon">
+                    {%- if block.settings.icon_svg != blank -%}
+                      {{ block.settings.icon_svg }}
+                    {%- else -%}
+                      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm5.207 7.707-6 6a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414L9.5 11.586l5.293-5.293a1 1 0 0 1 1.414 1.414z"/></svg>
+                    {%- endif -%}
+                  </span>
+                  <span class="ag-f2__check-text">{{ block.settings.text }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- if btn_text != blank -%}
+        <a href="{{ btn_url | default: '#' }}" class="ag-f2__cta">
+          {%- if btn_icon_left != blank -%}
+            <span class="ag-f2__cta-icon">{{ btn_icon_left }}</span>
+          {%- endif -%}
+          <span class="ag-f2__cta-text">{{ btn_text }}</span>
+          {%- if btn_icon_right != blank -%}
+            <span class="ag-f2__cta-icon">{{ btn_icon_right }}</span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AG - Feature #2",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Fond de la section",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur des icônes (bénéfices + checks)",
+      "default": "#111827"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Padding de la section (desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Média"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Type de média",
+      "options": [
+        { "value": "image",         "label": "Image" },
+        { "value": "video_shopify", "label": "Vidéo Shopify (CDN)" },
+        { "value": "video_url",     "label": "Vidéo externe (URL)" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Vidéo Shopify (CDN)",
+      "visible_if": "{{ section.settings.media_type == 'video_shopify' }}"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "URL de la vidéo",
+      "info": "YouTube, Vimeo, Gumlet — colle l'URL complète (page ou embed)",
+      "visible_if": "{{ section.settings.media_type == 'video_url' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay (mute automatique requis)",
+      "default": false,
+      "visible_if": "{{ section.settings.media_type != 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Lecture en boucle",
+      "default": false,
+      "visible_if": "{{ section.settings.media_type != 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Position du média (desktop)",
+      "options": [
+        { "value": "left",  "label": "Gauche" },
+        { "value": "right", "label": "Droite" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "media_height_desktop",
+      "label": "Hauteur du média (desktop)",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "media_aspect_mobile",
+      "label": "Ratio H/L mobile (×100)",
+      "info": "56 ≈ 16/9, 75 ≈ 4/3, 100 = carré",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "default": 76
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "The Magical Box of Wonders"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Are you ready to unlock the mystery of the magical box? Well, buckle up because this video is sure to be a wild ride!"
+    },
+    {
+      "type": "text",
+      "id": "checklist_title",
+      "label": "Sous-titre liste",
+      "default": "WHY IT'S MAGICAL:"
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Lien"
+    },
+    {
+      "type": "color_background",
+      "id": "button_bg",
+      "label": "Fond du bouton",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Couleur du texte",
+      "default": "#ffffff"
+    },
+    {
+      "type": "html",
+      "id": "button_icon_left",
+      "label": "SVG icône (gauche, optionnel)"
+    },
+    {
+      "type": "html",
+      "id": "button_icon_right",
+      "label": "SVG icône (droite, optionnel)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bénéfice",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Bénéfice"
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "SVG de l'icône",
+          "info": "Colle le code SVG ici (taille 16×16 conseillée)"
+        }
+      ]
+    },
+    {
+      "type": "check",
+      "name": "Item checklist",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Ajoute une description ici."
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icône SVG (optionnel)",
+          "info": "Laisser vide pour utiliser l'icône check-circle par défaut"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG - Feature #2",
+      "blocks": [
+        { "type": "benefit", "settings": { "label": "Unicorn Horn" } },
+        { "type": "benefit", "settings": { "label": "Genie Lamp" } },
+        { "type": "benefit", "settings": { "label": "Dragon Scale" } },
+        { "type": "benefit", "settings": { "label": "Magical Wand" } },
+        { "type": "benefit", "settings": { "label": "Flying Carpet" } },
+        { "type": "benefit", "settings": { "label": "Magic Mirror" } },
+        { "type": "check",   "settings": { "text": "It can grant you any wish you desire." } },
+        { "type": "check",   "settings": { "text": "It can create an infinite supply of money and other resources." } },
+        { "type": "check",   "settings": { "text": "It can help you to achieve your goals more quickly and easily." } },
+        { "type": "check",   "settings": { "text": "It can provide you with guidance, direction, and wisdom." } },
+        { "type": "check",   "settings": { "text": "It can help you to better understand yourself." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

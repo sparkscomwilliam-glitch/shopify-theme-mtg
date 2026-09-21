@@ -1,0 +1,26 @@
+{% comment %} AG Product Info — Stock notification banner. Accepts: block, section {% endcomment %}
+
+{%- assign bs = block.settings -%}
+{%- assign uid = block.id | replace: '_', '-' | downcase -%}
+
+<style>
+  .ag-sn-{{ uid }} {
+    background-color: {{ bs.bg_color | default: '#ffecec' }};
+    border-left: {{ bs.border_width | default: 5 }}px solid {{ bs.border_color | default: '#ff6b6b' }};
+    padding: {{ bs.padding_y | default: 10 }}px {{ bs.padding_x | default: 15 }}px;
+    font-size: {{ bs.text_size | default: 15 }}px;
+    color: {{ bs.text_color | default: '#333333' }};
+    margin-top: {{ bs.margin_top | default: 20 }}px;
+    margin-bottom: {{ bs.margin_bottom | default: 0 }}px;
+    border-radius: {{ bs.radius | default: 5 }}px;
+    {%- if bs.font_family != blank -%}font-family: {{ bs.font_family }};{%- endif -%}
+  }
+  .ag-sn-{{ uid }} b, .ag-sn-{{ uid }} strong {
+    color: {{ bs.label_color | default: bs.text_color | default: '#333333' }};
+  }
+</style>
+
+<div class="ag-sn-{{ uid }}" {{ block.shopify_attributes }}>
+  {%- if bs.label != blank -%}<b>{{ bs.label }}</b> {% endif -%}
+  {{ bs.message }}
+</div>

@@ -1,0 +1,125 @@
+{% comment %}
+  AG Product Info — Quantity Breaks renderer
+  Renders "tier" blocks as selectable packs:
+  - blocks of type "tier" with settings: qty, discount, discount_code, title, subtitle, badge, save_label
+  - placeholders: [qty], [discount], [item_price], [total_price]
+  - selecting a tier updates [name="quantity"] and the displayed price (handled in ag-product-info.js)
+  - data-discount-code is read by the JS and applied via /discount/CODE on add-to-cart
+  - the actual discount must exist in Shopify (automatic discount or the matching code)
+
+  Accepts:
+  - product:       the product object
+  - section:       the host section (tiers are read from section.blocks)
+  - show_images:   boolean, renders a product thumb inside each card (V3)
+{% endcomment %}
+
+{%- liquid
+  assign qb_variant = product.selected_or_first_available_variant
+  assign tier_blocks = section.blocks | where: 'type', 'tier'
+
+  assign default_index = 1
+  assign i = 0
+  for block in tier_blocks
+    assign i = i | plus: 1
+    if block.settings.preselect
+      assign default_index = i
+      break
+    endif
+  endfor
+-%}
+
+{%- if tier_blocks.size > 0 -%}
+  <div class="ag-qb" data-ag-qty-breaks role="radiogroup" aria-label="{{ 'Choose your pack' }}">
+    {%- for block in tier_blocks -%}
+      {%- liquid
+        assign tier_qty = block.settings.qty | default: 1
+        assign tier_discount = block.settings.discount | default: 0
+
+        assign unit_price_cents = 100 | minus: tier_discount | times: qb_variant.price | divided_by: 100.0 | round
+        assign total_price_cents = unit_price_cents | times: tier_qty
+
+        if qb_variant.compare_at_price > qb_variant.price
+          assign compare_total_cents = qb_variant.compare_at_price | times: tier_qty
+        else
+          assign compare_total_cents = qb_variant.price | times: tier_qty
+        endif
+
+        assign item_price = unit_price_cents | money_without_trailing_zeros
+        assign total_price = total_price_cents | money_without_trailing_zeros
+        assign compare_total = compare_total_cents | money_without_trailing_zeros
+
+        assign qty_replace = tier_qty | append: ''
+        assign discount_replace = tier_discount | append: '%'
+
+        assign tier_title = block.settings.title | replace: '[qty]', qty_replace | replace: '[discount]', discount_replace | replace: '[item_price]', item_price | replace: '[total_price]', total_price
+        assign tier_subtitle = block.settings.subtitle | replace: '[qty]', qty_replace | replace: '[discount]', discount_replace | replace: '[item_price]', item_price | replace: '[total_price]', total_price
+        assign tier_badge = block.settings.badge | replace: '[qty]', qty_replace | replace: '[discount]', discount_replace | replace: '[item_price]', item_price | replace: '[total_price]', total_price
+        assign tier_save = block.settings.save_label | replace: '[qty]', qty_replace | replace: '[discount]', discount_replace | replace: '[item_price]', item_price | replace: '[total_price]', total_price
+
+        assign tier_id = 'ag-qb-' | append: section.id | append: '-' | append: forloop.index
+        if forloop.index == default_index
+          assign is_default = true
+        else
+          assign is_default = false
+        endif
+      -%}
+      <label
+        class="ag-qb-card{% if is_default %} is-selected{% endif %}"
+        for="{{ tier_id }}"
+        {{ block.shopify_attributes }}
+      >
+        <input
+          type="radio"
+          id="{{ tier_id }}"
+          class="ag-qb-input visually-hidden"
+          name="ag-qb-{{ section.id }}"
+          value="{{ tier_qty }}"
+          data-qty="{{ tier_qty }}"
+          data-discount="{{ tier_discount }}"
+          data-unit-cents="{{ unit_price_cents }}"
+          data-total-cents="{{ total_price_cents }}"
+          data-compare-cents="{{ compare_total_cents }}"
+          data-total="{{ total_price }}"
+          data-compare="{{ compare_total }}"
+          data-discount-code="{{ block.settings.discount_code | escape }}"
+          {% if is_default %}checked{% endif %}
+        >
+        <span class="ag-qb-radio" aria-hidden="true"></span>
+
+        {%- if show_images -%}
+          <span class="ag-qb-thumb" aria-hidden="true">
+            {%- if qb_variant.featured_image -%}
+              {{ qb_variant.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', alt: '' }}
+            {%- elsif product.featured_image -%}
+              {{ product.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', alt: '' }}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+
+        <span class="ag-qb-main">
+          <span class="ag-qb-titlerow">
+            {%- if tier_title != blank -%}
+              <span class="ag-qb-title">{{ tier_title }}</span>
+            {%- endif -%}
+            {%- if tier_badge != blank -%}
+              <span class="ag-qb-badge">{{ tier_badge }}</span>
+            {%- endif -%}
+          </span>
+          {%- if tier_subtitle != blank -%}
+            <span class="ag-qb-subtitle">{{ tier_subtitle }}</span>
+          {%- endif -%}
+        </span>
+
+        <span class="ag-qb-pricecol">
+          {%- if tier_discount > 0 -%}
+            <span class="ag-qb-compare">{{ compare_total }}</span>
+          {%- endif -%}
+          <span class="ag-qb-price">{{ total_price }}</span>
+          {%- if tier_save != blank -%}
+            <span class="ag-qb-save">{{ tier_save }}</span>
+          {%- endif -%}
+        </span>
+      </label>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

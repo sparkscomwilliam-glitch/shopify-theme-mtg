@@ -1,0 +1,64 @@
+{% assign block_settings = block.settings %}
+
+{%- liquid
+  assign icons = block_settings.icons | split: '|'
+  assign labels = block_settings.labels | split: '|'
+-%}
+
+<div class="ag-trust-badges" {{ block.shopify_attributes }}>
+  {%- for label in labels -%}
+    {%- assign trimmed = label | strip -%}
+    {%- if trimmed != blank -%}
+      {%- assign icon_name = icons[forloop.index0] | default: 'check' | strip -%}
+      <div class="ag-trust-badges__item">
+        <svg class="ag-trust-badges__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          {%- case icon_name -%}
+            {%- when 'truck' -%}
+              <path d="M3 7h11v8H3z"/><path d="M14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17.5" cy="17" r="1.6"/>
+            {%- when 'shield' -%}
+              <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>
+            {%- when 'refresh' -%}
+              <path d="M4 9a8 8 0 0 1 14-4l2 2"/><path d="M20 5v4h-4"/><path d="M20 15a8 8 0 0 1-14 4l-2-2"/><path d="M4 19v-4h4"/>
+            {%- when 'leaf' -%}
+              <path d="M4 20s4-2 8-6 4-10 4-10-6 0-10 4-2 8-2 8z"/><path d="M4 20l8-8"/>
+            {%- when 'lock' -%}
+              <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+            {%- when 'lab' -%}
+              <path d="M9 3v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V3"/><path d="M9 3h6"/>
+            {%- else -%}
+              <path d="M5 12l5 5L20 7"/>
+          {%- endcase -%}
+        </svg>
+        <span class="ag-trust-badges__label">{{ trimmed }}</span>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Trust Badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "labels",
+      "label": "Labels (separated by |)",
+      "default": "Livraison offerte<br>dès 40 €|Garantie<br>60 jours|Sans<br>engagement",
+      "info": "Separate each badge with a pipe character |. Use <br> for line breaks."
+    },
+    {
+      "type": "text",
+      "id": "icons",
+      "label": "Icons (separated by |)",
+      "default": "truck|shield|refresh",
+      "info": "Options: truck, shield, refresh, leaf, lock, lab, check"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Trust Badges"
+    }
+  ]
+}
+{% endschema %}

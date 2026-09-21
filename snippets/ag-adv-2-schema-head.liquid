@@ -1,0 +1,8 @@
+{% comment %}
+  ag-adv-2-schema-head.liquid — propriété de James Sparks
+  Rendered at the top of every ag-adv-2-* section. Browsers dedupe the
+  asset request, so multiple renders only cost a tiny amount of extra parsing.
+  Fonts inherit from the theme settings (Online Store > Theme > Customize > Typography):
+    serif role → theme heading font · sans role → theme body font · mono role → theme accent font.
+{% endcomment %}
+{{ 'ag-advertorial-2.css' | asset_url | stylesheet_tag }}

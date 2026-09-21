@@ -1,0 +1,223 @@
+{% assign block_settings = block.settings %}
+
+<div class="ag-subscription-plans" {{ block.shopify_attributes }}>
+
+  {%- comment -%} Plan 1 : Subscription / promoted plan {%- endcomment -%}
+  {%- if block_settings.plan_1_enabled -%}
+    <div
+      class="ag-subscription-plans__plan{% if block_settings.default_plan == 'plan_1' %} is-active{% endif %}"
+      role="button"
+      tabindex="0"
+      data-now="{{ block_settings.plan_1_price_now }}"
+      data-was="{{ block_settings.plan_1_price_was }}"
+      data-selling-plan-id="{{ block_settings.plan_1_selling_plan_id }}"
+      aria-pressed="{% if block_settings.default_plan == 'plan_1' %}true{% else %}false{% endif %}"
+    >
+      {%- if block_settings.plan_1_flag != blank -%}
+        <span class="ag-subscription-plans__flag">{{ block_settings.plan_1_flag }}</span>
+      {%- endif -%}
+
+      <div class="ag-subscription-plans__top">
+        <div>
+          <div class="ag-subscription-plans__name">
+            {{ block_settings.plan_1_name }}
+            {%- if block_settings.plan_1_save_label != blank -%}
+              <span class="ag-subscription-plans__save">{{ block_settings.plan_1_save_label }}</span>
+            {%- endif -%}
+          </div>
+          <div class="ag-subscription-plans__sub">{{ block_settings.plan_1_sub }}</div>
+        </div>
+        <div class="ag-subscription-plans__price">
+          {%- if block_settings.plan_1_price_was != blank -%}
+            <span class="ag-subscription-plans__was">{{ block_settings.plan_1_price_was }}</span>
+          {%- endif -%}
+          <span class="ag-subscription-plans__now">{{ block_settings.plan_1_price_now }}</span>
+          {%- if block_settings.plan_1_per != blank -%}
+            <span class="ag-subscription-plans__per">{{ block_settings.plan_1_per }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if block_settings.plan_1_perks != blank -%}
+        <div class="ag-subscription-plans__perks">
+          <div>
+            <ul>
+              {%- assign perks = block_settings.plan_1_perks | split: '|' -%}
+              {%- for perk in perks -%}
+                {%- assign trimmed = perk | strip -%}
+                {%- if trimmed != blank -%}
+                  <li><span class="ag-ck" aria-hidden="true"></span>{{ trimmed }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Plan 2 : One-time purchase {%- endcomment -%}
+  {%- if block_settings.plan_2_enabled -%}
+    <div
+      class="ag-subscription-plans__plan{% if block_settings.default_plan == 'plan_2' %} is-active{% endif %}"
+      role="button"
+      tabindex="0"
+      data-now="{{ block_settings.plan_2_price_now }}"
+      data-was="{{ block_settings.plan_2_price_was }}"
+      data-selling-plan-id="one-time"
+      aria-pressed="{% if block_settings.default_plan == 'plan_2' %}true{% else %}false{% endif %}"
+    >
+      <div class="ag-subscription-plans__top">
+        <div>
+          <div class="ag-subscription-plans__name">{{ block_settings.plan_2_name }}</div>
+          <div class="ag-subscription-plans__sub">{{ block_settings.plan_2_sub }}</div>
+        </div>
+        <div class="ag-subscription-plans__price">
+          {%- if block_settings.plan_2_price_was != blank -%}
+            <span class="ag-subscription-plans__was">{{ block_settings.plan_2_price_was }}</span>
+          {%- endif -%}
+          <span class="ag-subscription-plans__now">{{ block_settings.plan_2_price_now }}</span>
+          {%- if block_settings.plan_2_per != blank -%}
+            <span class="ag-subscription-plans__per">{{ block_settings.plan_2_per }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "AG Subscription Plans",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "select",
+      "id": "default_plan",
+      "label": "Default plan",
+      "options": [
+        { "value": "plan_1", "label": "Plan 1 (Subscription)" },
+        { "value": "plan_2", "label": "Plan 2 (One-time)" }
+      ],
+      "default": "plan_1"
+    },
+    {
+      "type": "paragraph",
+      "content": "Set plan_1_selling_plan_id to a Shopify selling plan ID to enable subscription. Leave empty for visual demo only."
+    },
+    {
+      "type": "header",
+      "content": "Plan 1 (Subscription)"
+    },
+    {
+      "type": "checkbox",
+      "id": "plan_1_enabled",
+      "label": "Enable Plan 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "plan_1_flag",
+      "label": "Flag (top-right)",
+      "default": "Le plus choisi"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_name",
+      "label": "Plan name",
+      "default": "Abonnement"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_save_label",
+      "label": "Save label (next to name)",
+      "default": "−20 %"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_sub",
+      "label": "Sub-description",
+      "default": "Livré tous les 30 jours · sans engagement"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_price_now",
+      "label": "Current price",
+      "default": "47 €"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_price_was",
+      "label": "Original price (strikethrough)",
+      "default": "59 €"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_per",
+      "label": "Per-unit label",
+      "default": "≈ 1,57 € / jour"
+    },
+    {
+      "type": "textarea",
+      "id": "plan_1_perks",
+      "label": "Perks (separated by |)",
+      "default": "Livraison offerte, à chaque envoi|Modifiable, suspendable ou résiliable en un clic|Tarif réduit garanti à vie — jamais réévalué"
+    },
+    {
+      "type": "text",
+      "id": "plan_1_selling_plan_id",
+      "label": "Shopify selling plan ID",
+      "info": "Optional. Get this from Shopify subscription app."
+    },
+    {
+      "type": "header",
+      "content": "Plan 2 (One-time purchase)"
+    },
+    {
+      "type": "checkbox",
+      "id": "plan_2_enabled",
+      "label": "Enable Plan 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "plan_2_name",
+      "label": "Plan name",
+      "default": "Achat unique"
+    },
+    {
+      "type": "text",
+      "id": "plan_2_sub",
+      "label": "Sub-description",
+      "default": "Une cure de 60 jours, sans renouvellement"
+    },
+    {
+      "type": "text",
+      "id": "plan_2_price_now",
+      "label": "Current price",
+      "default": "59 €"
+    },
+    {
+      "type": "text",
+      "id": "plan_2_price_was",
+      "label": "Original price (strikethrough, optional)"
+    },
+    {
+      "type": "text",
+      "id": "plan_2_per",
+      "label": "Per-unit label",
+      "default": "≈ 1,97 € / jour"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Subscription Plans"
+    }
+  ]
+}
+{% endschema %}

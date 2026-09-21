@@ -1,0 +1,216 @@
+{% comment %} ag-adv-2-footer.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.text_color != blank %}color:{{ s.text_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.disclaimer_color != blank %}--ag2-footer-disc:{{ s.disclaimer_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <footer class="ag-adv-2-footer">
+    <div class="ag-adv-2__col-wide">
+      {%- if s.sponsored_label != blank -%}
+        <span class="ag-adv-2-footer__sponsored">{{ s.sponsored_label }}</span>
+      {%- endif -%}
+      {%- if s.logo_image != blank or s.logo_text != blank -%}
+        <div class="ag-adv-2-footer__logo"{% if s.logo_color != blank %} style="color:{{ s.logo_color }};"{% endif %}>
+          {%- if s.logo_image != blank -%}
+            <img src="{{ s.logo_image | image_url: width: 320 }}" alt="{{ s.logo_text | escape }}" style="max-height:36px;width:auto;display:inline-block;">
+          {%- else -%}
+            {{ s.logo_text }}{% if s.logo_text_bold != blank %} <b>{{ s.logo_text_bold }}</b>{% endif %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="ag-adv-2-footer__links"{% if s.links_color != blank %} style="color:{{ s.links_color }};"{% endif %}>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'link' and block.settings.label != blank -%}
+              <a href="{{ block.settings.link | default: '#' }}"{% if s.links_color != blank %} style="color:{{ s.links_color }};"{% endif %} {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if s.disclaimer != blank -%}
+        <p class="ag-adv-2-footer__disclaimer"{% if s.disclaimer_color != blank %} style="color:{{ s.disclaimer_color }};"{% endif %}>{{ s.disclaimer }}</p>
+      {%- endif -%}
+    </div>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Footer",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge sponsorisé"
+    },
+    {
+      "type": "text",
+      "id": "sponsored_label",
+      "label": "Texte du badge",
+      "default": "Article sponsorisé"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Texte du logo",
+      "default": "The Glow"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_bold",
+      "label": "Texte du logo (accent)",
+      "default": "Report"
+    },
+    {
+      "type": "header",
+      "content": "Disclaimer"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Ceci est un publi-rédactionnel. Les témoignages, photographies et résultats présentés sont fournis à titre illustratif et n'engagent pas de garantie de résultat individuel. Les résultats varient d'une personne à l'autre. © 2026 The Glow Report. Tous droits réservés."
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#b8b4b1"
+    },
+    {
+      "type": "color",
+      "id": "logo_color",
+      "label": "Couleur du logo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (badge & b du logo)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "links_color",
+      "label": "Couleur des liens",
+      "default": "#b8b4b1"
+    },
+    {
+      "type": "color",
+      "id": "disclaimer_color",
+      "label": "Couleur du disclaimer",
+      "default": "#807c79"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Lien footer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texte",
+          "default": "Mentions légales"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Footer",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "label": "Mentions légales"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Confidentialité"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Conditions de vente"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

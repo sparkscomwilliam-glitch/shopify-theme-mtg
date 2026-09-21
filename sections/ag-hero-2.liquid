@@ -1,0 +1,1474 @@
+{% comment %}
+  AG Hero 2 Section
+  A responsive hero section with different layouts for desktop and mobile
+{% endcomment %}
+
+{%- liquid
+  assign show_rating = section.settings.show_rating
+  assign rating_value = section.settings.rating_value
+  assign review_display_text = section.settings.review_display_text
+  assign rating_link = section.settings.review_link
+  assign rating_color = section.settings.rating_color
+  assign rating_text_color = section.settings.rating_text_color
+  assign star_size = section.settings.star_size
+  assign mobile_review_alignment = section.settings.mobile_review_alignment | default: section.settings.review_alignment
+
+  assign mobile_review_alignment_class = 'center'
+  if mobile_review_alignment == 'left'
+    assign mobile_review_alignment_class = 'left'
+  elsif mobile_review_alignment == 'right'
+    assign mobile_review_alignment_class = 'right'
+  endif
+
+  assign pre_heading = section.settings.pre_heading
+  assign pre_heading_color = section.settings.pre_heading_color
+  assign pre_heading_use_gradient = section.settings.pre_heading_use_gradient
+
+  assign hero_title = section.settings.heading
+  assign heading_color = section.settings.heading_color
+  assign heading_size_desktop = section.settings.heading_size_desktop
+  assign heading_size_mobile = section.settings.heading_size_mobile
+  assign show_title_gradient = section.settings.heading_use_gradient
+  assign title_gradient = section.settings.heading_gradient
+
+  assign use_colored_words = section.settings.use_colored_words
+  assign colored_words = section.settings.colored_words
+  assign word_color = section.settings.word_color
+
+  assign use_font_words = section.settings.use_font_words
+  assign font_words = section.settings.font_words
+  assign custom_font = section.settings.custom_font
+
+  assign description = section.settings.description
+  assign description_color = section.settings.description_color
+  assign desktop_description_size = section.settings.description_size_desktop
+  assign mobile_description_size = section.settings.description_size_mobile
+
+  assign button_text = section.settings.button_text
+  assign button_url = section.settings.button_url
+  assign button_text_color = section.settings.button_text_color
+  assign button_bg_color = section.settings.button_bg_color
+  assign button_radius = section.settings.button_radius
+  assign button_use_gradient = section.settings.button_use_gradient
+  assign button_gradient = section.settings.button_gradient
+  assign button_use_icon = section.settings.button_use_icon
+  assign button_icon_svg = section.settings.button_icon_svg
+  assign button_icon_position = section.settings.button_icon_position
+
+  assign hero_image = section.settings.image
+  assign mobile_image = section.settings.mobile_image | default: hero_image
+
+  assign button_width_desktop = section.settings.button_width_desktop
+  assign button_height_desktop = section.settings.button_height_desktop
+  assign button_width_mobile = section.settings.button_width_mobile
+  assign button_height_mobile = section.settings.button_height_mobile
+
+  assign gradient_desktop = section.settings.gradient_desktop
+  assign gradient_mobile = section.settings.gradient_mobile
+-%}
+
+{% stylesheet %}
+.ag-hero-2 {
+  width: 100%;
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+}
+
+/* Visibility control — scoped to this section */
+.ag-hero-2 .ag-hero-2--desktop-only {
+  display: none !important;
+}
+
+.ag-hero-2 .ag-hero-2--mobile-only {
+  display: block;
+}
+
+@media screen and (min-width: 992px) {
+  .ag-hero-2 .ag-hero-2--desktop-only {
+    display: block !important;
+  }
+
+  .ag-hero-2 .ag-hero-2--mobile-only {
+    display: none !important;
+  }
+}
+
+.ag-hero-2__container {
+  position: relative;
+  width: 100%;
+  background: transparent;
+}
+
+.ag-hero-2__image {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+}
+
+.ag-hero-2__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ag-hero-2__placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+
+.ag-hero-2__gradient-overlay {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+}
+
+.ag-hero-2__content {
+  position: absolute;
+  top: 149px;
+  left: var(--content-padding-left, 75px);
+  right: var(--content-padding-right, auto);
+  width: calc(725px - var(--content-padding-left, 75px) + 75px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 48px;
+  z-index: 2;
+  background: transparent;
+}
+
+.ag-hero-2__pre-heading {
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  line-height: 16px;
+  white-space: pre-wrap;
+  margin: 0 0 10px 0;
+  text-align: left !important;
+  background: transparent;
+}
+
+.ag-hero-2__heading-wrapper {
+  width: 100%;
+  background: transparent;
+}
+
+.ag-hero-2__heading {
+  font-size: 55px;
+  font-weight: var(--font-heading-weight);
+  line-height: 116%;
+  text-transform: capitalize;
+  margin: 0;
+  font-family: var(--font-heading-family) !important;
+  background: transparent;
+}
+
+.ag-hero-2__description {
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  line-height: 150%;
+  margin: 0;
+  background: transparent;
+}
+
+.ag-hero-2__cta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 454px;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.ag-hero-2__reviews-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.ag-hero-2__review-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.ag-hero-2 .stars-container {
+  display: flex;
+  align-items: center;
+}
+
+.ag-hero-2__button {
+  width: 100%;
+  border-radius: 25px;
+  background-color: #000;
+  color: #f4fbfe;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 28px;
+  text-transform: uppercase;
+  padding: 18px 35px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.ag-hero-2__button--mobile {
+  width: 100%;
+  height: var(--button-height-mobile, auto);
+}
+
+.ag-hero-2--desktop-only .ag-hero-2__button {
+  width: var(--button-width-desktop, auto);
+  height: var(--button-height-desktop, auto);
+}
+
+.ag-hero-2__button-text {
+  display: inline-block;
+}
+
+.ag-hero-2__button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-hero-2__button-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ag-hero-2__rating-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #000;
+}
+
+.ag-hero-2__stars-container {
+  display: flex;
+  align-items: center;
+}
+
+.ag-hero-2__rating-text {
+  letter-spacing: 0.05em;
+  line-height: 19px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* Rating stars styling */
+.ag-hero-2 .rating-stars {
+  display: flex;
+  align-items: center;
+}
+
+.ag-hero-2 .rating-stars__star {
+  display: inline-flex;
+  margin-right: 2px;
+}
+
+.ag-hero-2 .rating-stars__star--filled {
+  color: var(--star-color, #FFD700);
+}
+
+.ag-hero-2 .rating-stars__star--half path {
+  stroke: var(--star-color, #FFD700);
+}
+
+.ag-hero-2 .rating-stars__star--empty {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+/* Desktop styles */
+@media screen and (min-width: 992px) {
+  .ag-hero-2__container {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 660px;
+    overflow: hidden;
+    display: block;
+  }
+
+  .ag-hero-2__image {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 783px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 783px;
+    z-index: 0;
+  }
+
+  .ag-hero-2__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .ag-hero-2__gradient-overlay {
+    position: absolute;
+    width: 100%;
+    top: calc(50% - 330px);
+    right: 0;
+    left: 0;
+    height: 660px;
+    z-index: 1;
+  }
+
+  .ag-hero-2__content {
+    position: absolute;
+    top: 149px;
+    left: var(--content-padding-left, 75px);
+    right: var(--content-padding-right, auto);
+    width: calc(725px - var(--content-padding-left, 75px) + 75px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 48px;
+    z-index: 2;
+    background: transparent;
+  }
+
+  .ag-hero-2__main-content {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 48px;
+    background: transparent;
+  }
+
+  .ag-hero-2__text-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+    background: transparent;
+  }
+
+  .ag-hero-2__pre-heading-wrapper {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ag-hero-2__heading-wrapper {
+    align-self: stretch;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ag-hero-2__heading {
+    position: relative;
+    line-height: 116%;
+    text-transform: capitalize;
+    font-size: 55px;
+    font-family: var(--font-heading-family) !important;
+    font-weight: var(--font-heading-weight);
+    margin: 0;
+  }
+
+  .ag-hero-2__description-wrapper {
+    align-self: stretch;
+    position: relative;
+  }
+
+  .ag-hero-2__description {
+    position: relative;
+    letter-spacing: 0.01em;
+    line-height: 150%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 725px;
+    font-size: 18px;
+  }
+
+  .ag-hero-2__cta-section {
+    width: 454px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .ag-hero-2__button {
+    align-self: stretch;
+    border-radius: 25px;
+    background-color: #000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 35px;
+    font-size: 16px;
+    color: #f4fbfe;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 28px;
+    text-transform: uppercase;
+  }
+
+  .ag-hero-2__reviews-wrapper {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #000;
+  }
+
+  .ag-hero-2__review-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5px;
+  }
+
+  .ag-hero-2 .stars-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5px;
+  }
+
+  .ag-hero-2__rating-text {
+    position: relative;
+    letter-spacing: 0.05em;
+    line-height: 19px;
+    text-transform: uppercase;
+  }
+}
+
+/* Mobile and Tablet styles */
+@media screen and (max-width: 991px) {
+  .ag-hero-2__container {
+    height: 697px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+  }
+
+  .ag-hero-2__image {
+    position: absolute;
+    height: calc(100% - 264px);
+    width: 100%;
+    top: 264px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  .ag-hero-2__gradient-overlay {
+    position: absolute;
+    width: 100%;
+    top: calc(50% - 347.5px);
+    right: 0;
+    left: 0;
+    height: 695px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ag-hero-2__content {
+    position: absolute;
+    width: 88.89%;
+    top: 66.98px;
+    right: 5.55%;
+    left: 5.56%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+    z-index: 2;
+    text-align: center;
+    background: transparent;
+  }
+
+  .ag-hero-2__pre-heading {
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    line-height: 150%;
+    text-align: center !important;
+    width: 100%;
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .ag-hero-2__heading {
+    font-size: 30px;
+    letter-spacing: -0.03em;
+    line-height: 116%;
+    text-transform: capitalize;
+    font-family: var(--font-heading-family) !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ag-hero-2__description {
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    line-height: 150%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ag-hero-2__cta-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .ag-hero-2__reviews-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .ag-hero-2__button {
+    width: 100%;
+    border-radius: 50px;
+    background-color: #021832;
+    color: #f4fbfe;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 50px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 28px;
+    text-transform: uppercase;
+  }
+
+  /* Tablet adjustments */
+  @media screen and (min-width: 750px) and (max-width: 991px) {
+    .ag-hero-2__container {
+      height: 800px;
+    }
+
+    .ag-hero-2__image {
+      height: calc(100% - 300px);
+      top: 300px;
+    }
+
+    .ag-hero-2__content {
+      top: 80px;
+      gap: 35px;
+    }
+
+    .ag-hero-2__heading {
+      font-size: 40px !important;
+    }
+
+    .ag-hero-2__description {
+      font-size: 18px !important;
+    }
+  }
+}
+{% endstylesheet %}
+
+{%- style -%}
+  /* Force the Shopify section wrapper to be truly full-width */
+  .shopify-section:has(#ag-hero-2-{{ section.id }}) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* CSS Variables */
+  #ag-hero-2-{{ section.id }} {
+    --button-width-desktop: {{ button_width_desktop }}px;
+    --button-height-desktop: {{ button_height_desktop }}px;
+    --button-height-mobile: {{ button_height_mobile }}px;
+    --content-padding-left: {{ section.settings.content_padding_left | default: 75 }}px;
+    --content-padding-right: {{ section.settings.content_padding_right | default: 0 }}px;
+    {% if section.settings.title_font %}
+      --title-font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
+      --title-font-weight: {{ section.settings.title_font.weight }};
+      --title-font-style: {{ section.settings.title_font.style }};
+    {% else %}
+      --title-font-family: var(--font-heading-family);
+      --title-font-weight: var(--font-heading-weight);
+      --title-font-style: normal;
+    {% endif %}
+  }
+
+  /* Desktop styles */
+  #ag-hero-2-{{ section.id }} .ag-hero-2__gradient-overlay {
+    background: {{ gradient_desktop }};
+  }
+
+  #ag-hero-2-{{ section.id }} .ag-hero-2__award-text {
+    font-size: {{ section.settings.pre_heading_size_desktop }}px;
+    {% if pre_heading_use_gradient and section.settings.pre_heading_gradient != blank %}
+      background: {{ section.settings.pre_heading_gradient }};
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    {% else %}
+      color: {{ pre_heading_color }};
+    {% endif %}
+  }
+
+  #ag-hero-2-{{ section.id }} .ag-hero-2__heading {
+    font-size: {{ heading_size_desktop }}px;
+    font-family: var(--title-font-family) !important;
+    font-weight: var(--title-font-weight) !important;
+    font-style: var(--title-font-style) !important;
+  }
+
+  #ag-hero-2-{{ section.id }} .ag-hero-2__description {
+    font-size: {{ desktop_description_size }}px;
+  }
+
+  #ag-hero-2-{{ section.id }} .ag-hero-2__button {
+    border-radius: {{ button_radius }}px;
+    {% if button_use_gradient and button_gradient != blank %}
+      background: {{ button_gradient }};
+    {% else %}
+      background-color: {{ button_bg_color }};
+    {% endif %}
+    color: {{ button_text_color }};
+  }
+
+  /* Desktop spacing */
+  #ag-hero-2-{{ section.id }} .ag-hero-2__content {
+    gap: {{ section.settings.content_spacing_desktop }}px;
+  }
+
+  #ag-hero-2-{{ section.id }} .ag-hero-2__cta-section {
+    margin-top: {{ section.settings.cta_margin_desktop }}px;
+    gap: {{ section.settings.cta_spacing_desktop }}px;
+  }
+
+  /* Mobile styles */
+  @media screen and (max-width: 991px) {
+    #ag-hero-2-{{ section.id }} .ag-hero-2--mobile-only .ag-hero-2__gradient-overlay {
+      background: {{ gradient_mobile }};
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__award-text {
+      font-size: {{ section.settings.pre_heading_size_mobile }}px;
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__heading {
+      font-size: {{ heading_size_mobile }}px;
+      font-family: var(--title-font-family) !important;
+      font-weight: var(--title-font-weight) !important;
+      font-style: var(--title-font-style) !important;
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__description {
+      font-size: {{ mobile_description_size }}px;
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__content {
+      gap: {{ section.settings.content_spacing_mobile }}px;
+      padding-top: {{ section.settings.content_padding_top_mobile }}px;
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__cta-section {
+      margin-top: {{ section.settings.cta_margin_mobile }}px;
+      gap: {{ section.settings.cta_spacing_mobile }}px;
+    }
+
+    #ag-hero-2-{{ section.id }} .ag-hero-2__rating-container {
+      justify-content: center;
+    }
+  }
+{%- endstyle -%}
+
+{%- capture heading_html -%}
+  {% if hero_title != blank %}
+    {% if show_title_gradient and title_gradient != blank %}
+      <h1 class="ag-hero-2__heading" style="background: {{ title_gradient }}; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">
+        {{ hero_title }}
+      </h1>
+    {% elsif use_colored_words and colored_words != blank %}
+      {% assign words_array = colored_words | split: ', ' %}
+      {% assign title_with_colors = hero_title %}
+      {% for word in words_array %}
+        {% assign word_trimmed = word | strip %}
+        {% assign replacement = '<span style="color: ' | append: word_color | append: ';">' | append: word_trimmed | append: '</span>' %}
+        {% assign title_with_colors = title_with_colors | replace: word_trimmed, replacement %}
+      {% endfor %}
+      <h1 class="ag-hero-2__heading" style="color: {{ heading_color }};">{{ title_with_colors }}</h1>
+    {% elsif use_font_words and font_words != blank %}
+      {% assign words_array = font_words | split: ', ' %}
+      {% assign title_with_font = hero_title %}
+      {% for word in words_array %}
+        {% assign word_trimmed = word | strip %}
+        {% assign replacement = '<span style="font-family: ' | append: custom_font | append: ';">' | append: word_trimmed | append: '</span>' %}
+        {% assign title_with_font = title_with_font | replace: word_trimmed, replacement %}
+      {% endfor %}
+      <h1 class="ag-hero-2__heading" style="color: {{ heading_color }};">{{ title_with_font }}</h1>
+    {% else %}
+      <h1 class="ag-hero-2__heading" style="color: {{ heading_color }};">{{ hero_title }}</h1>
+    {% endif %}
+  {% endif %}
+{%- endcapture -%}
+
+{%- capture rating_html -%}
+  {% if show_rating %}
+    <div class="ag-hero-2__reviews-wrapper {{ mobile_review_alignment_class }}">
+      <div class="ag-hero-2__review-wrapper">
+        <div class="stars-container" style="font-size: {{ star_size }}px;">
+          {% assign full_stars = rating_value | floor %}
+          {% assign has_half_star = rating_value | modulo: 1 %}
+          {% assign empty_stars = 5 | minus: full_stars %}
+          {% if has_half_star > 0 %}
+            {% assign empty_stars = empty_stars | minus: 1 %}
+          {% endif %}
+
+          {% for i in (1..full_stars) %}
+            <span class="rating-stars__star rating-stars__star--filled" style="color: {{ rating_color }};">★</span>
+          {% endfor %}
+
+          {% if has_half_star > 0 %}
+            <span class="rating-stars__star rating-stars__star--half" style="color: {{ rating_color }};">☆</span>
+          {% endif %}
+
+          {% for i in (1..empty_stars) %}
+            <span class="rating-stars__star rating-stars__star--empty" style="color: rgba(0,0,0,0.2);">☆</span>
+          {% endfor %}
+        </div>
+        {% if review_display_text != blank %}
+          {% if rating_link != blank %}
+            <a
+              href="{{ rating_link }}"
+              class="ag-hero-2__rating-text"
+              style="color: {{ rating_text_color }}"
+            >
+              {{ review_display_text }}
+            </a>
+          {% else %}
+            <span class="ag-hero-2__rating-text" style="color: {{ rating_text_color }}">
+              {{ review_display_text }}
+            </span>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{%- endcapture -%}
+
+{%- capture button_html -%}
+  {% if button_text != blank %}
+    <a href="{{ button_url | default: '#' }}" class="ag-hero-2__button">
+      {% if button_use_icon and button_icon_position == 'left' %}
+        <span class="ag-hero-2__button-icon ag-hero-2__button-icon--left">
+          {{ button_icon_svg }}
+        </span>
+      {% endif %}
+      <span class="ag-hero-2__button-text">{{ button_text }}</span>
+      {% if button_use_icon and button_icon_position == 'right' %}
+        <span class="ag-hero-2__button-icon ag-hero-2__button-icon--right">
+          {{ button_icon_svg }}
+        </span>
+      {% endif %}
+    </a>
+  {% endif %}
+{%- endcapture -%}
+
+<div class="ag-hero-2" id="ag-hero-2-{{ section.id }}">
+  <!-- Desktop View -->
+  <div class="ag-hero-2__container ag-hero-2--desktop-only">
+    <div class="ag-hero-2__image">
+      {% if hero_image != blank %}
+        <img
+          srcset="{%- if hero_image.width >= 165 -%}{{ hero_image | image_url: width: 165 }} 165w,{%- endif -%}
+          {%- if hero_image.width >= 360 -%}{{ hero_image | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if hero_image.width >= 535 -%}{{ hero_image | image_url: width: 535 }} 535w,{%- endif -%}
+          {%- if hero_image.width >= 720 -%}{{ hero_image | image_url: width: 720 }} 720w,{%- endif -%}
+          {%- if hero_image.width >= 990 -%}{{ hero_image | image_url: width: 990 }} 990w,{%- endif -%}
+          {%- if hero_image.width >= 1200 -%}{{ hero_image | image_url: width: 1200 }} 1200w,{%- endif -%}
+          {%- if hero_image.width >= 1600 -%}{{ hero_image | image_url: width: 1600 }} 1600w,{%- endif -%}"
+          src="{{ hero_image | image_url: width: 1600 }}"
+          sizes="(min-width: 992px) 40vw, 100vw"
+          alt="{{ hero_image.alt | default: 'Hero image' | escape }}"
+          loading="lazy"
+          width="{{ hero_image.width }}"
+          height="{{ hero_image.height }}"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'ag-hero-2__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="ag-hero-2__gradient-overlay"></div>
+
+    <div class="ag-hero-2__content">
+      <div class="ag-hero-2__main-content">
+        <div class="ag-hero-2__text-section">
+          {% if pre_heading != blank %}
+            <h3
+              class="ag-hero-2__pre-heading ag-hero-2__award-text{% if pre_heading_use_gradient %} ag-hero-2__pre-heading--gradient{% endif %}"
+              {% unless pre_heading_use_gradient %}
+                style="color: {{ pre_heading_color }};"
+              {% endunless %}
+            >
+              {{ pre_heading }}
+            </h3>
+          {% endif %}
+
+          <div class="ag-hero-2__heading-wrapper">
+            {{ heading_html }}
+          </div>
+        </div>
+
+        {% if description != blank %}
+          <div class="ag-hero-2__description-wrapper">
+            <div class="ag-hero-2__description" style="color: {{ description_color }};">
+              {{ description }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ag-hero-2__cta-section">
+        {{ button_html }}
+        {{ rating_html }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile View -->
+  <div class="ag-hero-2__container ag-hero-2--mobile-only">
+    <div class="ag-hero-2__gradient-overlay"></div>
+
+    <div class="ag-hero-2__content">
+      {% if pre_heading != blank %}
+        <h3
+          class="ag-hero-2__pre-heading ag-hero-2__award-text{% if pre_heading_use_gradient %} ag-hero-2__pre-heading--gradient{% endif %}"
+          {% unless pre_heading_use_gradient %}
+            style="color: {{ pre_heading_color }};"
+          {% endunless %}
+        >
+          {{ pre_heading }}
+        </h3>
+      {% endif %}
+
+      <div class="ag-hero-2__heading-wrapper">
+        {{ heading_html }}
+      </div>
+
+      {% if description != blank %}
+        <div class="ag-hero-2__description" style="color: {{ description_color }}; font-size: {{ mobile_description_size }}px;">
+          {{ description }}
+        </div>
+      {% endif %}
+
+      <div class="ag-hero-2__cta-section">
+        {% if button_text != blank %}
+          <a
+            href="{{ button_url | default: '#' }}"
+            class="ag-hero-2__button ag-hero-2__button--mobile"
+          >
+            {% if button_use_icon and button_icon_position == 'left' %}
+              <span class="ag-hero-2__button-icon ag-hero-2__button-icon--left">
+                {{ button_icon_svg }}
+              </span>
+            {% endif %}
+            <span class="ag-hero-2__button-text">{{ button_text }}</span>
+            {% if button_use_icon and button_icon_position == 'right' %}
+              <span class="ag-hero-2__button-icon ag-hero-2__button-icon--right">
+                {{ button_icon_svg }}
+              </span>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        {{ rating_html }}
+      </div>
+    </div>
+
+    <div class="ag-hero-2__image">
+      {% if mobile_image != blank %}
+        <img
+          srcset="{%- if mobile_image.width >= 165 -%}{{ mobile_image | image_url: width: 165 }} 165w,{%- endif -%}
+          {%- if mobile_image.width >= 360 -%}{{ mobile_image | image_url: width: 360 }} 360w,{%- endif -%}
+          {%- if mobile_image.width >= 535 -%}{{ mobile_image | image_url: width: 535 }} 535w,{%- endif -%}
+          {%- if mobile_image.width >= 720 -%}{{ mobile_image | image_url: width: 720 }} 720w,{%- endif -%}
+          {%- if mobile_image.width >= 990 -%}{{ mobile_image | image_url: width: 990 }} 990w,{%- endif -%}
+          {%- if mobile_image.width >= 1200 -%}{{ mobile_image | image_url: width: 1200 }} 1200w,{%- endif -%}"
+          src="{{ mobile_image | image_url: width: 720 }}"
+          sizes="100vw"
+          alt="{{ mobile_image.alt | default: 'Hero mobile image' | escape }}"
+          loading="lazy"
+          width="{{ mobile_image.width }}"
+          height="{{ mobile_image.height }}"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'ag-hero-2__placeholder' }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero 2",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image",
+      "info": "If not set, desktop image will be used"
+    },
+    {
+      "type": "header",
+      "content": "Gradients & Overlays"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_desktop",
+      "label": "Gradient Overlay (Desktop)",
+      "default": "linear-gradient(to bottom, rgba(211, 25, 25, 0) 41.83%, rgba(211, 25, 25, 1) 100%)"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_mobile",
+      "label": "Gradient Overlay (Mobile)",
+      "default": "linear-gradient(to bottom, rgba(0, 0, 0, 0) 41.83%, rgba(0, 0, 0, 0.5) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Rating & Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show Rating Stars",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rating_value",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "label": "Rating Value",
+      "default": 4.8
+    },
+    {
+      "type": "text",
+      "id": "review_display_text",
+      "label": "Rating Text",
+      "default": "4.8 · XXXX+ happy customers"
+    },
+    {
+      "type": "color",
+      "id": "rating_color",
+      "label": "Stars Color",
+      "default": "#FFC72D"
+    },
+    {
+      "type": "color",
+      "id": "rating_text_color",
+      "label": "Rating Text Color",
+      "default": "#042138"
+    },
+    {
+      "type": "url",
+      "id": "review_link",
+      "label": "Rating Link URL",
+      "info": "URL for the rating text to link to"
+    },
+    {
+      "type": "select",
+      "id": "review_alignment",
+      "label": "Stars Alignment (Desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_review_alignment",
+      "label": "Stars Alignment (Mobile)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Stars Size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "pre_heading",
+      "label": "Award Text (Uptitle)",
+      "default": "XXX AWARD WINNING • XXX+ SOLD"
+    },
+    {
+      "type": "checkbox",
+      "id": "pre_heading_use_gradient",
+      "label": "Use Gradient for Uptitle",
+      "default": false
+    },
+    {
+      "type": "color_background",
+      "id": "pre_heading_gradient",
+      "label": "Uptitle Gradient",
+      "default": "linear-gradient(to right, #FF0000, #0000FF)"
+    },
+    {
+      "type": "color",
+      "id": "pre_heading_color",
+      "label": "Uptitle Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "pre_heading_size_desktop",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Uptitle Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "pre_heading_size_mobile",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Uptitle Size (Mobile)",
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Lorem ipsum tempor<br>Incididunt ut labore"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_use_gradient",
+      "label": "Use Gradient for Heading",
+      "default": false,
+      "info": "The gradient is applied directly on the text"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading Gradient",
+      "default": "linear-gradient(to right, #FF0000, #0000FF)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_colored_words",
+      "label": "Color Specific Words in Heading",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "colored_words",
+      "label": "Words to Color (comma-separated)",
+      "info": "e.g., ipsum, labore"
+    },
+    {
+      "type": "color",
+      "id": "word_color",
+      "label": "Color for Specific Words",
+      "default": "#FF6347"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_font_words",
+      "label": "Use Custom Font for Specific Words",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "font_words",
+      "label": "Words for Custom Font (comma-separated)",
+      "info": "e.g., ipsum, labore"
+    },
+    {
+      "type": "select",
+      "id": "custom_font",
+      "label": "Custom Font for Words",
+      "options": [
+        { "value": "inherit", "label": "Default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "Times New Roman, serif", "label": "Times New Roman" },
+        { "value": "Helvetica, sans-serif", "label": "Helvetica" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 16,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 30
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, <br>sed do eiusmod tempor.</p>"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_use_gradient",
+      "label": "Use Gradient for Button",
+      "default": false
+    },
+    {
+      "type": "color_background",
+      "id": "button_gradient",
+      "label": "Button Gradient",
+      "default": "linear-gradient(to right, #FF0000, #0000FF)"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 25
+    },
+    {
+      "type": "checkbox",
+      "id": "button_use_icon",
+      "label": "Use Icon in Button",
+      "default": false
+    },
+    {
+      "type": "html",
+      "id": "button_icon_svg",
+      "label": "Button Icon SVG",
+      "info": "Paste your SVG code here"
+    },
+    {
+      "type": "select",
+      "id": "button_icon_position",
+      "label": "Icon Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Button Size Settings"
+    },
+    {
+      "type": "range",
+      "id": "button_width_desktop",
+      "min": 150,
+      "max": 450,
+      "step": 10,
+      "unit": "px",
+      "label": "Button Width (Desktop)",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "button_height_desktop",
+      "min": 40,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Height (Desktop)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "button_height_mobile",
+      "min": 40,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Height (Mobile)",
+      "default": 46
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_left",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Padding Left (Desktop)",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "content_padding_right",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Padding Right (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_spacing_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Spacing",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cta_margin_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "CTA Section Margin",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cta_spacing_desktop",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "CTA Internal Spacing",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_spacing_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap entre les éléments (Mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "content_padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top du contenu (Mobile)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cta_margin_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "CTA Section Margin",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "cta_spacing_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "CTA Internal Spacing",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero 2",
+      "category": "Hero",
+      "settings": {
+        "heading": "Impressive Hero Section",
+        "description": "<p>A modern and customizable hero section with support for uptitle, reviews, and more.</p>",
+        "button_text": "Get Started"
+      }
+    }
+  ]
+}
+{% endschema %}

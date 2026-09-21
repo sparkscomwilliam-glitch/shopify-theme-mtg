@@ -1,0 +1,40 @@
+{% assign block_settings = block.settings %}
+
+<span class="ag-promo-badge" {{ block.shopify_attributes }}>
+  {%- if block_settings.show_star -%}
+    <span class="ag-promo-badge__star">{{ block_settings.star_symbol | default: '✦' }}</span>
+  {%- endif -%}
+  {{ block_settings.text | default: 'Meilleure offre' }}
+</span>
+
+{% schema %}
+{
+  "name": "AG Promo Badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Badge text",
+      "default": "Meilleure offre · −20 % à vie"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_star",
+      "label": "Show star icon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "star_symbol",
+      "label": "Star symbol",
+      "default": "✦"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Promo Badge"
+    }
+  ]
+}
+{% endschema %}

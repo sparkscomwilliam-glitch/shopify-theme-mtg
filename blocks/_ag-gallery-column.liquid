@@ -1,0 +1,38 @@
+<div class="ag-product-section__gallery" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "AG Gallery Column",
+  "tag": null,
+  "blocks": [
+    { "type": "@app" },
+    { "type": "_product-media-gallery" },
+    { "type": "ag-macro-cards" },
+    { "type": "ag-promo-badge" },
+    { "type": "ag-reviews-stars" },
+    { "type": "ag-benefit-pills" },
+    { "type": "ag-trust-badges" },
+    { "type": "ag-product-tagline" },
+    { "type": "text" },
+    { "type": "icon" },
+    { "type": "image" },
+    { "type": "button" },
+    { "type": "video" },
+    { "type": "spacer" },
+    { "type": "_divider" }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This is the left column. Add and reorder blocks freely (media gallery, macro cards, custom blocks)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Gallery Column"
+    }
+  ]
+}
+{% endschema %}

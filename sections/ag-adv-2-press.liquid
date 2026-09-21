@@ -1,0 +1,179 @@
+{% comment %} ag-adv-2-press.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}--ag2-coral-wash:{{ s.bg_color }};{% endif %}
+  {% if s.border_color != blank %}--ag2-coral-tint:{{ s.border_color }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+  {% if s.logo_color != blank %}--ag2-press-logo:{{ s.logo_color }};{% endif %}
+  {% if s.logo_color_hover != blank %}--ag2-coral-deep:{{ s.logo_color_hover }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <div class="ag-adv-2-press">
+    {%- if s.eyebrow != blank -%}
+      <span class="ag-adv-2__eyebrow ag-adv-2-press__eyebrow">{{ s.eyebrow }}</span>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="ag-adv-2-press__logos">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'press_logo' -%}
+            <span class="ag-adv-2-press__pl" {{ block.shopify_attributes }}{% if s.logo_color != blank %} style="color:{{ s.logo_color }};"{% endif %}>
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.name | escape }}">
+              {%- else -%}
+                {{ block.settings.name }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Press",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Petit titre",
+      "default": "Vu dans la presse"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#fff9f8"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Couleur de bordure haut/bas",
+      "default": "#fff4f3"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur eyebrow",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "color",
+      "id": "logo_color",
+      "label": "Couleur des logos texte",
+      "default": "#c5bdb9"
+    },
+    {
+      "type": "color",
+      "id": "logo_color_hover",
+      "label": "Couleur des logos au survol",
+      "default": "#e85459"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "press_logo",
+      "name": "Logo presse",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom du média",
+          "default": "Vogue"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo image (optionnel)",
+          "info": "Remplace le texte si défini"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Press",
+      "blocks": [
+        {
+          "type": "press_logo",
+          "settings": {
+            "name": "Elle"
+          }
+        },
+        {
+          "type": "press_logo",
+          "settings": {
+            "name": "Vogue"
+          }
+        },
+        {
+          "type": "press_logo",
+          "settings": {
+            "name": "Byrdie"
+          }
+        },
+        {
+          "type": "press_logo",
+          "settings": {
+            "name": "Allure"
+          }
+        },
+        {
+          "type": "press_logo",
+          "settings": {
+            "name": "Marie Claire"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

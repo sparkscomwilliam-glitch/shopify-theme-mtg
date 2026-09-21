@@ -1,0 +1,151 @@
+{% comment %} ag-adv-2-guarantee.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.seal_bg != blank %}--ag2-cream:{{ s.seal_bg }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <section class="ag-adv-2-guarantee">
+    <div class="ag-adv-2-guarantee__seal">
+      {%- if s.days != blank -%}
+        <span class="ag-adv-2-guarantee__days">{{ s.days }}</span>
+      {%- endif -%}
+      {%- if s.label != blank -%}
+        <span class="ag-adv-2-guarantee__lbl">{{ s.label }}</span>
+      {%- endif -%}
+    </div>
+    {%- if s.heading != blank -%}
+      <h3>{{ s.heading }}</h3>
+    {%- endif -%}
+    {%- if s.body != blank -%}
+      <p>{{ s.body }}</p>
+    {%- endif -%}
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Guarantee",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Sceau"
+    },
+    {
+      "type": "text",
+      "id": "days",
+      "label": "Chiffre central",
+      "default": "60"
+    },
+    {
+      "type": "textarea",
+      "id": "label",
+      "label": "Texte du sceau",
+      "default": "Jours satisfait ou remboursé"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Zéro risque, vraiment"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Description",
+      "default": "Essayez Lumira pendant 60 jours complets. Si votre peau ne change pas, écrivez-nous : nous vous remboursons l'intégralité, même le flacon vide. C'est aussi simple que ça."
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "seal_bg",
+      "label": "Couleur de fond du sceau",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (bordure)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent profonde",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du titre",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du texte",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Guarantee"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,511 @@
+{%- style -%}
+  /* ─── Variables de section ─── */
+  .ag-announcement-timer-{{ section.id }} {
+    --c1:         {{ section.settings.gradient_color_1 }};
+    --c2:         {{ section.settings.gradient_color_2 }};
+    --text-color: {{ section.settings.text_color }};
+    --block-bg:   {{ section.settings.block_bg }};
+    --val-color:  {{ section.settings.block_value_color }};
+    --lbl-color:  {{ section.settings.block_label_color }};
+    --sep-color:  {{ section.settings.sep_color }};
+    --h-desktop:  {{ section.settings.bar_height_desktop }}px;
+    --h-mobile:   {{ section.settings.bar_height_mobile }}px;
+    --radius:     {{ section.settings.block_radius }}px;
+    --anim-dur:   {{ section.settings.anim_duration }}s;
+    --fs-title:   {{ section.settings.font_size_title }}px;
+    --fs-sub:     {{ section.settings.font_size_subtitle }}px;
+    --fs-val:     {{ section.settings.font_size_value }}px;
+    --fs-lbl:     {{ section.settings.font_size_label }}px;
+  }
+
+  /* ─── Conteneur principal ─── */
+  .ag-announcement-timer {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: var(--h-mobile);
+    background: linear-gradient(135deg, var(--c1), var(--c2), var(--c1));
+    background-size: 400% 400%;
+    animation: ag-timer-shift var(--anim-dur) ease-in-out infinite alternate;
+  }
+
+  /* ─── Animation dégradé aller-retour ─── */
+  @keyframes ag-timer-shift {
+    0%   { background-position: 0%   50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  /* ─── Inner wrapper — row par défaut (mobile-first) ─── */
+  .ag-timer__inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 16px;
+    box-sizing: border-box;
+    min-height: var(--h-mobile);
+  }
+
+  /* ─── Texte promo ─── */
+  .ag-timer__promo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    text-align: left;
+  }
+
+  /* ─── Overrides mobile (< 768px) : tailles réduites, responsive ─── */
+  @media (max-width: 767px) {
+    .ag-announcement-timer-{{ section.id }} {
+      --fs-title: 16px;
+      --fs-sub: 12px;
+    }
+
+    .ag-announcement-timer {
+      min-height: auto;
+    }
+
+    .ag-timer__inner {
+      min-height: auto;
+      gap: clamp(8px, 3vw, 16px);
+      padding: 8px clamp(10px, 4vw, 16px);
+    }
+
+    .ag-timer__title {
+      font-size: clamp(10px, 3vw, 13px);
+    }
+
+    .ag-timer__subtitle {
+      font-size: clamp(8px, 2.5vw, 11px);
+    }
+
+    .ag-timer__value {
+      font-size: clamp(13px, 4vw, 18px);
+    }
+
+    .ag-timer__unit {
+      font-size: clamp(6px, 1.8vw, 9px);
+    }
+
+    .ag-timer__sep {
+      font-size: clamp(13px, 4vw, 18px);
+      margin-top: 2px;
+    }
+
+    .ag-timer__block {
+      min-width: clamp(28px, 8vw, 38px);
+      padding: 3px clamp(4px, 2vw, 7px);
+    }
+
+    .ag-timer__countdown {
+      gap: clamp(3px, 1.5vw, 6px);
+    }
+  }
+
+  .ag-timer__title {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    color: var(--text-color);
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  .ag-timer__subtitle {
+    font-size: var(--fs-sub);
+    font-weight: 400;
+    color: var(--text-color);
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+
+  /* ─── Countdown row ─── */
+  .ag-timer__countdown {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ─── Blocs individuels ─── */
+  .ag-timer__block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--block-bg);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    min-width: 40px;
+    gap: 1px;
+  }
+
+  .ag-timer__value {
+    font-size: var(--fs-val);
+    font-weight: 700;
+    color: var(--val-color);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+  }
+
+  .ag-timer__unit {
+    font-size: var(--fs-lbl);
+    font-weight: 400;
+    color: var(--lbl-color);
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  /* ─── Séparateur ":" ─── */
+  .ag-timer__sep {
+    font-size: var(--fs-val);
+    font-weight: 700;
+    color: var(--sep-color);
+    line-height: 1;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  /* ─── Desktop (>= 768px) ─── */
+  @media (min-width: 768px) {
+    .ag-announcement-timer {
+      min-height: var(--h-desktop);
+    }
+
+    .ag-timer__inner {
+      gap: 40px;
+      min-height: var(--h-desktop);
+      padding: 8px 40px;
+    }
+
+    .ag-timer__block {
+      min-width: 48px;
+      padding: 5px 10px;
+    }
+  }
+{%- endstyle -%}
+
+<div id="ag-timer-{{ section.id }}"
+     class="ag-announcement-timer ag-announcement-timer-{{ section.id }}"
+     data-end-date="{{ section.settings.countdown_end | escape }}">
+  <div class="ag-timer__inner">
+
+    {%- comment -%} ── TEXTE PROMO ── {%- endcomment -%}
+    <div class="ag-timer__promo">
+      {%- if section.settings.sale_title != blank -%}
+        <span class="ag-timer__title">{{ section.settings.sale_title }}</span>
+      {%- endif -%}
+      {%- if section.settings.sale_subtitle != blank -%}
+        <span class="ag-timer__subtitle">{{ section.settings.sale_subtitle }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── COUNTDOWN BLOCKS ── {%- endcomment -%}
+    <div class="ag-timer__countdown" aria-label="Compte a rebours">
+
+      <div class="ag-timer__block">
+        <span class="ag-timer__value" data-unit="days">00</span>
+        <span class="ag-timer__unit">{{ section.settings.label_days }}</span>
+      </div>
+
+      <span class="ag-timer__sep" aria-hidden="true">:</span>
+
+      <div class="ag-timer__block">
+        <span class="ag-timer__value" data-unit="hours">00</span>
+        <span class="ag-timer__unit">{{ section.settings.label_hours }}</span>
+      </div>
+
+      <span class="ag-timer__sep" aria-hidden="true">:</span>
+
+      <div class="ag-timer__block">
+        <span class="ag-timer__value" data-unit="min">00</span>
+        <span class="ag-timer__unit">{{ section.settings.label_min }}</span>
+      </div>
+
+      <span class="ag-timer__sep" aria-hidden="true">:</span>
+
+      <div class="ag-timer__block">
+        <span class="ag-timer__value" data-unit="sec">00</span>
+        <span class="ag-timer__unit">{{ section.settings.label_sec }}</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var bar = document.getElementById('ag-timer-{{ section.id }}');
+    if (!bar) return;
+
+    var endDate = new Date(bar.getAttribute('data-end-date'));
+    if (isNaN(endDate.getTime())) return;
+
+    var selectors = {
+      days:  bar.querySelector('[data-unit="days"]'),
+      hours: bar.querySelector('[data-unit="hours"]'),
+      min:   bar.querySelector('[data-unit="min"]'),
+      sec:   bar.querySelector('[data-unit="sec"]')
+    };
+
+    function pad(n) {
+      return (n < 10 ? '0' : '') + n;
+    }
+
+    function render(days, hours, min, sec) {
+      if (selectors.days)  selectors.days.textContent  = pad(days);
+      if (selectors.hours) selectors.hours.textContent = pad(hours);
+      if (selectors.min)   selectors.min.textContent   = pad(min);
+      if (selectors.sec)   selectors.sec.textContent   = pad(sec);
+    }
+
+    var intervalId = null;
+
+    function tick() {
+      var diff = endDate.getTime() - Date.now();
+
+      if (diff <= 0) {
+        render(0, 0, 0, 0);
+        stop();
+        return;
+      }
+
+      var days  = Math.floor(diff / 86400000);
+      var hours = Math.floor((diff % 86400000) / 3600000);
+      var min   = Math.floor((diff % 3600000)  / 60000);
+      var sec   = Math.floor((diff % 60000)    / 1000);
+
+      render(days, hours, min, sec);
+    }
+
+    function start() {
+      if (intervalId !== null) return;
+      tick();
+      intervalId = setInterval(tick, 1000);
+    }
+
+    function stop() {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    });
+
+    start();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "AG Announcement Timer",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Texte Promotionnel"
+    },
+    {
+      "type": "text",
+      "id": "sale_title",
+      "label": "Titre (ligne 1)",
+      "default": "SPRING SALE"
+    },
+    {
+      "type": "text",
+      "id": "sale_subtitle",
+      "label": "Sous-titre (ligne 2)",
+      "default": "SAVE UP TO 35%"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end",
+      "label": "Date de fin (ISO 8601)",
+      "default": "2025-09-01T00:00:00",
+      "info": "Format : YYYY-MM-DDTHH:MM:SS — ex: 2025-09-01T00:00:00"
+    },
+    {
+      "type": "text",
+      "id": "label_days",
+      "label": "Label Jours",
+      "default": "DAYS"
+    },
+    {
+      "type": "text",
+      "id": "label_hours",
+      "label": "Label Heures",
+      "default": "HOURS"
+    },
+    {
+      "type": "text",
+      "id": "label_min",
+      "label": "Label Minutes",
+      "default": "MIN"
+    },
+    {
+      "type": "text",
+      "id": "label_sec",
+      "label": "Label Secondes",
+      "default": "SEC"
+    },
+    {
+      "type": "header",
+      "content": "Couleurs"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Couleur dégradé 1",
+      "default": "#D4632A"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Couleur dégradé 2",
+      "default": "#F28B3A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur texte promo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "block_bg",
+      "label": "Fond des blocs timer",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "block_value_color",
+      "label": "Couleur chiffres timer",
+      "default": "#C25722"
+    },
+    {
+      "type": "color",
+      "id": "block_label_color",
+      "label": "Couleur labels timer (DAYS...)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sep_color",
+      "label": "Couleur separateurs \":\"",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Typographie"
+    },
+    {
+      "type": "range",
+      "id": "font_size_title",
+      "label": "Taille titre (px)",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "font_size_subtitle",
+      "label": "Taille sous-titre (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "font_size_value",
+      "label": "Taille chiffres timer (px)",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "default": 22,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "font_size_label",
+      "label": "Taille labels timer (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 10,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "range",
+      "id": "bar_height_desktop",
+      "label": "Hauteur barre desktop (px)",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "default": 56,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "bar_height_mobile",
+      "label": "Hauteur barre mobile (px)",
+      "min": 50,
+      "max": 140,
+      "step": 2,
+      "default": 90,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "block_radius",
+      "label": "Arrondi blocs timer (px)",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 5,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "anim_duration",
+      "label": "Duree animation degrade (s)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "unit": "s"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Announcement Timer"
+    }
+  ]
+}
+{% endschema %}

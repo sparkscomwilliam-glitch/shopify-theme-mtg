@@ -1,0 +1,700 @@
+/* ============================================================
+   ag-product-section.css
+   SÈVE-inspired product page system for Horizon
+   3 palettes: Apothicaire (default), Clinique, Énergie
+   Type: Newsreader (display) · Hanken Grotesk (UI) · Space Mono (technique)
+   ============================================================ */
+
+/* ----- Scoped under .ag-product-section to avoid global pollution ----- */
+.ag-product-section {
+  /* --- palette: Apothicaire (default) --- */
+  --ag-bone:      #F1EADC;
+  --ag-paper:     #FBF7EF;
+  --ag-paper-2:   #F4EDDF;
+  --ag-ink:       #1E1C16;
+  --ag-ink-2:     #4A463B;
+  --ag-ink-3:     #8A8473;
+  --ag-pine:      #1F3D31;
+  --ag-pine-deep: #162C23;
+  --ag-amber:     #C98A2E;
+  --ag-amber-2:   #E9CD8E;
+  --ag-amber-tint:#F4E3BE;
+  --ag-line:      rgba(30,28,22,.12);
+  --ag-line-2:    rgba(30,28,22,.07);
+  --ag-cta-bg:    var(--ag-pine);
+  --ag-cta-bg-h:  var(--ag-pine-deep);
+  --ag-cta-fg:    #FBF7EF;
+  --ag-shadow:    0 1px 2px rgba(30,28,22,.04), 0 18px 40px -24px rgba(30,28,22,.30);
+
+  --ag-font-display:'Newsreader', Georgia, 'Times New Roman', serif;
+  --ag-font-ui:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --ag-font-mono:'Space Mono', ui-monospace, monospace;
+
+  --ag-r-lg: 18px;
+  --ag-r-md: 13px;
+  --ag-r-sm: 9px;
+
+  background: var(--ag-bone);
+  color: var(--ag-ink);
+  font-family: var(--ag-font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* clinique — cool, scientific */
+.ag-product-section[data-theme="clinique"]{
+  --ag-bone:#EAEDF0; --ag-paper:#FCFDFE; --ag-paper-2:#EEF1F5;
+  --ag-ink:#13171C; --ag-ink-2:#414954; --ag-ink-3:#8a93a0;
+  --ag-pine:#1D3A8A; --ag-pine-deep:#142a66;
+  --ag-amber:#1D6FE0; --ag-amber-2:#9CC2F4; --ag-amber-tint:#D8E6FB;
+  --ag-line:rgba(19,23,28,.12); --ag-line-2:rgba(19,23,28,.07);
+  --ag-cta-bg:#13171C; --ag-cta-bg-h:#000; --ag-cta-fg:#fff;
+}
+
+/* énergie — assertive, dark */
+.ag-product-section[data-theme="energie"]{
+  --ag-bone:#15110E; --ag-paper:#1F1A15; --ag-paper-2:#191410;
+  --ag-ink:#F4EEE6; --ag-ink-2:#C9C0B3; --ag-ink-3:#7d756a;
+  --ag-pine:#F0E9DD; --ag-pine-deep:#fff;
+  --ag-amber:#F0522B; --ag-amber-2:#9c3a22; --ag-amber-tint:#3a1a12;
+  --ag-line:rgba(244,238,230,.14); --ag-line-2:rgba(244,238,230,.07);
+  --ag-cta-bg:#F0522B; --ag-cta-bg-h:#ff6a44; --ag-cta-fg:#15110E;
+  --ag-shadow:0 18px 50px -24px rgba(0,0,0,.7);
+}
+
+/* ============================================================
+   SECTION CONTAINER & GRID
+   Full width, no box — edge to edge
+   ============================================================ */
+.ag-product-section__wrap {
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 0 80px;
+}
+
+/* When content_width = page, constrain to container width */
+.ag-product-section.section--page-width .ag-product-section__wrap {
+  max-width: 1320px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.ag-product-section__product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* no background, no border, no shadow, no radius — flat layout */
+}
+
+.ag-product-section__product[data-media-position="right"] .ag-product-section__gallery {
+  order: 2;
+}
+
+.ag-product-section__gallery {
+  padding: 0 24px;
+  position: relative;
+}
+
+.ag-product-section__info {
+  padding: 0 32px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* spacing between info blocks */
+.ag-product-section__info > * + * {
+  margin-top: 18px;
+}
+
+/* ============================================================
+   GALLERY: hero + thumbs (uses native Horizon media gallery)
+   ============================================================ */
+.ag-product-section__media-wrap {
+  border-radius: var(--ag-r-md);
+  overflow: hidden;
+  background: var(--ag-paper-2);
+}
+
+/* Override Horizon media gallery styles inside our section */
+.ag-product-section .product-media-container {
+  border-radius: var(--ag-r-md);
+}
+
+/* ============================================================
+   BLOCK: ag-promo-badge
+   ============================================================ */
+.ag-promo-badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--ag-ink);
+  color: var(--ag-paper);
+  padding: 8px 15px 8px 13px;
+  border-radius: 7px;
+  font-family: var(--ag-font-mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  position: relative;
+}
+.ag-promo-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: var(--ag-amber);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--ag-amber) 28%, transparent);
+  animation: ag-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ag-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(.7); opacity: .6; }
+}
+.ag-promo-badge__star {
+  font-family: var(--ag-font-display);
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--ag-amber);
+}
+.ag-product-section[data-cta-shape="pill"] .ag-promo-badge {
+  border-radius: 999px;
+  padding-left: 15px;
+}
+
+/* ============================================================
+   BLOCK: ag-reviews-stars
+   ============================================================ */
+.ag-reviews-stars {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.ag-reviews-stars__stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--ag-amber);
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.ag-reviews-stars__link {
+  font-size: 13.5px;
+  color: var(--ag-ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ag-line);
+  padding-bottom: 1px;
+  transition: color .2s, border-color .2s;
+  cursor: pointer;
+}
+.ag-reviews-stars__link:hover {
+  color: var(--ag-ink);
+  border-color: var(--ag-ink);
+}
+.ag-reviews-stars__rating {
+  font-weight: 600;
+  color: var(--ag-ink);
+}
+
+/* ============================================================
+   PRODUCT TITLE (overrides for native product-title block)
+   ============================================================ */
+.ag-product-section .product-title,
+.ag-product-section h1 {
+  font-family: var(--ag-font-display);
+  font-weight: 500;
+  font-size: clamp(38px, 4.4vw, 54px);
+  line-height: .98;
+  letter-spacing: -.02em;
+  color: var(--ag-ink);
+  text-wrap: balance;
+}
+.ag-product-section h1 em {
+  font-style: italic;
+  color: var(--ag-pine);
+}
+.ag-product-section[data-theme="energie"] h1 em {
+  color: var(--ag-amber);
+}
+
+/* ============================================================
+   BLOCK: ag-product-tagline
+   ============================================================ */
+.ag-product-tagline {
+  font-family: var(--ag-font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--ag-ink-2);
+  max-width: 42ch;
+}
+
+/* ============================================================
+   BLOCK: ag-benefit-pills
+   ============================================================ */
+.ag-benefit-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ag-benefit-pills__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--ag-paper-2);
+  border: 1px solid var(--ag-line-2);
+  border-radius: 999px;
+  padding: 7px 14px 7px 11px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-ink);
+  transition: transform .2s, border-color .2s;
+}
+.ag-benefit-pills__item:hover {
+  transform: translateY(-2px);
+  border-color: var(--ag-line);
+  background-color: var(--ag-paper);
+}
+.ag-benefit-pills__gem {
+  width: 9px;
+  height: 9px;
+  background: var(--ag-pine);
+  transform: rotate(45deg);
+  border-radius: 1.5px;
+}
+.ag-product-section[data-theme="energie"] .ag-benefit-pills__gem {
+  background: var(--ag-amber);
+}
+
+/* ============================================================
+   BLOCK: ag-macro-cards (90 / 100% / 0)
+   ============================================================ */
+.ag-macro-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+.ag-macro-cards__item {
+  background: var(--ag-paper-2);
+  border: 1px solid var(--ag-line-2);
+  border-radius: var(--ag-r-md);
+  padding: 16px 14px;
+  text-align: left;
+}
+.ag-macro-cards__n {
+  font-family: var(--ag-font-display);
+  font-weight: 500;
+  font-size: 34px;
+  line-height: .95;
+  color: var(--ag-pine);
+  letter-spacing: -.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.ag-macro-cards__u {
+  font-size: 15px;
+  color: var(--ag-ink-2);
+}
+.ag-macro-cards__l {
+  font-family: var(--ag-font-mono);
+  font-size: 9.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ag-ink-3);
+  margin-top: 9px;
+  line-height: 1.5;
+}
+.ag-product-section[data-theme="energie"] .ag-macro-cards__n {
+  color: var(--ag-amber);
+}
+
+/* ============================================================
+   FIELD LABEL (used by variant + plans)
+   ============================================================ */
+.ag-field-label {
+  font-family: var(--ag-font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ag-ink-3);
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ============================================================
+   VARIANT PICKER overrides (uses native Horizon variant-picker)
+   ============================================================ */
+.ag-product-section .variant-picker__option-values,
+.ag-product-section .variant-option__button-list {
+  gap: 8px;
+}
+.ag-product-section .variant-option__button-label {
+  border: 1px solid var(--ag-line);
+  background: var(--ag-paper);
+  border-radius: var(--ag-r-sm);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-ink-2);
+  transition: all .2s;
+}
+.ag-product-section .variant-option__button-label:hover {
+  border-color: var(--ag-ink-3);
+}
+.ag-product-section .variant-option__button:checked + .variant-option__button-label,
+.ag-product-section input.variant-option__button:checked ~ .variant-option__button-label {
+  border-color: var(--ag-pine);
+  background: color-mix(in oklab, var(--ag-pine) 6%, var(--ag-paper));
+  color: var(--ag-ink);
+  box-shadow: inset 0 0 0 1px var(--ag-pine);
+}
+.ag-product-section[data-theme="energie"] .variant-option__button:checked + .variant-option__button-label {
+  border-color: var(--ag-amber);
+  box-shadow: inset 0 0 0 1px var(--ag-amber);
+  background: color-mix(in oklab, var(--ag-amber) 10%, var(--ag-paper));
+}
+
+/* ============================================================
+   BLOCK: ag-subscription-plans
+   ============================================================ */
+.ag-subscription-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 13px;
+}
+.ag-subscription-plans__plan {
+  position: relative;
+  border: 1.5px solid var(--ag-line);
+  border-radius: var(--ag-r-md);
+  background: var(--ag-paper);
+  padding: 17px 18px 17px 50px;
+  cursor: pointer;
+  transition: border-color .25s, box-shadow .25s, background .25s;
+  overflow: hidden;
+}
+.ag-subscription-plans__plan:hover {
+  border-color: var(--ag-ink-3);
+}
+.ag-subscription-plans__plan::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 19px;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ag-ink-3);
+  transition: border-color .25s;
+}
+.ag-subscription-plans__plan::after {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 24px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ag-pine);
+  transform: scale(0);
+  transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__plan::after {
+  background: var(--ag-amber);
+}
+.ag-subscription-plans__plan.is-active {
+  border-color: var(--ag-pine);
+  box-shadow: 0 0 0 1px var(--ag-pine), 0 14px 30px -20px rgba(31, 61, 49, .5);
+  background: color-mix(in oklab, var(--ag-pine) 4%, var(--ag-paper));
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__plan.is-active {
+  border-color: var(--ag-amber);
+  box-shadow: 0 0 0 1px var(--ag-amber), 0 14px 30px -20px rgba(0, 0, 0, .6);
+}
+.ag-subscription-plans__plan.is-active::before {
+  border-color: var(--ag-pine);
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__plan.is-active::before {
+  border-color: var(--ag-amber);
+}
+.ag-subscription-plans__plan.is-active::after {
+  transform: scale(1);
+}
+.ag-subscription-plans__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ag-subscription-plans__name {
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--ag-ink);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.ag-subscription-plans__save {
+  font-family: var(--ag-font-mono);
+  font-size: 9.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--ag-amber-tint);
+  color: var(--ag-amber);
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-weight: 700;
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__save {
+  color: var(--ag-amber-2);
+  background: var(--ag-amber-tint);
+}
+.ag-subscription-plans__sub {
+  font-size: 12.5px;
+  color: var(--ag-ink-2);
+  margin-top: 4px;
+}
+.ag-subscription-plans__price {
+  text-align: right;
+  flex-shrink: 0;
+}
+.ag-subscription-plans__now {
+  font-family: var(--ag-font-display);
+  font-weight: 500;
+  font-size: 25px;
+  color: var(--ag-ink);
+  line-height: 1;
+}
+.ag-subscription-plans__was {
+  font-size: 13px;
+  color: var(--ag-ink-3);
+  text-decoration: line-through;
+  text-decoration-color: var(--ag-amber);
+  margin-right: 4px;
+}
+.ag-subscription-plans__per {
+  display: block;
+  font-family: var(--ag-font-mono);
+  font-size: 8.5px;
+  letter-spacing: .03em;
+  color: var(--ag-ink-3);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.ag-subscription-plans__flag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--ag-pine);
+  color: var(--ag-paper);
+  font-family: var(--ag-font-mono);
+  font-size: 8.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 5px 13px;
+  border-bottom-left-radius: 10px;
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__flag {
+  background: var(--ag-amber);
+  color: var(--ag-ink);
+}
+.ag-subscription-plans__perks {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .35s ease;
+  margin-left: -32px;
+}
+.ag-subscription-plans__plan.is-active .ag-subscription-plans__perks {
+  grid-template-rows: 1fr;
+}
+.ag-subscription-plans__perks > div {
+  overflow: hidden;
+}
+.ag-subscription-plans__perks ul {
+  list-style: none;
+  padding: 14px 0 0;
+  margin: 14px 0 0;
+  border-top: 1px dashed var(--ag-line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ag-subscription-plans__perks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--ag-ink-2);
+}
+.ag-subscription-plans__perks li .ag-ck {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ag-pine);
+  position: relative;
+  margin-top: 1px;
+}
+.ag-product-section[data-theme="energie"] .ag-subscription-plans__perks li .ag-ck {
+  background: var(--ag-amber);
+}
+.ag-subscription-plans__perks li .ag-ck::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  width: 3.5px;
+  height: 6.5px;
+  border: 1.6px solid var(--ag-paper);
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(42deg);
+}
+
+/* ============================================================
+   CTA: overrides for native Horizon buy-buttons
+   ============================================================ */
+.ag-product-section .add-to-cart-button,
+.ag-product-section .product-form__button {
+  background: var(--ag-cta-bg);
+  color: var(--ag-cta-fg);
+  border-radius: var(--ag-r-md);
+  padding: 19px 24px;
+  font-family: var(--ag-font-ui);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: .01em;
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: background .25s, transform .12s, box-shadow .25s;
+  box-shadow: 0 12px 28px -16px color-mix(in oklab, var(--ag-cta-bg) 80%, transparent);
+  margin-top: 20px;
+}
+.ag-product-section .add-to-cart-button:hover {
+  background: var(--ag-cta-bg-h);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px -16px color-mix(in oklab, var(--ag-cta-bg) 85%, transparent);
+}
+.ag-product-section .add-to-cart-button:active {
+  transform: translateY(0);
+}
+.ag-product-section[data-cta-shape="net"] .add-to-cart-button {
+  border-radius: 0;
+}
+.ag-product-section[data-cta-shape="pill"] .add-to-cart-button {
+  border-radius: 999px;
+}
+
+/* ============================================================
+   BLOCK: ag-trust-badges
+   ============================================================ */
+.ag-trust-badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ag-line);
+}
+.ag-trust-badges__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+}
+.ag-trust-badges__icon {
+  width: 26px;
+  height: 26px;
+  color: var(--ag-pine);
+}
+.ag-product-section[data-theme="energie"] .ag-trust-badges__icon {
+  color: var(--ag-amber);
+}
+.ag-trust-badges__label {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--ag-ink-2);
+  font-weight: 500;
+}
+
+/* ============================================================
+   ACCORDION overrides (uses native Horizon accordion)
+   ============================================================ */
+.ag-product-section .accordion {
+  margin-top: 24px;
+  border-top: 1px solid var(--ag-line);
+}
+.ag-product-section .accordion-row,
+.ag-product-section .details {
+  border-bottom: 1px solid var(--ag-line);
+}
+.ag-product-section .accordion__summary,
+.ag-product-section .details summary {
+  padding: 18px 2px;
+  font-family: var(--ag-font-ui);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ag-ink);
+}
+.ag-product-section .details-content {
+  padding: 0 2px 22px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ag-ink-2);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media screen and (max-width: 900px) {
+  .ag-product-section__product {
+    grid-template-columns: 1fr;
+  }
+  .ag-product-section__product[data-media-position="right"] .ag-product-section__gallery {
+    order: 0;
+  }
+  .ag-product-section__wrap {
+    padding: 28px 0 80px;
+  }
+  .ag-product-section.section--page-width .ag-product-section__wrap {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .ag-product-section__gallery {
+    padding: 0 18px;
+    margin-bottom: 24px;
+  }
+  .ag-product-section__info {
+    padding: 0 18px;
+  }
+  .ag-product-section h1 {
+    font-size: 33px;
+  }
+  .ag-product-tagline {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ag-macro-cards__n {
+    font-size: 24px;
+  }
+  .ag-macro-cards__l {
+    font-size: 8px;
+    margin-top: 5px;
+  }
+}

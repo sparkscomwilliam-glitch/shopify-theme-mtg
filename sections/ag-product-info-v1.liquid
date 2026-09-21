@@ -1,0 +1,677 @@
+{{ 'ag-product-info.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ag-product-info.js' | asset_url }}" defer></script>
+
+{%- if section.settings.load_google_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{%- endif -%}
+
+{%- liquid
+  assign s = section.settings
+
+  assign ag_product = closest.product
+  if ag_product == blank
+    assign ag_product = product
+  endif
+  assign current_variant = ag_product.selected_or_first_available_variant
+
+  assign tier_blocks = section.blocks | where: 'type', 'tier'
+  assign chip_blocks = section.blocks | where: 'type', 'benefit_chip'
+  assign trust_blocks = section.blocks | where: 'type', 'trust_item'
+  assign faq_blocks = section.blocks | where: 'type', 'faq_item'
+  assign side_card_blocks = section.blocks | where: 'type', 'side_card'
+  assign videos_blocks = section.blocks | where: 'type', 'videos'
+
+  assign display_title = s.custom_title | default: ag_product.title
+  assign show_side_cards = false
+  if side_card_blocks.size > 0
+    assign show_side_cards = true
+  endif
+
+  assign default_tier = tier_blocks | first
+  for block in tier_blocks
+    if block.settings.preselect
+      assign default_tier = block
+      break
+    endif
+  endfor
+
+  assign default_total_cents = current_variant.price
+  if default_tier
+    assign default_qty = default_tier.settings.qty | default: 1
+    assign default_total_cents = 100 | minus: default_tier.settings.discount | times: current_variant.price | divided_by: 100.0 | round | times: default_qty
+  endif
+  assign default_total = default_total_cents | money_without_trailing_zeros
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} .ag-pinfo--v1 {
+    {%- if s.color_bg != blank %}--ag-bg: {{ s.color_bg }};{% endif -%}
+    {%- if s.color_text_primary != blank %}--ag-text-primary: {{ s.color_text_primary }}; --ag-text-heading: {{ s.color_text_primary }};{% endif -%}
+    {%- if s.color_text_secondary != blank %}--ag-text-secondary: {{ s.color_text_secondary }};{% endif -%}
+    {%- if s.color_accent != blank %}--ag-accent: {{ s.color_accent }};{% endif -%}
+    {%- if s.color_accent_text != blank %}--ag-accent-text: {{ s.color_accent_text }};{% endif -%}
+    {%- if s.color_card_bg != blank %}--ag-card-bg: {{ s.color_card_bg }};{% endif -%}
+    {%- if s.color_card_border != blank %}--ag-card-border: {{ s.color_card_border }}; --ag-line: {{ s.color_card_border }};{% endif -%}
+    {%- if s.color_card_selected_bg != blank %}--ag-card-selected-bg: {{ s.color_card_selected_bg }};{% endif -%}
+    {%- if s.color_card_selected_border != blank %}--ag-card-selected-border: {{ s.color_card_selected_border }};{% endif -%}
+    {%- if s.color_trust_bar_bg != blank %}--ag-trust-bar-bg: {{ s.color_trust_bar_bg }};{% endif -%}
+  }
+  /* CTA — direct write, bypasses CSS var indirection to guarantee a visible background. */
+  #shopify-section-{{ section.id }} .ag-pinfo--v1 .ag-cta {
+    background: {{ s.cta_bg | default: '#14301f' }};
+    color: {{ s.cta_text_color | default: '#ffffff' }};
+    {%- if s.cta_radius != blank %}border-radius: {{ s.cta_radius }}px;{% endif -%}
+    {%- if s.cta_font != blank %}font-family: {{ s.cta_font.family }}, {{ s.cta_font.fallback_families }};{% endif -%}
+  }
+  {%- if s.cta_font != blank %}{{ s.cta_font | font_face: font_display: 'swap' }}{% endif -%}
+  {%- if s.section_bg != blank %}
+  #shopify-section-{{ section.id }} .ag-pinfo--v1 { background: {{ s.section_bg }}; }
+  {%- endif %}
+  {%- if s.cta_text_gradient != blank %}
+  #shopify-section-{{ section.id }} .ag-pinfo--v1 .ag-cta__label {
+    background: {{ s.cta_text_gradient }};
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  {%- endif %}
+</style>
+
+<section
+  class="ag-pinfo ag-pinfo--v1"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ ag_product.id }}"
+  data-money-format="{{ shop.money_format | escape }}"
+  data-show-cta-price="{% if s.show_price_on_cta %}true{% else %}false{% endif %}"
+>
+  <div class="ag-pinfo__inner">
+    <div class="ag-grid">
+      <div class="ag-gallery">
+        <div class="ag-gallery__hero{% if show_side_cards %} ag-gallery__hero--with-cards{% endif %}">
+          <div class="ag-gallery__main" data-ag-main-image data-ag-lightbox-open>
+            {%- if s.image_badge_text != blank -%}
+              <span class="ag-gallery__label">{{ s.image_badge_text }}</span>
+            {%- endif -%}
+            {%- if ag_product.featured_image -%}
+              {{ ag_product.featured_image | image_url: width: 1224 | image_tag: loading: 'eager', alt: ag_product.featured_image.alt | default: display_title }}
+            {%- else -%}
+              <div class="ag-gallery__placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
+            {%- endif -%}
+          </div>
+
+          {%- if show_side_cards -%}
+            <div class="ag-side-cards" aria-label="Key benefits">
+              {%- for block in side_card_blocks limit: 3 -%}
+                <div class="ag-side-card" {{ block.shopify_attributes }}>
+                  <span class="ag-side-card__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+                  <span class="ag-side-card__label">{{ block.settings.label }}</span>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if ag_product.images.size > 0 -%}
+          <div class="ag-thumbs" data-ag-thumbs>
+            <button type="button" class="ag-thumbs__arrow ag-thumbs__arrow--prev" data-ag-thumbs-prev aria-label="Previous" hidden>‹</button>
+            <div class="ag-thumbs__track" data-ag-thumbs-track>
+              {%- for image in ag_product.images -%}
+                <button
+                  type="button"
+                  class="ag-thumb{% if forloop.first %} is-active{% endif %}"
+                  data-media-src="{{ image | image_url: width: 1224 }}"
+                  aria-label="{{ image.alt | default: display_title }}"
+                >
+                  {{ image | image_url: width: 320 | image_tag: loading: 'lazy', alt: image.alt | default: display_title }}
+                </button>
+              {%- endfor -%}
+            </div>
+            <button type="button" class="ag-thumbs__arrow ag-thumbs__arrow--next" data-ag-thumbs-next aria-label="Next" hidden>›</button>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="ag-buycol">
+        {%- if s.product_eyebrow != blank -%}
+          <p class="ag-eyebrow">{{ s.product_eyebrow }}</p>
+        {%- endif -%}
+
+        <h1 class="ag-title">{{ display_title }}</h1>
+
+        {%- if s.rating_text != blank or s.reviews_text != blank -%}
+          <div class="ag-rating ag-rating--badge">
+            {%- if s.rating_text != blank -%}
+              <span class="ag-rating__stars">{{ s.rating_text }}</span>
+            {%- endif -%}
+            {%- if s.reviews_text != blank -%}
+              <span class="ag-rating__count">{{ s.reviews_text }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if s.custom_description != blank -%}
+          <p class="ag-desc">{{ s.custom_description }}</p>
+        {%- elsif ag_product.description != blank -%}
+          <div class="ag-desc">{{ ag_product.description | strip_html | truncatewords: 45 }}</div>
+        {%- endif -%}
+
+        {%- if chip_blocks.size > 0 -%}
+          <div class="ag-chips">
+            {%- for block in chip_blocks -%}
+              <span class="ag-chip" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- form 'product', ag_product, data-ag-product-form: 'true' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <input type="hidden" name="quantity" value="{{ default_qty | default: 1 }}">
+
+          {%- if tier_blocks.size > 0 -%}
+            <div class="ag-buybox">
+              {% render 'ag-pinfo-qty-breaks', product: ag_product, section: section %}
+            </div>
+          {%- endif -%}
+
+          <div class="ag-native-blocks">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'ag_reviews_carousel' -%}
+                  {% render 'ag-pinfo-reviews-carousel', block: block, section: section %}
+                {%- when 'ag_rating_summary' -%}
+                  {% render 'ag-pinfo-rating-summary', block: block, section: section %}
+                {%- when 'ag_stock_notification' -%}
+                  {% render 'ag-pinfo-stock-notification', block: block, section: section %}
+                {%- when 'ag_shipping_info' -%}
+                  {% render 'ag-pinfo-shipping-info', block: block, section: section %}
+                {%- when 'ag_social_proof' -%}
+                  {% render 'ag-pinfo-social-proof', block: block, section: section %}
+                {%- when 'ag_product_benefits' -%}
+                  {% render 'ag-pinfo-product-benefits', block: block, section: section %}
+              {%- endcase -%}
+            {%- endfor -%}
+            {% content_for 'blocks' %}
+          </div>
+
+          <button type="submit" name="add" class="ag-cta" data-ag-main-cta>
+            <span class="ag-cta__label">{{ s.cta_text | default: 'Get started' }}</span>
+            <span class="ag-cta__price" data-ag-cta-price{% unless s.show_price_on_cta %} hidden{% endunless %}>{{ default_total }}</span>
+          </button>
+          <p class="ag-cta-error" data-ag-cta-error hidden></p>
+
+          {%- for block in videos_blocks -%}
+            {% render 'ag-pinfo-videos', block: block, section: section %}
+          {%- endfor -%}
+
+          {%- if s.cta_subtext != blank -%}
+            <p class="ag-cta-sub">{{ s.cta_subtext }}</p>
+          {%- endif -%}
+        {%- endform -%}
+
+        {%- if trust_blocks.size > 0 -%}
+          <div class="ag-trust">
+            {%- for block in trust_blocks -%}
+              <div class="ag-trust__item" {{ block.shopify_attributes }}>
+                <span class="ag-trust__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+                <span class="ag-trust__label">{{ block.settings.label }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if s.doctor_quote_text != blank -%}
+      <div class="ag-quote ag-doctor-quote">
+        <span class="ag-quote__mark" aria-hidden="true">&ldquo;</span>
+        <div class="ag-quote__body">
+          <p class="ag-quote__text">{{ s.doctor_quote_text }}</p>
+          <div class="ag-quote__person">
+            <span class="ag-quote__avatar">
+              {%- if s.doctor_image != blank -%}
+                {{ s.doctor_image | image_url: width: 92, height: 92, crop: 'center' | image_tag: loading: 'lazy', alt: s.doctor_name | default: '' }}
+              {%- endif -%}
+            </span>
+            <span>
+              <strong class="ag-quote__name">{{ s.doctor_name }}</strong>
+              <span class="ag-quote__role">{{ s.doctor_title }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if faq_blocks.size > 0 -%}
+      <div class="ag-faq">
+        <h2 class="ag-faq__title">{{ s.faq_title | default: 'Frequently asked questions' }}</h2>
+        <div class="ag-faq__list">
+          {%- for block in faq_blocks -%}
+            <div class="ag-faq-item{% if forloop.first %} is-open{% endif %}" {{ block.shopify_attributes }}>
+              <button
+                type="button"
+                class="ag-faq-btn"
+                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="ag-faq-{{ section.id }}-{{ forloop.index }}"
+              >
+                <span class="ag-faq-btn__q">{{ block.settings.question }}</span>
+                <span class="ag-faq-btn__icon" aria-hidden="true">{% if forloop.first %}—{% else %}+{% endif %}</span>
+              </button>
+              <div class="ag-faq-answer" id="ag-faq-{{ section.id }}-{{ forloop.index }}">
+                <div class="ag-faq-answer__inner">
+                  <p>{{ block.settings.answer }}</p>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if ag_product.images.size > 1 -%}
+    <dialog class="ag-lightbox" data-ag-lightbox aria-label="Product gallery">
+      <button type="button" class="ag-lightbox__close" data-ag-lightbox-close aria-label="Close">×</button>
+      <div class="ag-lightbox__track">
+        {%- for image in ag_product.images -%}
+          <div class="ag-lightbox__slide">
+            {{ image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: image.alt | default: display_title }}
+          </div>
+        {%- endfor -%}
+      </div>
+    </dialog>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "AG Product Info V1",
+  "tag": "section",
+  "class": "ag-section-product-info",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "color_bg", "label": "Fond de section", "default": "#ffffff" },
+    { "type": "color_background", "id": "section_bg", "label": "Fond de section (gradient)", "info": "Couleur ou dégradé. Override le fond de section." },
+    { "type": "color", "id": "color_text_primary", "label": "Texte principal", "default": "#16211b" },
+    { "type": "color", "id": "color_text_secondary", "label": "Texte secondaire", "default": "#5d6b63" },
+    { "type": "color", "id": "color_accent", "label": "Couleur d'accentuation", "default": "#1f5132" },
+    { "type": "color", "id": "color_accent_text", "label": "Texte sur accent", "default": "#ffffff" },
+    { "type": "color", "id": "color_card_bg", "label": "Fond card", "default": "#ffffff" },
+    { "type": "color", "id": "color_card_border", "label": "Bordure card", "default": "#e6eae4" },
+    { "type": "color", "id": "color_card_selected_bg", "label": "Fond card sélectionnée", "default": "#f0f6ec" },
+    { "type": "color", "id": "color_card_selected_border", "label": "Bordure card sélectionnée", "default": "#1f5132" },
+    { "type": "color", "id": "color_trust_bar_bg", "label": "Fond trust bar", "default": "#ffffff" },
+    { "type": "header", "content": "Contenu produit" },
+    { "type": "text", "id": "product_eyebrow", "label": "Texte eyebrow", "default": "MEN'S HAIRCARE" },
+    { "type": "text", "id": "custom_title", "label": "Titre personnalisé", "info": "Laisser vide pour utiliser le titre du produit." },
+    { "type": "textarea", "id": "custom_description", "label": "Description personnalisée" },
+    { "type": "text", "id": "rating_text", "label": "Note", "default": "★★★★★  4.6" },
+    { "type": "text", "id": "reviews_text", "label": "Nombre d'avis", "default": "2,340 reviews" },
+    { "type": "text", "id": "image_badge_text", "label": "Badge sur l'image", "default": "The 3-step routine" },
+    { "type": "header", "content": "Hero side cards" },
+    { "type": "paragraph", "content": "Ajoutez des blocs « Side card (hero) » ci-dessous pour les afficher à côté de l'image principale." },
+    { "type": "header", "content": "CTA — contenu" },
+    { "type": "text", "id": "cta_text", "label": "Texte du bouton CTA", "default": "GET STARTED" },
+    { "type": "checkbox", "id": "show_price_on_cta", "label": "Afficher le prix sur le bouton", "default": true },
+    { "type": "textarea", "id": "cta_subtext", "label": "Sous-texte CTA", "default": "Always free EU delivery · Swap, skip or cancel anytime" },
+    { "type": "header", "content": "CTA — style" },
+    { "type": "color_background", "id": "cta_bg", "label": "Fond bouton (couleur ou gradient)" },
+    { "type": "color", "id": "cta_text_color", "label": "Couleur texte bouton" },
+    { "type": "color_background", "id": "cta_text_gradient", "label": "Texte en gradient (optionnel)" },
+    { "type": "range", "id": "cta_radius", "label": "Arrondi bouton", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 14 },
+    { "type": "font_picker", "id": "cta_font", "label": "Police bouton", "default": "helvetica_n4" },
+    { "type": "header", "content": "Citation expert" },
+    { "type": "textarea", "id": "doctor_quote_text", "label": "Citation" },
+    { "type": "text", "id": "doctor_name", "label": "Nom" },
+    { "type": "text", "id": "doctor_title", "label": "Titre / Fonction" },
+    { "type": "image_picker", "id": "doctor_image", "label": "Photo" },
+    { "type": "header", "content": "FAQ" },
+    { "type": "text", "id": "faq_title", "label": "Titre FAQ", "default": "Frequently asked questions" },
+    { "type": "header", "content": "Avancé" },
+    { "type": "checkbox", "id": "load_google_fonts", "label": "Charger Google Fonts (Hanken Grotesk)", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Pack (Quantity Break)",
+      "settings": [
+        { "type": "header", "content": "Config" },
+        { "type": "range", "id": "qty", "label": "Quantité", "min": 1, "max": 12, "default": 1 },
+        { "type": "range", "id": "discount", "label": "Remise", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 0 },
+        { "type": "checkbox", "id": "preselect", "label": "Sélectionné par défaut", "default": false },
+        { "type": "text", "id": "discount_code", "label": "Code promo Shopify (optionnel)", "info": "Créé dans Réductions. Appliqué au panier à l'ajout." },
+        { "type": "header", "content": "Textes", "info": "Placeholders : [qty] [discount] [item_price] [total_price]" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "1-month supply" },
+        { "type": "text", "id": "subtitle", "label": "Sous-titre", "default": "A 1-month supply, delivered monthly" },
+        { "type": "text", "id": "badge", "label": "Badge" },
+        { "type": "text", "id": "save_label", "label": "Label économie", "default": "Save [discount]" }
+      ]
+    },
+    {
+      "type": "benefit_chip",
+      "name": "Chip bénéfice",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Texte", "default": "Clinically tested" }
+      ]
+    },
+    {
+      "type": "side_card",
+      "name": "Side card (hero)",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icône (emoji ou texte)", "default": "✓" },
+        { "type": "text", "id": "label", "label": "Label (2 lignes)", "default": "Clinically tested" }
+      ]
+    },
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icône", "default": "🚚" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Free EU delivery" }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "Question FAQ",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "textarea", "id": "answer", "label": "Réponse" }
+      ]
+    },
+    {
+      "type": "videos",
+      "name": "Vidéos (slider)",
+      "settings": [
+        { "type": "header", "content": "Slider" },
+        { "type": "range", "id": "slides_per_view", "label": "Slides visibles (desktop)", "min": 1, "max": 5, "step": 1, "default": 3 },
+        { "type": "range", "id": "slides_per_view_mobile", "label": "Slides visibles (mobile)", "min": 1, "max": 3, "step": 1, "default": 1 },
+        { "type": "range", "id": "gap", "label": "Espacement", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 16 },
+        { "type": "range", "id": "card_radius", "label": "Arrondi", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 12 },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Ratio",
+          "default": "9/16",
+          "options": [
+            { "value": "9/16", "label": "Portrait 9:16" },
+            { "value": "3/4", "label": "Portrait 3:4" },
+            { "value": "1/1", "label": "Carré 1:1" },
+            { "value": "16/9", "label": "Paysage 16:9" }
+          ]
+        },
+        { "type": "checkbox", "id": "autoplay", "label": "Lecture automatique (muet)", "default": true },
+        { "type": "checkbox", "id": "loop_video", "label": "Boucle", "default": true },
+        { "type": "checkbox", "id": "show_play_icon", "label": "Afficher l'icône play", "default": true },
+        { "type": "checkbox", "id": "open_lightbox", "label": "Ouvrir en plein écran au clic (son activé)", "default": true },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "arrow_bg", "label": "Fond flèches", "default": "#ffffff" },
+        { "type": "color", "id": "arrow_color", "label": "Couleur flèches", "default": "#16211b" },
+        { "type": "color", "id": "play_icon_color", "label": "Icône play", "default": "#ffffff" },
+        { "type": "header", "content": "Vidéo 1" },
+        { "type": "video", "id": "video_1", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_1", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_1", "label": "Poster (optionnel)" },
+        { "type": "header", "content": "Vidéo 2" },
+        { "type": "video", "id": "video_2", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_2", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_2", "label": "Poster (optionnel)" },
+        { "type": "header", "content": "Vidéo 3" },
+        { "type": "video", "id": "video_3", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_3", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_3", "label": "Poster (optionnel)" },
+        { "type": "header", "content": "Vidéo 4" },
+        { "type": "video", "id": "video_4", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_4", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_4", "label": "Poster (optionnel)" },
+        { "type": "header", "content": "Vidéo 5" },
+        { "type": "video", "id": "video_5", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_5", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_5", "label": "Poster (optionnel)" },
+        { "type": "header", "content": "Vidéo 6" },
+        { "type": "video", "id": "video_6", "label": "Vidéo (hébergée Shopify)" },
+        { "type": "url", "id": "video_url_6", "label": "Ou URL mp4 externe" },
+        { "type": "image_picker", "id": "poster_6", "label": "Poster (optionnel)" }
+      ]
+    },
+    {
+      "type": "ag_reviews_carousel",
+      "name": "AG Reviews Carousel",
+      "settings": [
+        { "type": "header", "content": "Container" },
+        { "type": "color", "id": "bg_color", "label": "Fond" },
+        { "type": "color", "id": "text_color", "label": "Couleur texte avis", "default": "#333333" },
+        { "type": "color", "id": "name_color", "label": "Couleur nom", "default": "#333333" },
+        { "type": "color", "id": "arrow_color", "label": "Couleur flèches", "default": "#333333" },
+        { "type": "range", "id": "container_radius", "label": "Arrondi container", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "header", "content": "Image avis" },
+        { "type": "range", "id": "image_size", "label": "Taille image", "min": 30, "max": 150, "step": 5, "unit": "px", "default": 70 },
+        { "type": "range", "id": "image_radius", "label": "Arrondi image", "min": 0, "max": 50, "step": 1, "unit": "px", "default": 12 },
+        { "type": "header", "content": "Typographie" },
+        { "type": "range", "id": "text_size", "label": "Taille texte avis", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12 },
+        { "type": "range", "id": "name_size", "label": "Taille nom", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12 },
+        { "type": "checkbox", "id": "text_italic", "label": "Texte en italique", "default": true },
+        { "type": "range", "id": "stars_width", "label": "Largeur étoiles", "min": 50, "max": 150, "step": 5, "unit": "px", "default": 85 },
+        { "type": "header", "content": "Comportement" },
+        { "type": "checkbox", "id": "show_arrows", "label": "Afficher flèches", "default": true },
+        { "type": "checkbox", "id": "autoplay", "label": "Lecture auto", "default": false },
+        { "type": "range", "id": "autoplay_delay", "label": "Délai (sec)", "min": 2, "max": 15, "step": 1, "default": 5 },
+        { "type": "header", "content": "URLs images étoiles" },
+        { "type": "text", "id": "default_stars_5", "label": "Image 5 étoiles", "default": "https://cdn.shopify.com/s/files/1/0633/4496/7905/files/stars-5-1_2.svg?v=1704889528" },
+        { "type": "header", "content": "Avis 1" },
+        { "type": "text", "id": "r1_image", "label": "URL image", "default": "https://cdn.shopify.com/s/files/1/0909/4994/3627/files/images.jpg?v=1739606357" },
+        { "type": "textarea", "id": "r1_text", "label": "Texte", "default": "Je suis triste que ce magasin ferme, mais ces prix soldés m'ont fait très plaisir ! Cet endroit va me manquer." },
+        { "type": "text", "id": "r1_name", "label": "Nom", "default": "Sara T." },
+        { "type": "text", "id": "r1_stars", "label": "URL étoiles (vide = 5★)" },
+        { "type": "header", "content": "Avis 2" },
+        { "type": "text", "id": "r2_image", "label": "URL image", "default": "https://cdn.shopify.com/s/files/1/0909/4994/3627/files/images_3.jpg?v=1739606826" },
+        { "type": "textarea", "id": "r2_text", "label": "Texte", "default": "Je suis impressionné par la rapidité avec laquelle ma commande est arrivée." },
+        { "type": "text", "id": "r2_name", "label": "Nom", "default": "Julia Pere." },
+        { "type": "text", "id": "r2_stars", "label": "URL étoiles (vide = 5★)" },
+        { "type": "header", "content": "Avis 3" },
+        { "type": "text", "id": "r3_image", "label": "URL image", "default": "https://cdn.shopify.com/s/files/1/0944/2761/1467/files/Ontwerp_zonder_titel_66.png?v=1750373433" },
+        { "type": "textarea", "id": "r3_text", "label": "Texte", "default": "Absolument parfait ! Tout était exactement comme sur les photos." },
+        { "type": "text", "id": "r3_name", "label": "Nom", "default": "Alexa R." },
+        { "type": "text", "id": "r3_stars", "label": "URL étoiles (vide = 5★)" },
+        { "type": "header", "content": "Avis 4" },
+        { "type": "text", "id": "r4_image", "label": "URL image", "default": "https://cdn.shopify.com/s/files/1/0633/4496/7905/files/dfhhdfsdsf.svg?v=1704894390" },
+        { "type": "textarea", "id": "r4_text", "label": "Texte", "default": "La livraison a été rapide et le retour s'est déroulé sans problème." },
+        { "type": "text", "id": "r4_name", "label": "Nom", "default": "Maxime P." },
+        { "type": "text", "id": "r4_stars", "label": "URL étoiles (vide = 5★)" }
+      ]
+    },
+    {
+      "type": "ag_rating_summary",
+      "name": "AG Rating Summary",
+      "settings": [
+        { "type": "header", "content": "Contenu" },
+        { "type": "text", "id": "rating", "label": "Note (ex: 4.5)", "default": "4.5" },
+        { "type": "text", "id": "prefix", "label": "Préfixe", "default": "EXCELLENT" },
+        { "type": "text", "id": "score_text", "label": "Score (gras)", "default": "4.8/5" },
+        { "type": "text", "id": "suffix", "label": "Suffixe", "default": "1734 Avis" },
+        { "type": "url", "id": "link_url", "label": "Lien (optionnel)" },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "star_color", "label": "Couleur étoiles", "default": "#00b87e" },
+        { "type": "color", "id": "empty_color", "label": "Couleur étoiles vides", "default": "#dddddd" },
+        { "type": "color", "id": "label_color", "label": "Couleur texte", "default": "#000000" },
+        { "type": "color", "id": "bg_color", "label": "Fond" },
+        { "type": "header", "content": "Style" },
+        { "type": "range", "id": "stars_zoom", "label": "Taille étoiles", "min": 0.5, "max": 2, "step": 0.1, "default": 0.8 },
+        { "type": "range", "id": "label_size", "label": "Taille texte", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 14 },
+        { "type": "select", "id": "text_weight", "label": "Graisse texte", "default": "500",
+          "options": [
+            { "value": "400", "label": "Regular" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" }
+          ]
+        },
+        { "type": "range", "id": "container_radius", "label": "Arrondi container", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 }
+      ]
+    },
+    {
+      "type": "ag_stock_notification",
+      "name": "AG Stock Notification",
+      "settings": [
+        { "type": "header", "content": "Contenu" },
+        { "type": "text", "id": "label", "label": "Préfixe en gras", "default": "MISE À JOUR :" },
+        { "type": "textarea", "id": "message", "label": "Message", "default": "Le stock est limité… si vous pouvez encore cliquer sur « ajouter au panier », c'est qu'il y a encore du stock." },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "bg_color", "label": "Fond", "default": "#ffecec" },
+        { "type": "color", "id": "border_color", "label": "Bordure gauche", "default": "#ff6b6b" },
+        { "type": "color", "id": "text_color", "label": "Texte", "default": "#333333" },
+        { "type": "color", "id": "label_color", "label": "Préfixe en gras" },
+        { "type": "header", "content": "Style" },
+        { "type": "range", "id": "text_size", "label": "Taille texte", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 15 },
+        { "type": "range", "id": "border_width", "label": "Épaisseur bordure", "min": 0, "max": 10, "step": 1, "unit": "px", "default": 5 },
+        { "type": "range", "id": "radius", "label": "Arrondi", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 5 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 10 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 15 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 20 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "text", "id": "font_family", "label": "Police CSS (optionnel)" }
+      ]
+    },
+    {
+      "type": "ag_shipping_info",
+      "name": "AG Shipping Info",
+      "settings": [
+        { "type": "header", "content": "Date d'expédition" },
+        { "type": "text", "id": "ship_prefix", "label": "Préfixe", "default": "Expédié le" },
+        { "type": "range", "id": "days_after_today", "label": "Jours après aujourd'hui", "min": 0, "max": 14, "step": 1, "default": 1 },
+        { "type": "text", "id": "date_locale", "label": "Locale date", "default": "fr-FR" },
+        { "type": "text", "id": "fallback_date", "label": "Date de secours", "default": "demain" },
+        { "type": "checkbox", "id": "show_dot", "label": "Pastille animée", "default": true },
+        { "type": "header", "content": "Livraison" },
+        { "type": "text", "id": "shipping_prefix", "label": "Texte livraison", "default": "Livraison La Poste" },
+        { "type": "text", "id": "free_label", "label": "Mot en surbrillance", "default": "GRATUITE" },
+        { "type": "image_picker", "id": "icon_image", "label": "Icône (drapeau)" },
+        { "type": "text", "id": "icon_url", "label": "URL icône (fallback)", "default": "https://cdn.pixabay.com/photo/2013/07/12/17/17/france-151928_640.png" },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "bg_color", "label": "Fond", "default": "#f6f6f6" },
+        { "type": "color", "id": "text_color", "label": "Texte", "default": "#000000" },
+        { "type": "color", "id": "highlight_color", "label": "Texte en surbrillance" },
+        { "type": "color", "id": "dot_color", "label": "Couleur pastille", "default": "#137333" },
+        { "type": "header", "content": "Style" },
+        { "type": "range", "id": "text_size", "label": "Taille texte", "min": 8, "max": 18, "step": 1, "unit": "px", "default": 12 },
+        { "type": "range", "id": "icon_size", "label": "Taille icône", "min": 12, "max": 60, "step": 1, "unit": "px", "default": 25 },
+        { "type": "range", "id": "dot_size", "label": "Taille pastille", "min": 6, "max": 24, "step": 1, "unit": "px", "default": 12 },
+        { "type": "range", "id": "radius", "label": "Arrondi", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 10 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 6 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 16 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 }
+      ]
+    },
+    {
+      "type": "ag_social_proof",
+      "name": "AG Social Proof",
+      "settings": [
+        { "type": "header", "content": "Contenu" },
+        { "type": "text", "id": "name", "label": "Nom (en gras)", "default": "Davie" },
+        { "type": "richtext", "id": "message", "label": "Message", "default": "<p>et <strong>1500+</strong> autres adorent nos produits !</p>" },
+        { "type": "checkbox", "id": "show_badge", "label": "Afficher badge ✓", "default": true },
+        { "type": "header", "content": "Avatars" },
+        { "type": "image_picker", "id": "avatar_1", "label": "Avatar 1" },
+        { "type": "text", "id": "avatar_1_url", "label": "URL avatar 1 (fallback)", "default": "//section.store/cdn/shop/files/profile-image-meg-aghamyan-JXDFfSHarvY-unsplash.jpg?v=1753272392&width=150" },
+        { "type": "image_picker", "id": "avatar_2", "label": "Avatar 2" },
+        { "type": "text", "id": "avatar_2_url", "label": "URL avatar 2 (fallback)", "default": "//section.store/cdn/shop/files/profile-image-ordan-gonzalez-MxNime7-f6Q-unsplash.jpg?v=1754051894&width=150" },
+        { "type": "image_picker", "id": "avatar_3", "label": "Avatar 3" },
+        { "type": "text", "id": "avatar_3_url", "label": "URL avatar 3 (fallback)", "default": "//section.store/cdn/shop/files/profile-image-pexels-dziana-hasanbekava-7275385.jpg?v=1751892377&width=150" },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "bg_color", "label": "Fond", "default": "#f3f3f3" },
+        { "type": "color", "id": "text_color", "label": "Texte", "default": "#404040" },
+        { "type": "color", "id": "badge_color", "label": "Badge ✓", "default": "#4c8ae7" },
+        { "type": "color", "id": "avatar_border_color", "label": "Bordure avatar", "default": "#ffffff" },
+        { "type": "header", "content": "Style" },
+        { "type": "range", "id": "avatar_size", "label": "Taille avatar", "min": 20, "max": 60, "step": 1, "unit": "px", "default": 30 },
+        { "type": "range", "id": "avatar_border", "label": "Épaisseur bordure", "min": 0, "max": 5, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "text_size", "label": "Taille texte", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 13 },
+        { "type": "range", "id": "radius", "label": "Arrondi container", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 7 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 8 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 10 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 }
+      ]
+    },
+    {
+      "type": "ag_product_benefits",
+      "name": "AG Product Benefits",
+      "settings": [
+        { "type": "header", "content": "Bénéfices", "info": "Utilisez <strong>texte</strong> pour mettre en gras." },
+        { "type": "text", "id": "benefit_1", "label": "Bénéfice 1", "default": "💦 <strong>Hydratation</strong> intense" },
+        { "type": "text", "id": "benefit_2", "label": "Bénéfice 2", "default": "🛡️ <strong>Répare</strong> en profondeur" },
+        { "type": "text", "id": "benefit_3", "label": "Bénéfice 3", "default": "🌸 <strong>Beauté</strong> parfaite" },
+        { "type": "text", "id": "benefit_4", "label": "Bénéfice 4" },
+        { "type": "text", "id": "benefit_5", "label": "Bénéfice 5" },
+        { "type": "text", "id": "benefit_6", "label": "Bénéfice 6" },
+        { "type": "header", "content": "Disposition" },
+        { "type": "select", "id": "layout", "label": "Disposition", "default": "vertical",
+          "options": [
+            { "value": "vertical", "label": "Vertical" },
+            { "value": "horizontal", "label": "Horizontal" }
+          ]
+        },
+        { "type": "range", "id": "gap", "label": "Espacement", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 8 },
+        { "type": "header", "content": "Couleurs" },
+        { "type": "color", "id": "bg_color", "label": "Fond pill", "default": "#fde4ed" },
+        { "type": "color", "id": "text_color", "label": "Texte", "default": "#ff566a" },
+        { "type": "color", "id": "highlight_color", "label": "Texte en gras" },
+        { "type": "header", "content": "Style" },
+        { "type": "range", "id": "text_size", "label": "Taille texte", "min": 10, "max": 22, "step": 1, "unit": "px", "default": 14 },
+        { "type": "select", "id": "text_weight", "label": "Graisse texte", "default": "500",
+          "options": [
+            { "value": "400", "label": "Regular" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" }
+          ]
+        },
+        { "type": "range", "id": "radius", "label": "Arrondi", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 8 },
+        { "type": "range", "id": "padding_y", "label": "Padding vertical", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 16 },
+        { "type": "range", "id": "padding_x", "label": "Padding horizontal", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 16 },
+        { "type": "range", "id": "margin_top", "label": "Marge haut", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 },
+        { "type": "range", "id": "margin_bottom", "label": "Marge bas", "min": 0, "max": 60, "step": 1, "unit": "px", "default": 0 }
+      ]
+    },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "AG Product Info V1",
+      "blocks": [
+        { "type": "tier", "settings": { "qty": 1, "discount": 0, "title": "1-month supply", "subtitle": "A 1-month supply, delivered monthly", "badge": "Most popular", "save_label": "" } },
+        { "type": "tier", "settings": { "qty": 3, "discount": 15, "preselect": true, "title": "3-month supply", "subtitle": "A 3-month supply, delivered quarterly", "badge": "Best value", "save_label": "Save [discount]" } },
+        { "type": "benefit_chip", "settings": { "text": "Clinically tested" } },
+        { "type": "benefit_chip", "settings": { "text": "Results in as little as 45 days" } },
+        { "type": "benefit_chip", "settings": { "text": "Drug-free, safe daily use" } },
+        { "type": "benefit_chip", "settings": { "text": "93% satisfaction rate" } },
+        { "type": "side_card", "settings": { "icon": "✓", "label": "Clinically tested" } },
+        { "type": "side_card", "settings": { "icon": "🌿", "label": "Drug-free daily use" } },
+        { "type": "side_card", "settings": { "icon": "🛡", "label": "150-day guarantee" } },
+        { "type": "trust_item", "settings": { "icon": "🚚", "label": "Free EU delivery" } },
+        { "type": "trust_item", "settings": { "icon": "🛡️", "label": "150-day guarantee" } },
+        { "type": "trust_item", "settings": { "icon": "🔒", "label": "Secure checkout" } },
+        { "type": "trust_item", "settings": { "icon": "🌿", "label": "Drug-free formula" } },
+        { "type": "faq_item", "settings": { "question": "What's in the routine?", "answer": "A Bio-Pilixin® Shampoo, Conditioner and Activation Serum — a complete 3-step daily system designed to reduce shedding and support the growth of stronger hair." } },
+        { "type": "faq_item", "settings": { "question": "How does it compare to pharmaceutical brands?", "answer": "" } },
+        { "type": "faq_item", "settings": { "question": "What's the scientific evidence?", "answer": "" } },
+        { "type": "faq_item", "settings": { "question": "When can I expect to see results?", "answer": "" } },
+        { "type": "faq_item", "settings": { "question": "What types of hair loss does it work for?", "answer": "" } },
+        { "type": "faq_item", "settings": { "question": "How do I use the routine?", "answer": "" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

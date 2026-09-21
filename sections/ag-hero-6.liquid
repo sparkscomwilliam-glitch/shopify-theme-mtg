@@ -1,0 +1,621 @@
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.text_font | font_face: font_display: 'swap' }}
+
+  .ag-hero-6-{{ section.id }} {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #fff;
+    
+    --heading-font: {{ section.settings.heading_font.family | default: "sans-serif" }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-weight: {{ section.settings.heading_font.weight | default: 700 }};
+    
+    --text-font: {{ section.settings.text_font.family | default: "sans-serif" }}, {{ section.settings.text_font.fallback_families }};
+    --text-weight: {{ section.settings.text_font.weight | default: 400 }};
+  }
+
+  /* Backgrounds */
+  .ag-hero-6__background-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  
+  .ag-hero-6__background-mobile {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .ag-hero-6__background-desktop {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ag-hero-6__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.9) 80%, #ffffff 100%);
+  }
+
+  /* Content Wrapper */
+  .ag-hero-6__content-wrapper {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ag-hero-6__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px 30px 20px;
+    gap: 20px;
+    min-height: 85vh; 
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .ag-hero-6__spacer {
+    flex-grow: 1;
+    min-height: 20px;
+  }
+
+  /* Titles and Text */
+  .ag-hero-6__title {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-display-sm);
+    line-height: 1.37;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    {% if section.settings.heading_gradient != blank %}
+      background: {{ section.settings.heading_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ section.settings.heading_color_mobile | default: '#ffffff' }};
+    {% endif %}
+  }
+
+  .ag-hero-6__subtitle {
+    font-family: var(--text-font);
+    font-weight: 600;
+    font-size: var(--ag-fs-lead);
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    color: {{ section.settings.subheading_color_mobile | default: '#ffffff' }};
+  }
+
+  /* Badge */
+  .ag-hero-6__badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: {{ section.settings.badge_bg_color | default: '#215ae0' }};
+    color: #fff;
+    font-family: var(--text-font);
+    font-weight: 500;
+    font-size: var(--ag-fs-small);
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 5px;
+    transform: rotate(26deg);
+    white-space: nowrap;
+    z-index: 4;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  /* Review Badge */
+  {% if section.settings.show_review_desktop == false %}
+    .ag-hero-6__review-wrapper { display: flex; }
+  {% endif %}
+  
+  .ag-hero-6__review-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: 3px solid #2f4578;
+    border-radius: 26px;
+    padding: 8px 16px;
+    backdrop-filter: blur(17.2px);
+    width: max-content;
+  }
+  
+  .ag-hero-6__review-stars {
+    display: flex;
+    gap: 2px;
+    color: #FFD700;
+  }
+  .ag-hero-6__review-stars svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+  
+  .ag-hero-6__review-text {
+    font-family: var(--text-font);
+    font-weight: 600;
+    font-size: var(--ag-fs-body);
+    color: #fff;
+    margin: 0;
+  }
+
+  /* Icons grid */
+  .ag-hero-6__icons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .ag-hero-6__icon-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+    gap: 9px;
+  }
+
+  .ag-hero-6__icon-svg {
+    width: 37px;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #215ae0; /* inherit color if svg uses currentcolor */
+  }
+  
+  .ag-hero-6__icon-svg svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ag-hero-6__icon-title {
+    font-family: var(--text-font);
+    font-weight: 500;
+    font-size: var(--ag-fs-eyebrow);
+    line-height: 1.37;
+    text-align: center;
+    color: {{ section.settings.icon_text_color | default: '#2f4578' }};
+    margin: 0;
+  }
+
+  /* Button */
+  .ag-hero-6__button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ag-hero-6__button {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: {{ section.settings.button_bg_color | default: '#2f4578' }};
+    color: {{ section.settings.button_text_color | default: '#ffffff' }};
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-cta);
+    line-height: 1.37;
+    height: var(--ag-btn-h);
+    padding: 0 var(--ag-btn-px);
+    border-radius: var(--ag-btn-radius);
+    text-decoration: none;
+    box-shadow: 4px 4px 4px 0px rgba(0,0,0,0.25);
+    gap: 6px;
+    width: 100%;
+    max-width: 365px;
+    margin-top: 5px;
+    transition: transform 0.2s, background 0.2s;
+  }
+  
+  .ag-hero-6__button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  /* Desktop overrides */
+  @media (min-width: 768px) {
+    .ag-hero-6-{{ section.id }} {
+      flex-direction: row;
+    }
+    .ag-hero-6__background-desktop { display: block; }
+    .ag-hero-6__background-mobile { display: none; }
+    .ag-hero-6__overlay { display: none; }
+    
+    .ag-hero-6__content-wrapper {
+      justify-content: flex-start;
+      padding-left: 100px;
+    }
+
+    .ag-hero-6__content {
+      width: 100%;
+      min-height: 452px;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 64px 0;
+      max-width: 515px; /* Restrict content width on desktop */
+      gap: 15px;
+    }
+
+    .ag-hero-6__spacer {
+      display: none;
+    }
+    
+    .ag-hero-6__badge {
+      position: absolute;
+      top: 55px; /* relative to parent */
+      left: 522px; /* distance matched to figma */
+      right: auto;
+    }
+
+    .ag-hero-6__title {
+      text-align: left;
+      {{ section.settings.heading_color_desktop | default: '#2f4578' | prepend: 'color: ' | append: ';' }}
+    }
+
+    .ag-hero-6__subtitle {
+      text-align: left;
+      margin-top: 0;
+      {{ section.settings.subheading_color_desktop | default: '#2f4578' | prepend: 'color: ' | append: ';' }}
+    }
+    
+    {% if section.settings.show_review_desktop == false %}
+      .ag-hero-6__review-wrapper { display: none; }
+    {% else %}
+      .ag-hero-6__review-wrapper { margin-bottom: 0px; margin-top: 15px; border-color: #2f4578; }
+      .ag-hero-6__review-text { color: #2f4578; }
+    {% endif %}
+
+    .ag-hero-6__icons-wrapper {
+      justify-content: flex-start;
+      margin-top: 15px;
+      gap: 10px;
+    }
+
+    .ag-hero-6__icon-block {
+      width: auto;
+      max-width: 125px;
+      align-items: flex-start;
+    }
+    
+    .ag-hero-6__icon-svg {
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .ag-hero-6__icon-title {
+      text-align: left;
+      color: #215ae0;
+    }
+
+    .ag-hero-6__button-wrapper {
+      justify-content: flex-start;
+    }
+
+    .ag-hero-6__button {
+      width: auto;
+      margin-top: 15px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .ag-hero-6__content-wrapper {
+      padding-left: calc((100vw - 1440px) / 2 + 105px);
+    }
+    /* Fixed absolute position for badge based on container */
+    .ag-hero-6__badge {
+       left: 600px; /* adjusted slightly for absolute context */
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-6 ag-hero-6-{{ section.id }}">
+  <div class="ag-hero-6__background-wrapper">
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 800 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-6__background-mobile" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-6__background-mobile" style="background:#ddd;"></div>
+    {%- endif -%}
+    
+    {%- if section.settings.image_desktop != blank -%}
+      <img src="{{ section.settings.image_desktop | image_url: width: 1600 }}" alt="{{ section.settings.heading | escape }}" class="ag-hero-6__background-desktop" width="{{ section.settings.image_desktop.width }}" height="{{ section.settings.image_desktop.height }}" loading="lazy">
+    {%- else -%}
+      <div class="ag-hero-6__background-desktop" style="background:#eee;"></div>
+    {%- endif -%}
+    <div class="ag-hero-6__overlay"></div>
+  </div>
+
+  <div class="ag-hero-6__content-wrapper">
+    {%- if section.settings.badge_text != blank -%}
+      <div class="ag-hero-6__badge">{{ section.settings.badge_text }}</div>
+    {%- endif -%}
+    
+    <div class="ag-hero-6__content">
+      
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ag-hero-6__title">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+
+      <div class="ag-hero-6__spacer"></div>
+      
+      {%- if section.settings.review_text != blank -%}
+        <div class="ag-hero-6__review-wrapper">
+          <div class="ag-hero-6__review-stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+              </svg>
+            {%- endfor -%}
+          </div>
+          <p class="ag-hero-6__review-text">{{ section.settings.review_text }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="ag-hero-6__subtitle">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+
+      <div class="ag-hero-6__icons-wrapper">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'icon_block' -%}
+            <div class="ag-hero-6__icon-block" {{ block.shopify_attributes }}>
+              <div class="ag-hero-6__icon-svg">
+                {%- if block.settings.svg_icon != blank -%}
+                  {{ block.settings.svg_icon }}
+                {%- else -%}
+                  <div style="width:37px;height:37px;background:#ccc;border-radius:50%;"></div>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.title != blank -%}
+                <p class="ag-hero-6__icon-title">{{ block.settings.title }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ag-hero-6__button-wrapper">
+        {%- if section.settings.button_main_text != blank or section.settings.button_sub_text != blank -%}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="ag-hero-6__button">
+            <span>{{ section.settings.button_main_text }}</span>
+            {% if section.settings.button_sub_text != blank %}
+              <span>{{ section.settings.button_sub_text }}</span>
+            {% endif %}
+          </a>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero Baths",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Typography Options"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Transform Ordinary Baths into a Skin-Nourishing Ritual"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading Gradient",
+      "info": "Overrides solid color if set. Example: linear-gradient(90deg, #ff0000, #00ff00)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_desktop",
+      "label": "Desktop Heading Color",
+      "default": "#2f4578"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_mobile",
+      "label": "Mobile Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Purify your bath water, remove harsh chemicals, and enjoy softer, healthier skin with every soak"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color_desktop",
+      "label": "Desktop Subheading Color",
+      "default": "#2f4578"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color_mobile",
+      "label": "Mobile Subheading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Discount Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "GET 30% OFF"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background Color",
+      "default": "#215ae0"
+    },
+    {
+      "type": "header",
+      "content": "Review Stars (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Review Text",
+      "default": "+ 10'000 children happy"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_review_desktop",
+      "label": "Show on Desktop",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_main_text",
+      "label": "Button Main Text",
+      "default": "Upgrade Your Bath Experience Today"
+    },
+    {
+      "type": "text",
+      "id": "button_sub_text",
+      "label": "Button Sub Text",
+      "default": "-30% OFF Only Today"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#2f4578"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon_block",
+      "name": "Icon Block",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "html",
+          "id": "svg_icon",
+          "label": "SVG Icon Code",
+          "info": "Paste complete SVG code here."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Icon Label",
+          "default": "Softer, Hydrated Skin"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero Baths",
+      "blocks": [
+        {
+          "type": "icon_block",
+          "settings": {
+            "title": "Softer, Hydrated Skin"
+          }
+        },
+        {
+          "type": "icon_block",
+          "settings": {
+            "title": "Optimized Skin Health"
+          }
+        },
+        {
+          "type": "icon_block",
+          "settings": {
+            "title": "Eliminates Harmful Bacteria"
+          }
+        },
+        {
+          "type": "icon_block",
+          "settings": {
+            "title": "Crystal-Clear Pure Water"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

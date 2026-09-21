@@ -1,0 +1,197 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "ag2_header": {
+      "type": "ag-adv-2-header",
+      "blocks": {
+        "n1": { "type": "nav_link", "settings": { "label": "Skincare" } },
+        "n2": { "type": "nav_link", "settings": { "label": "Maquillage" } },
+        "n3": { "type": "nav_link", "settings": { "label": "Tendances" } },
+        "n4": { "type": "nav_link", "settings": { "label": "Bien-être" } },
+        "n5": { "type": "nav_link", "settings": { "label": "Shop" } }
+      },
+      "block_order": ["n1", "n2", "n3", "n4", "n5"],
+      "settings": {}
+    },
+    "ag2_hero": {
+      "type": "ag-adv-2-hero",
+      "settings": {}
+    },
+    "ag2_content_intro": {
+      "type": "ag-adv-2-content",
+      "blocks": {
+        "p1": {
+          "type": "paragraphs",
+          "settings": {
+            "is_lead": true,
+            "content": "<p>Je vais être honnête avec vous, et ce n'est pas facile à admettre quand on écrit sur la beauté pour vivre : <strong>pendant dix ans, j'ai dépensé une petite fortune en sérums anti-âge.</strong> Des flacons à 180 € recommandés par des influenceuses, des crèmes « cliniquement prouvées » achetées en duty-free, des cures que je commandais depuis la Corée.</p><p>Et pourtant, à 47 ans, je me regardais dans le miroir le matin et je voyais la même chose : des ridules autour des yeux qui ne partaient pas, un teint terne, cette sensation de tiraillement vers 16 h.</p><p>Puis, lors d'un rendez-vous de routine, ma dermatologue a fait quelque chose que je n'oublierai jamais. Elle a regardé la liste de mes produits, a posé son stylo, et m'a dit : « Sophie, vous gaspillez votre argent. Le problème n'est pas ce que vous mettez <strong>sur</strong> votre peau. C'est ce que votre peau a arrêté de produire <strong>elle-même</strong>. »</p>"
+          }
+        }
+      },
+      "block_order": ["p1"],
+      "settings": {}
+    },
+    "ag2_press": {
+      "type": "ag-adv-2-press",
+      "blocks": {
+        "p1": { "type": "press_logo", "settings": { "name": "Elle" } },
+        "p2": { "type": "press_logo", "settings": { "name": "Vogue" } },
+        "p3": { "type": "press_logo", "settings": { "name": "Byrdie" } },
+        "p4": { "type": "press_logo", "settings": { "name": "Allure" } },
+        "p5": { "type": "press_logo", "settings": { "name": "Marie Claire" } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4", "p5"],
+      "settings": {}
+    },
+    "ag2_content_body": {
+      "type": "ag-adv-2-content",
+      "blocks": {
+        "fig": {
+          "type": "float_image",
+          "settings": {
+            "placeholder": "Photo — femme devant son miroir, expression contrariée",
+            "caption": "Dix ans de produits, et toujours le même reflet le matin."
+          }
+        },
+        "p1": {
+          "type": "paragraphs",
+          "settings": {
+            "content": "<p>Elle m'a expliqué quelque chose que la plupart des marques préfèrent que vous ignoriez. Après 40 ans, la peau ralentit drastiquement sa production de <strong>céramides</strong> et de <strong>peptides</strong> — les molécules qui maintiennent la barrière cutanée ferme et hydratée. La plupart des crèmes restent en surface. Elles hydratent une heure, puis s'évaporent. Elles ne <em>relancent</em> jamais le mécanisme lui-même.</p>"
+          }
+        },
+        "quote": {
+          "type": "pullquote",
+          "settings": {
+            "quote": "« Vous ne payez pas pour un meilleur produit. Vous payez pour un plus joli flacon et un meilleur marketing. »",
+            "cite": "— Ma dermatologue, ce jour-là"
+          }
+        },
+        "p2": {
+          "type": "paragraphs",
+          "settings": {
+            "content": "<p>Elle m'a alors parlé d'une formule développée par un laboratoire dermatologique français, qui ne dépensait presque rien en publicité parce qu'il vendait l'essentiel de sa production à… des cliniques. Pas de mannequin retouchée, pas de packaging doré. Juste une concentration d'actifs que la plupart des marques grand public n'osent pas utiliser, parce qu'ils coûtent trop cher.</p><p>Je suis repartie avec un nom écrit sur une ordonnance. C'est là que tout a changé.</p>"
+          }
+        }
+      },
+      "block_order": ["fig", "p1", "quote", "p2"],
+      "settings": {}
+    },
+    "ag2_product": {
+      "type": "ag-adv-2-product",
+      "blocks": {
+        "b1": { "type": "benefit", "settings": { "text": "Relance la production naturelle de céramides en 14 jours" } },
+        "b2": { "type": "benefit", "settings": { "text": "Complexe de 5 peptides à concentration clinique" } },
+        "b3": { "type": "benefit", "settings": { "text": "Repulpe visiblement les ridules sans effet « masque »" } },
+        "b4": { "type": "benefit", "settings": { "text": "Formulé sans parfum, testé sous contrôle dermatologique" } },
+        "b5": { "type": "benefit", "settings": { "text": "Un flacon = 8 semaines (moins cher que votre café quotidien)" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5"],
+      "settings": {}
+    },
+    "ag2_reasons": {
+      "type": "ag-adv-2-reasons",
+      "blocks": {
+        "r1": { "type": "reason", "settings": { "number": "01", "title": "Il répare la barrière, il ne la masque pas", "image_placeholder": "Illustration — gros plan texture de peau / actif", "body": "<p>La plupart des crèmes posent un film hydratant qui s'évapore en quelques heures. Lumira apporte les céramides identiques à ceux de la peau, qui s'intègrent réellement à la barrière cutanée.</p><p>Résultat : dès la deuxième semaine, cette sensation de tiraillement vers 16 h avait complètement disparu.</p>", "stat_big": "+38 %", "stat_label": "hydratation mesurée à J14" } },
+        "r2": { "type": "reason", "settings": { "number": "02", "title": "Une concentration que peu de marques osent", "image_placeholder": "Illustration — pipette / concentration d'actifs", "body": "<p>Le complexe de 5 peptides est dosé à un niveau clinique. C'est coûteux à produire, et c'est précisément pour ça que les grandes marques le diluent.</p><p>Ici, pas de marketing à financer : l'argent va dans le flacon, pas dans la publicité.</p>", "stat_big": "5", "stat_label": "peptides actifs par dose" } },
+        "r3": { "type": "reason", "settings": { "number": "03", "title": "Les ridules se repulpent de l'intérieur", "image_placeholder": "Illustration — femme appliquant le sérum, le matin", "body": "<p>En relançant la production de collagène, la peau se repulpe naturellement. Pas d'effet « tiré », pas de fini plâtreux sous le fond de teint.</p><p>Au bout d'un mois, j'ai arrêté d'utiliser mon correcteur sous les yeux. Pour la première fois depuis des années.</p>", "stat_big": "9 sur 10", "stat_label": "ont vu leurs ridules atténuées*" } },
+        "r4": { "type": "reason", "settings": { "number": "04", "title": "Il remplace 4 produits par un seul", "image_placeholder": "Illustration — calendrier / routine simplifiée", "body": "<p>J'ai rangé mon sérum, mon contour des yeux, mon « booster » et ma crème de nuit. Une seule étape, matin et soir.</p><p>Ma routine est passée de 11 minutes à 2. Et ma peau ne s'est jamais aussi bien portée.</p>", "stat_big": "2 min", "stat_label": "de routine, matin & soir" } },
+        "r5": { "type": "reason", "settings": { "number": "05", "title": "Il m'a fait économiser des centaines d'euros", "image_placeholder": "Illustration — porte-monnaie / comparatif de prix", "body": "<p>Quand j'ai additionné ce que je dépensais chaque mois en produits qui ne marchaient pas, le calcul m'a fait mal. Lumira coûte une fraction de ce total.</p><p>Le vrai luxe, finalement, ce n'était pas le prix. C'était d'arrêter de chercher.</p>", "stat_big": "−70 %", "stat_label": "vs mon ancienne routine" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5"],
+      "settings": {}
+    },
+    "ag2_ba": {
+      "type": "ag-adv-2-before-after",
+      "blocks": {
+        "p1": { "type": "ba_pair", "settings": { "name": "Camille, 52 ans", "duration": "8 semaines d'utilisation" } },
+        "p2": { "type": "ba_pair", "settings": { "name": "Nadia, 45 ans", "duration": "6 semaines d'utilisation" } },
+        "p3": { "type": "ba_pair", "settings": { "name": "Hélène, 49 ans", "duration": "10 semaines d'utilisation" } }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {}
+    },
+    "ag2_cmp": {
+      "type": "ag-adv-2-comparison",
+      "blocks": {
+        "r1": { "type": "row", "settings": { "criterion": "Céramides identiques à la peau", "col1_val": "yes", "col2_val": "no",  "col3_val": "yes", "col4_val": "no" } },
+        "r2": { "type": "row", "settings": { "criterion": "Peptides à dose clinique",       "col1_val": "yes", "col2_val": "no",  "col3_val": "no",  "col4_val": "no" } },
+        "r3": { "type": "row", "settings": { "criterion": "Sans parfum ni alcool",          "col1_val": "yes", "col2_val": "no",  "col3_val": "yes", "col4_val": "no" } },
+        "r4": { "type": "row", "settings": { "criterion": "Contrôle dermatologique",        "col1_val": "yes", "col2_val": "yes", "col3_val": "yes", "col4_val": "no" } },
+        "r5": { "type": "row", "settings": { "criterion": "Remplace 4 produits",            "col1_val": "yes", "col2_val": "no",  "col3_val": "no",  "col4_val": "no" } },
+        "r6": { "type": "row", "settings": { "criterion": "Prix par mois", "col1_val": "text", "col1_text": "~24 €", "col2_val": "text", "col2_text": "180 €", "col3_val": "text", "col3_text": "95 €", "col4_val": "text", "col4_text": "65 €" } },
+        "r7": { "type": "row", "settings": { "criterion": "Garantie 60 jours",              "col1_val": "yes", "col2_val": "no",  "col3_val": "no",  "col4_val": "no" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7"],
+      "settings": {}
+    },
+    "ag2_testimonials": {
+      "type": "ag-adv-2-testimonials",
+      "blocks": {
+        "t1": { "type": "review", "settings": { "name": "Valérie M.",   "location": "Lyon",       "quote": "J'étais sceptique après des années de déceptions. Au bout de trois semaines, mon mari m'a demandé si j'avais changé quelque chose. Tout est dit." } },
+        "t2": { "type": "review", "settings": { "name": "Inès B.",      "location": "Bordeaux",   "quote": "Le tiraillement en fin de journée a disparu en deux semaines. J'ai arrêté trois autres produits. Ma trousse n'a jamais été aussi légère." } },
+        "t3": { "type": "review", "settings": { "name": "Christine D.", "location": "Nantes",     "quote": "À 58 ans, je ne pensais plus que quoi que ce soit puisse changer. Je me suis trompée. C'est la première fois que je rachète un produit deux fois." } },
+        "t4": { "type": "review", "settings": { "name": "Sarah K.",     "location": "Strasbourg", "quote": "Ce que j'aime, c'est l'absence de parfum. Ma peau est réactive et c'est le seul sérum qui ne l'a jamais agressée. Et le résultat est là." } },
+        "t5": { "type": "review", "settings": { "name": "Fatou S.",     "location": "Marseille",  "quote": "J'ai offert un flacon à ma mère et un à ma fille. Trois générations conquises. Le rapport qualité-prix est incomparable." } },
+        "t6": { "type": "review", "settings": { "name": "Élodie R.",    "location": "Lille",      "quote": "Esthéticienne depuis 20 ans, je recommande maintenant Lumira à mes clientes. Les ingrédients parlent d'eux-mêmes." } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4", "t5", "t6"],
+      "settings": {}
+    },
+    "ag2_cta": {
+      "type": "ag-adv-2-cta",
+      "settings": {}
+    },
+    "ag2_guarantee": {
+      "type": "ag-adv-2-guarantee",
+      "settings": {}
+    },
+    "ag2_faq": {
+      "type": "ag-adv-2-faq",
+      "blocks": {
+        "q1": { "type": "faq_item", "settings": { "open": true, "question": "Au bout de combien de temps voit-on des résultats ?", "answer": "<p>La plupart des utilisatrices remarquent une peau plus souple et moins de tiraillement dès la première semaine. Les ridules et la fermeté évoluent surtout entre la 4ᵉ et la 8ᵉ semaine, le temps que la barrière cutanée se reconstruise.</p>" } },
+        "q2": { "type": "faq_item", "settings": { "question": "Est-ce adapté aux peaux sensibles ?", "answer": "<p>Oui. La formule est sans parfum, sans alcool et sans huiles essentielles, et elle est testée sous contrôle dermatologique. Si vous avez une peau très réactive, faites un test dans le pli du coude pendant 24 h.</p>" } },
+        "q3": { "type": "faq_item", "settings": { "question": "Comment l'intégrer à ma routine ?", "answer": "<p>Appliquez 3 à 4 gouttes sur peau propre, matin et soir, avant votre crème solaire le jour. Lumira remplace généralement sérum, contour des yeux et crème de nuit.</p>" } },
+        "q4": { "type": "faq_item", "settings": { "question": "Puis-je l'utiliser avec du rétinol ou de la vitamine C ?", "answer": "<p>Tout à fait. Lumira renforce la barrière cutanée, ce qui aide même la peau à mieux tolérer les actifs puissants.</p>" } },
+        "q5": { "type": "faq_item", "settings": { "question": "Que se passe-t-il si ça ne fonctionne pas pour moi ?", "answer": "<p>Vous êtes couverte par notre garantie 60 jours. Si vous n'êtes pas convaincue, contactez notre service client pour un remboursement intégral.</p>" } },
+        "q6": { "type": "faq_item", "settings": { "question": "Est-ce un abonnement ?", "answer": "<p>Non. Vous achetez le nombre de flacons que vous souhaitez, sans engagement. Une option d'abonnement avec remise existe, mais elle est totalement facultative.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "settings": {}
+    },
+    "ag2_footer": {
+      "type": "ag-adv-2-footer",
+      "blocks": {
+        "l1": { "type": "link", "settings": { "label": "Mentions légales" } },
+        "l2": { "type": "link", "settings": { "label": "Confidentialité" } },
+        "l3": { "type": "link", "settings": { "label": "Conditions de vente" } },
+        "l4": { "type": "link", "settings": { "label": "Contact" } }
+      },
+      "block_order": ["l1", "l2", "l3", "l4"],
+      "settings": {}
+    }
+  },
+  "order": [
+    "ag2_header",
+    "ag2_hero",
+    "ag2_content_intro",
+    "ag2_press",
+    "ag2_content_body",
+    "ag2_product",
+    "ag2_reasons",
+    "ag2_ba",
+    "ag2_cmp",
+    "ag2_testimonials",
+    "ag2_cta",
+    "ag2_guarantee",
+    "ag2_faq",
+    "ag2_footer"
+  ]
+}

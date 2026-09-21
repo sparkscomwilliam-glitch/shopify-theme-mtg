@@ -1,0 +1,548 @@
+{% comment %} ag-versus.liquid — propriété de James Sparks {% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+
+  # ---------- Default SVGs (used if user hasn't pasted custom code) ----------
+  assign default_check_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#1FAE57"/><path d="M7 12.5l3 3 7-7" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+
+  assign default_cross_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#E5484D"/><path d="M8 8l8 8M16 8l-8 8" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/></svg>'
+
+  assign check_svg = s.check_icon_svg | default: default_check_svg
+  assign cross_svg = s.cross_icon_svg | default: default_cross_svg
+
+  # ---------- Disclaimer opacity (entier 0-10 -> décimal 0.0-1.0) ----------
+  assign disclaimer_opacity_dec = s.disclaimer_bg_opacity | times: 1.0 | divided_by: 10
+-%}
+
+{%- style -%}
+  #ag-versus-{{ section.id }} {
+    --agv-bg: {{ s.bg_color | default: '#593092' }};
+    --agv-card-yes-bg: {{ s.card_yes_bg | default: '#FFFFFF' }};
+    --agv-card-yes-text: {{ s.card_yes_text | default: '#02302F' }};
+    --agv-card-no-bg: {{ s.card_no_bg | default: '#9C6CDE' }};
+    --agv-card-no-text: {{ s.card_no_text | default: '#FFFFFF' }};
+    --agv-card-no-border: {{ s.card_no_border | default: 'rgba(255,255,255,0.25)' }};
+    --agv-badge-bg: {{ s.badge_bg | default: '#FFFFFF' }};
+    --agv-badge-text: {{ s.badge_text | default: '#593092' }};
+    --agv-heading-color: {{ s.heading_color | default: '#FFFFFF' }};
+    --agv-body-color: {{ s.body_color | default: '#FFFFFF' }};
+    --agv-cta-bg: {{ s.cta_bg | default: '#FFFFFF' }};
+    --agv-cta-text: {{ s.cta_text | default: '#593092' }};
+    --agv-cta-bg-hover: {{ s.cta_bg_hover | default: '#F2EAFE' }};
+    --agv-popular-color: {{ s.popular_label_color | default: '#000000' }};
+
+    background: var(--agv-bg);
+    color: var(--agv-body-color);
+    padding: clamp(40px, 6vw, 80px) clamp(16px, 4vw, 64px);
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  #ag-versus-{{ section.id }} *,
+  #ag-versus-{{ section.id }} *::before,
+  #ag-versus-{{ section.id }} *::after { box-sizing: border-box; }
+
+  .ag-versus__inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 48px);
+    align-items: center;
+  }
+
+  /* ---------- Badge ---------- */
+  .ag-versus__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--agv-badge-bg);
+    color: var(--agv-badge-text);
+    border-radius: 999px;
+    padding: 10px 28px;
+    font-weight: 700;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.2;
+    width: max-content;
+  }
+
+  /* ---------- Heading / description / CTA column ---------- */
+  .ag-versus__content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    order: -1; /* mobile: text en haut */
+  }
+
+  .ag-versus__heading {
+    color: var(--agv-heading-color);
+    font-size: clamp(28px, 3.6vw, 44px);
+    line-height: 1.15;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .ag-versus__description {
+    color: var(--agv-body-color);
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.45;
+    margin: 0;
+  }
+  .ag-versus__description p { margin: 0 0 12px; }
+  .ag-versus__description p:last-child { margin-bottom: 0; }
+  .ag-versus__description strong { font-weight: 700; }
+
+  .ag-versus__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--agv-cta-bg);
+    color: var(--agv-cta-text);
+    border-radius: 999px;
+    padding: 18px 28px;
+    font-weight: 700;
+    font-size: clamp(15px, 1.3vw, 18px);
+    text-decoration: none;
+    text-align: center;
+    transition: background 200ms ease, transform 200ms ease;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 8px;
+  }
+  .ag-versus__cta:hover { background: var(--agv-cta-bg-hover); transform: translateY(-1px); }
+
+  /* ---------- Cards column ---------- */
+  .ag-versus__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .ag-versus__card {
+    position: relative;
+    border-radius: 12px;
+    padding: 24px 24px;
+    min-height: 220px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .ag-versus__card--yes {
+    background: var(--agv-card-yes-bg);
+    color: var(--agv-card-yes-text);
+  }
+
+  .ag-versus__card--no {
+    background: var(--agv-card-no-bg);
+    color: var(--agv-card-no-text);
+    border: 2px solid var(--agv-card-no-border);
+  }
+
+  .ag-versus__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 65%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ag-versus__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(14px, 1.2vw, 18px);
+    line-height: 1.35;
+  }
+
+  .ag-versus__icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ag-versus__icon svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- Card image ---------- */
+  .ag-versus__card-img {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 95%;
+    width: auto;
+    max-width: 45%;
+    object-fit: contain;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ag-versus__card--yes .ag-versus__card-img { right: 4px; }
+  .ag-versus__card--no .ag-versus__card-img { right: 12px; }
+
+  /* ---------- "Popular alternatives" label over card 2 ---------- */
+  .ag-versus__popular {
+    position: absolute;
+    right: 16px;
+    bottom: 14px;
+    font-family: 'Bebas Neue', 'Oswald', Impact, sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 1.6vw, 22px);
+    color: var(--agv-popular-color);
+    text-align: center;
+    line-height: 1;
+    text-transform: uppercase;
+    z-index: 2;
+    letter-spacing: 0.5px;
+    max-width: 40%;
+  }
+
+  /* ====================== DESKTOP ====================== */
+  @media (min-width: 900px) {
+    .ag-versus__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(40px, 5vw, 80px);
+    }
+    .ag-versus__content {
+      order: 0; /* desktop: text à droite */
+      gap: 22px;
+    }
+    .ag-versus__card { min-height: 250px; padding: 32px 32px; }
+    .ag-versus__list { gap: 22px; max-width: 55%; }
+  }
+{%- endstyle -%}
+
+<section id="ag-versus-{{ section.id }}">
+  <div class="ag-versus__inner">
+
+    {% comment %} ---------- CARDS COLUMN ---------- {% endcomment %}
+    <div class="ag-versus__cards">
+
+      {% comment %} ---- Card YES (product) ---- {% endcomment %}
+      <div class="ag-versus__card ag-versus__card--yes">
+        <ul class="ag-versus__list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'yes_item' -%}
+              <li class="ag-versus__item" {{ block.shopify_attributes }}>
+                <span class="ag-versus__icon" aria-hidden="true">{{ check_svg }}</span>
+                <span>{{ block.settings.text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+        {%- if s.yes_image != blank -%}
+          <img
+            class="ag-versus__card-img"
+            src="{{ s.yes_image | image_url: width: 600 }}"
+            srcset="{{ s.yes_image | image_url: width: 300 }} 300w, {{ s.yes_image | image_url: width: 600 }} 600w"
+            sizes="(min-width: 900px) 280px, 180px"
+            alt="{{ s.yes_image_alt | default: 'Product' | escape }}"
+            loading="lazy"
+            width="{{ s.yes_image.width }}"
+            height="{{ s.yes_image.height }}"
+          >
+        {%- endif -%}
+      </div>
+
+      {% comment %} ---- Card NO (alternative) ---- {% endcomment %}
+      <div class="ag-versus__card ag-versus__card--no">
+        <ul class="ag-versus__list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'no_item' -%}
+              <li class="ag-versus__item" {{ block.shopify_attributes }}>
+                <span class="ag-versus__icon" aria-hidden="true">{{ cross_svg }}</span>
+                <span>{{ block.settings.text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+        {%- if s.no_image != blank -%}
+          <img
+            class="ag-versus__card-img"
+            src="{{ s.no_image | image_url: width: 400 }}"
+            srcset="{{ s.no_image | image_url: width: 200 }} 200w, {{ s.no_image | image_url: width: 400 }} 400w"
+            sizes="(min-width: 900px) 200px, 140px"
+            alt="{{ s.no_image_alt | default: 'Alternative product' | escape }}"
+            loading="lazy"
+            width="{{ s.no_image.width }}"
+            height="{{ s.no_image.height }}"
+          >
+        {%- endif -%}
+        {%- if s.popular_label != blank -%}
+          <div class="ag-versus__popular">{{ s.popular_label }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {% comment %} ---------- CONTENT COLUMN ---------- {% endcomment %}
+    <div class="ag-versus__content">
+      {%- if s.badge_text_value != blank -%}
+        <span class="ag-versus__badge">{{ s.badge_text_value }}</span>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h2 class="ag-versus__heading">{{ s.heading }}</h2>
+      {%- endif -%}
+
+      {%- if s.description != blank -%}
+        <div class="ag-versus__description">{{ s.description }}</div>
+      {%- endif -%}
+
+      {%- if s.cta_text_value != blank -%}
+        <a class="ag-versus__cta" href="{{ s.cta_link | default: '#' }}">{{ s.cta_text_value }}</a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AG-Versus",
+  "tag": "section",
+  "class": "ag-versus-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Couleurs de fond"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond de la section",
+      "default": "#593092"
+    },
+
+    {
+      "type": "header",
+      "content": "Badge (ex : Reason 1)"
+    },
+    {
+      "type": "text",
+      "id": "badge_text_value",
+      "label": "Texte du badge",
+      "default": "Reason 1"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Fond du badge",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "badge_text",
+      "label": "Texte du badge",
+      "default": "#593092"
+    },
+
+    {
+      "type": "header",
+      "content": "Titre & description"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Hair regrowth, without sacrificing your sex drive"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Couleur du titre",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Hair loss drugs, like Finasteride, work by blocking DHT, a hormone tied to hair loss.</p><p>The problem? They don't just block it in your scalp, they block it everywhere. That's why so many men report low libido, erectile issues, and mood swings.</p><p>Hair Rescue works differently. It uses RU58841, a topical DHT blocker that stays local. <strong>It targets the root cause of hair loss, right at the follicle, without ever messing with your sex life.</strong></p>"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du texte de description",
+      "default": "#FFFFFF"
+    },
+
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text_value",
+      "label": "Texte du bouton",
+      "default": "Try It Risk-Free – 90-Day Guarantee"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg",
+      "label": "Fond du bouton",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "#593092"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_hover",
+      "label": "Fond du bouton (hover)",
+      "default": "#F2EAFE"
+    },
+
+    {
+      "type": "header",
+      "content": "Carte « Oui » (produit)"
+    },
+    {
+      "type": "color",
+      "id": "card_yes_bg",
+      "label": "Fond de la carte",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_yes_text",
+      "label": "Couleur du texte",
+      "default": "#02302F"
+    },
+    {
+      "type": "image_picker",
+      "id": "yes_image",
+      "label": "Image produit (à droite)"
+    },
+    {
+      "type": "text",
+      "id": "yes_image_alt",
+      "label": "Texte alternatif de l'image produit",
+      "default": "Product"
+    },
+
+    {
+      "type": "header",
+      "content": "Carte « Non » (alternative)"
+    },
+    {
+      "type": "color",
+      "id": "card_no_bg",
+      "label": "Fond de la carte",
+      "default": "#9C6CDE"
+    },
+    {
+      "type": "color",
+      "id": "card_no_text",
+      "label": "Couleur du texte",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_no_border",
+      "label": "Couleur de la bordure",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "image_picker",
+      "id": "no_image",
+      "label": "Image alternative (à droite)"
+    },
+    {
+      "type": "text",
+      "id": "no_image_alt",
+      "label": "Texte alternatif de l'image alternative",
+      "default": "Alternative product"
+    },
+    {
+      "type": "text",
+      "id": "popular_label",
+      "label": "Étiquette sous l'image (ex : POPULAR ALTERNATIVES)",
+      "default": "POPULAR ALTERNATIVES"
+    },
+    {
+      "type": "color",
+      "id": "popular_label_color",
+      "label": "Couleur de l'étiquette",
+      "default": "#000000"
+    },
+
+    {
+      "type": "header",
+      "content": "Icônes SVG (personnalisables)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Colle ici ton code SVG complet (avec la balise <svg>...</svg>). Laisser vide pour utiliser l'icône par défaut."
+    },
+    {
+      "type": "textarea",
+      "id": "check_icon_svg",
+      "label": "Icône ✓ (carte « Oui »)",
+      "info": "Code SVG complet. Ex : <svg ...>...</svg>"
+    },
+    {
+      "type": "textarea",
+      "id": "cross_icon_svg",
+      "label": "Icône ✗ (carte « Non »)",
+      "info": "Code SVG complet. Ex : <svg ...>...</svg>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "yes_item",
+      "name": "Point positif (carte ✓)",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte",
+          "default": "<p>RU58841 (<strong>topical</strong> DHT blocker) + Minoxidil to stimulate growth</p>"
+        }
+      ]
+    },
+    {
+      "type": "no_item",
+      "name": "Point négatif (carte ✗)",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte",
+          "default": "<p>Finasteride (oral DHT blocker)</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG-Versus",
+      "blocks": [
+        { "type": "yes_item", "settings": { "text": "<p>RU58841 (<strong>topical</strong> DHT blocker) + Minoxidil to stimulate growth</p>" } },
+        { "type": "yes_item", "settings": { "text": "<p>doesn't affect hormones</p>" } },
+        { "type": "yes_item", "settings": { "text": "<p>Noticeable changes in 2–4 weeks</p>" } },
+        { "type": "no_item", "settings": { "text": "<p>Finasteride (oral DHT blocker)</p>" } },
+        { "type": "no_item", "settings": { "text": "<p>low libido, erectile dysfunction, mood changes</p>" } },
+        { "type": "no_item", "settings": { "text": "<p>Often takes 3–6 months or more</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

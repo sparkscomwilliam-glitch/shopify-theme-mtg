@@ -1,0 +1,46 @@
+{% assign block_settings = block.settings %}
+
+<div class="ag-macro-cards" {{ block.shopify_attributes }}>
+  {%- for i in (1..3) -%}
+    {%- assign n_key = 'card_' | append: i | append: '_number' -%}
+    {%- assign u_key = 'card_' | append: i | append: '_unit' -%}
+    {%- assign l_key = 'card_' | append: i | append: '_label' -%}
+    {%- assign n_val = block_settings[n_key] -%}
+    {%- assign u_val = block_settings[u_key] -%}
+    {%- assign l_val = block_settings[l_key] -%}
+    {%- if n_val != blank or l_val != blank -%}
+      <div class="ag-macro-cards__item">
+        <div class="ag-macro-cards__n">
+          {{ n_val }}{%- if u_val != blank -%}<span class="ag-macro-cards__u">{{ u_val }}</span>{%- endif -%}
+        </div>
+        <div class="ag-macro-cards__l">{{ l_val }}</div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "AG Macro Cards",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "card_1_number", "label": "Number", "default": "90" },
+    { "type": "text", "id": "card_1_unit", "label": "Unit (optional)" },
+    { "type": "text", "id": "card_1_label", "label": "Label", "default": "nutriments essentiels" },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "card_2_number", "label": "Number", "default": "100" },
+    { "type": "text", "id": "card_2_unit", "label": "Unit (optional)", "default": "%" },
+    { "type": "text", "id": "card_2_label", "label": "Label", "default": "dose clinique" },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "card_3_number", "label": "Number", "default": "0" },
+    { "type": "text", "id": "card_3_unit", "label": "Unit (optional)" },
+    { "type": "text", "id": "card_3_label", "label": "Label", "default": "additif de synthèse" }
+  ],
+  "presets": [
+    {
+      "name": "AG Macro Cards"
+    }
+  ]
+}
+{% endschema %}

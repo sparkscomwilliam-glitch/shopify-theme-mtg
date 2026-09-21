@@ -1,0 +1,731 @@
+{% comment %} ag-variant-picker.liquid — propriété de James Sparks {% endcomment %}
+
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+{%- assign low_stock_threshold = block.settings.lowstock_threshold -%}
+
+<style>
+  /* ── Container ───────────────────────────────── */
+  #ag-vp-{{ block.id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ block.settings.card_gap }}px;
+    padding-top: 16px; /* room for overflow badges */
+    margin-top: calc({{ block.settings.margin_top | divided_by: 10.0 }}rem - 16px);
+    margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+  }
+
+  /* ── Card base ───────────────────────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.inactive_border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    background: {{ block.settings.inactive_bg_color }};
+    cursor: pointer;
+    padding: calc({{ block.settings.card_padding }}px + 10px) {{ block.settings.card_padding }}px {{ block.settings.card_padding }}px;
+    min-width: {{ block.settings.card_min_width }}px;
+    transition: border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+    user-select: none;
+  }
+
+  /* ── Sold out state ──────────────────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-card.ag-vp-soldout {
+    border-color: {{ block.settings.soldout_border_color }};
+    background: {{ block.settings.soldout_bg_color }};
+    opacity: {{ block.settings.soldout_opacity | divided_by: 100.0 }};
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ── Product image ───────────────────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-card .ag-vp-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    margin-bottom: 10px;
+  }
+  #ag-vp-{{ block.id }} .ag-vp-card .ag-vp-img-wrap img,
+  #ag-vp-{{ block.id }} .ag-vp-card .ag-vp-img-wrap .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ── Variant name ────────────────────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-card .ag-vp-name {
+    font-weight: 700;
+    font-size: {{ block.settings.name_font_size }}px;
+    color: {{ block.settings.name_color }};
+    margin: 4px 0 2px;
+    line-height: 1.2;
+  }
+
+  /* ── Price ───────────────────────────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-card .ag-vp-price {
+    font-size: {{ block.settings.price_font_size }}px;
+    color: {{ block.settings.price_color }};
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* ── Badge (pill at top-center) ──────────────── */
+  #ag-vp-{{ block.id }} .ag-vp-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: {{ block.settings.badge_font_size }}px;
+    font-weight: 600;
+    padding: 3px 11px;
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    border: 1.5px solid currentColor;
+    line-height: 1.5;
+    pointer-events: none;
+  }
+
+  #ag-vp-{{ block.id }} .ag-vp-badge--soldout {
+    background: {{ block.settings.soldout_badge_bg }};
+    color: {{ block.settings.soldout_badge_color }};
+  }
+
+  #ag-vp-{{ block.id }} .ag-vp-badge--lowstock {
+    background: {{ block.settings.lowstock_badge_bg }};
+    color: {{ block.settings.lowstock_badge_color }};
+  }
+</style>
+
+<div
+  id="ag-vp-{{ block.id }}"
+  class="no-js-hidden"
+  data-section="{{ section.id }}"
+  data-block="{{ block.id }}"
+  data-url="{{ product.url }}"
+  data-inactive-border="{{ block.settings.inactive_border_color }}"
+  data-inactive-bg="{{ block.settings.inactive_bg_color }}"
+  role="radiogroup"
+  aria-label="Variants"
+  {{ block.shopify_attributes }}
+>
+  {%- for variant in product.variants -%}
+    {%- assign vi           = forloop.index -%}
+    {%- assign v_border_key = 'variant_' | append: vi | append: '_border_color' -%}
+    {%- assign v_bg_key     = 'variant_' | append: vi | append: '_bg_color' -%}
+    {%- assign v_radius_key = 'variant_' | append: vi | append: '_border_radius' -%}
+    {%- assign v_border     = block.settings[v_border_key] -%}
+    {%- assign v_bg         = block.settings[v_bg_key] -%}
+    {%- assign v_radius     = block.settings[v_radius_key] -%}
+
+    {%- assign is_selected = false -%}
+    {%- if variant.id == selected_variant.id -%}
+      {%- assign is_selected = true -%}
+    {%- endif -%}
+
+    {%- assign is_lowstock = false -%}
+    {%- if variant.available
+        and variant.inventory_management == 'shopify'
+        and variant.inventory_quantity > 0
+        and variant.inventory_quantity <= low_stock_threshold -%}
+      {%- assign is_lowstock = true -%}
+    {%- endif -%}
+
+    <div
+      class="ag-vp-card{% unless variant.available %} ag-vp-soldout{% endunless %}{% if is_selected %} ag-vp-selected{% endif %}"
+      data-variant-id="{{ variant.id }}"
+      data-selected-border="{{ v_border }}"
+      data-selected-bg="{{ v_bg }}"
+      data-selected-radius="{{ v_radius }}"
+      {% if is_selected %}
+        style="border-color:{{ v_border }};background:{{ v_bg }};{% if v_radius != blank %}border-radius:{{ v_radius }}px;{% endif %}"
+      {% endif %}
+      role="radio"
+      aria-checked="{{ is_selected }}"
+      tabindex="{% if is_selected or forloop.first %}0{% else %}-1{% endif %}"
+    >
+      {%- if is_lowstock -%}
+        <span class="ag-vp-badge ag-vp-badge--lowstock">{{ block.settings.lowstock_badge_text }}</span>
+      {%- elsif variant.available == false -%}
+        <span class="ag-vp-badge ag-vp-badge--soldout">{{ block.settings.soldout_badge_text }}</span>
+      {%- endif -%}
+
+      <div class="ag-vp-img-wrap">
+        {%- assign variant_image = variant.featured_image | default: product.featured_image -%}
+        {%- if variant_image -%}
+          <img
+            src="{{ variant_image | image_url: width: 300 }}"
+            alt="{{ variant_image.alt | escape }}"
+            width="150"
+            height="150"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="ag-vp-name">{{ variant.title }}</div>
+      <div class="ag-vp-price">{{ variant.price | money }}</div>
+    </div>
+  {%- endfor -%}
+
+  <script type="application/json">
+    {{ product.variants | json }}
+  </script>
+</div>
+
+<script>
+(function () {
+  var container = document.getElementById('ag-vp-{{ block.id }}');
+  if (!container) return;
+
+  var sectionId     = container.dataset.section;
+  var inactiveBorder = container.dataset.inactiveBorder;
+  var inactiveBg    = container.dataset.inactiveBg;
+  var globalRadius  = '{{ block.settings.border_radius }}';
+  var cards         = Array.from(container.querySelectorAll('.ag-vp-card:not(.ag-vp-soldout)'));
+
+  function applySelected(card) {
+    var border = card.dataset.selectedBorder || inactiveBorder;
+    var bg     = card.dataset.selectedBg     || inactiveBg;
+    var radius = card.dataset.selectedRadius;
+    card.style.borderColor  = border;
+    card.style.background   = bg;
+    if (radius) card.style.borderRadius = radius + 'px';
+    card.classList.add('ag-vp-selected');
+    card.setAttribute('aria-checked', 'true');
+    card.setAttribute('tabindex', '0');
+  }
+
+  function applyInactive(card) {
+    card.style.borderColor  = inactiveBorder;
+    card.style.background   = inactiveBg;
+    card.style.borderRadius = globalRadius + 'px';
+    card.classList.remove('ag-vp-selected');
+    card.setAttribute('aria-checked', 'false');
+    card.setAttribute('tabindex', '-1');
+  }
+
+  function selectCard(card) {
+    cards.forEach(function(c) { applyInactive(c); });
+    applySelected(card);
+
+    var variantId = card.dataset.variantId;
+
+    // 1. Update hidden input
+    var form = document.getElementById('product-form-' + sectionId);
+    if (form) {
+      var input = form.querySelector('input[name="id"]');
+      if (input) {
+        input.value = variantId;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    // 2. Update URL
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', variantId);
+      window.history.replaceState({}, '', url.toString());
+    } catch(e) {}
+
+    // 3. Dispatch variant:changed for theme price/inventory components
+    var variantsData = JSON.parse(
+      container.querySelector('script[type="application\/json"]').textContent
+    );
+    var selectedVariant = variantsData.find(function(v) {
+      return String(v.id) === String(variantId);
+    });
+
+    if (selectedVariant) {
+      container.dispatchEvent(new CustomEvent('variant:changed', {
+        bubbles: true,
+        detail: { variant: selectedVariant, sectionId: sectionId }
+      }));
+      // Dawn/Horizon standard event
+      document.dispatchEvent(new CustomEvent('variant:change', {
+        bubbles: true,
+        detail: { variant: selectedVariant, sectionId: sectionId }
+      }));
+    }
+  }
+
+  cards.forEach(function(card) {
+    card.addEventListener('click', function() { selectCard(card); });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectCard(card);
+      }
+    });
+  });
+
+  // Re-init on section reload in editor
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === sectionId) {
+      var sel = container.querySelector('.ag-vp-card.ag-vp-selected');
+      if (sel) applySelected(sel);
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "AG - Variant Picker",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Card layout"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Global border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card padding",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_min_width",
+      "label": "Card minimum width",
+      "min": 60,
+      "max": 220,
+      "step": 10,
+      "unit": "px",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Default (unselected) state"
+    },
+    {
+      "type": "color",
+      "id": "inactive_border_color",
+      "label": "Border color",
+      "default": "#CCCCCC"
+    },
+    {
+      "type": "color",
+      "id": "inactive_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Sold out state"
+    },
+    {
+      "type": "color",
+      "id": "soldout_border_color",
+      "label": "Border color",
+      "default": "#CCCCCC"
+    },
+    {
+      "type": "color",
+      "id": "soldout_bg_color",
+      "label": "Background color",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "range",
+      "id": "soldout_opacity",
+      "label": "Opacity",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 65
+    },
+    {
+      "type": "text",
+      "id": "soldout_badge_text",
+      "label": "Sold out badge text",
+      "default": "Épuisé"
+    },
+    {
+      "type": "color",
+      "id": "soldout_badge_bg",
+      "label": "Sold out badge background",
+      "default": "#F0F0F0"
+    },
+    {
+      "type": "color",
+      "id": "soldout_badge_color",
+      "label": "Sold out badge text color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Low stock state"
+    },
+    {
+      "type": "range",
+      "id": "lowstock_threshold",
+      "label": "Low stock threshold (units)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "lowstock_badge_text",
+      "label": "Low stock badge text",
+      "default": "Bientôt épuisé"
+    },
+    {
+      "type": "color",
+      "id": "lowstock_badge_bg",
+      "label": "Low stock badge background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "lowstock_badge_color",
+      "label": "Low stock badge text color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Font size",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "range",
+      "id": "name_font_size",
+      "label": "Variant name size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Variant name color",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "label": "Price size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 1 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_1_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_1_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_1_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 2 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_2_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_2_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_2_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 3 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_3_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_3_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_3_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 4 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_4_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_4_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_4_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 5 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_5_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_5_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_5_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 6 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_6_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_6_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_6_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 7 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_7_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_7_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_7_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "─── Variant 8 — Selected state ───"
+    },
+    {
+      "type": "color",
+      "id": "variant_8_border_color",
+      "label": "Border color",
+      "default": "#1D3FAA"
+    },
+    {
+      "type": "color",
+      "id": "variant_8_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "variant_8_border_radius",
+      "label": "Border radius override",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Block margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 30,
+      "step": 3,
+      "unit": "px",
+      "label": "Top margin",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 30,
+      "step": 3,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 15
+    }
+  ]
+}
+{% endschema %}

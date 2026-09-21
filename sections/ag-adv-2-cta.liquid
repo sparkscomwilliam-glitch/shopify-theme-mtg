@@ -1,0 +1,214 @@
+{% comment %} ag-adv-2-cta.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+  assign stock_pct = s.stock_percent | default: 78
+  if stock_pct < 0
+    assign stock_pct = 0
+  endif
+  if stock_pct > 100
+    assign stock_pct = 100
+  endif
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.text_color != blank %}color:{{ s.text_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <section class="ag-adv-2-cta" id="{{ s.anchor_id | default: 'offre' }}">
+    <div class="ag-adv-2__col">
+      {%- if s.kicker != blank -%}
+        <span class="ag-adv-2__kicker">{{ s.kicker }}</span>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2>{{ s.heading }}</h2>
+      {%- endif -%}
+      {%- if s.sub != blank -%}
+        <p class="ag-adv-2-cta__sub">{{ s.sub }}</p>
+      {%- endif -%}
+      {%- if s.show_stockbar -%}
+        <div class="ag-adv-2-cta__stockbar"{% if s.stockbar_bg != blank %} style="background:{{ s.stockbar_bg }};"{% endif %}>
+          <i style="width:{{ stock_pct }}%;{% if s.stockbar_fill != blank %}background:{{ s.stockbar_fill }};{% endif %}"></i>
+        </div>
+        {%- if s.stock_text != blank -%}
+          <p class="ag-adv-2-cta__stocktxt">{{ s.stock_text }}</p>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if s.cta_text != blank -%}
+        <a href="{{ s.cta_link | default: '#' }}" class="ag-adv-2__btn ag-adv-2__btn--white ag-adv-2__btn--lg"{% if s.btn_bg != blank or s.btn_text_color != blank %} style="{% if s.btn_bg != blank %}background:{{ s.btn_bg }};{% endif %}{% if s.btn_text_color != blank %}color:{{ s.btn_text_color }};{% endif %}"{% endif %}>
+          {{ s.cta_text }} <span class="ag-adv-2__arr">&rarr;</span>
+        </a>
+      {%- endif -%}
+      {%- if s.microcopy != blank -%}
+        <p class="ag-adv-2-cta__microcopy">{{ s.microcopy }}</p>
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — CTA",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "ID d'ancre",
+      "default": "offre"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Offre de lancement"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre H2",
+      "default": "Il ne reste que 847 flacons en stock"
+    },
+    {
+      "type": "textarea",
+      "id": "sub",
+      "label": "Sous-titre",
+      "default": "La dernière production s'est écoulée en 4 jours. Le réapprovisionnement n'est pas garanti avant l'automne."
+    },
+    {
+      "type": "header",
+      "content": "Barre de stock"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stockbar",
+      "label": "Afficher la barre de stock",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "stock_percent",
+      "label": "Pourcentage de stock réservé",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 78
+    },
+    {
+      "type": "text",
+      "id": "stock_text",
+      "label": "Texte sous la barre",
+      "default": "78 % du stock déjà réservé"
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Commander Lumira — −40 % aujourd'hui"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Microcopy"
+    },
+    {
+      "type": "text",
+      "id": "microcopy",
+      "label": "Microcopy sous le bouton",
+      "default": "🔒 Paiement sécurisé · Livraison offerte · Garantie 60 jours satisfait ou remboursé"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "stockbar_bg",
+      "label": "Fond de la barre de stock",
+      "default": "#ff8c8c"
+    },
+    {
+      "type": "color",
+      "id": "stockbar_fill",
+      "label": "Couleur de remplissage de la barre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Fond du bouton",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Texte du bouton",
+      "default": "#e85459"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG-Adv-2 — CTA"
+    }
+  ]
+}
+{% endschema %}

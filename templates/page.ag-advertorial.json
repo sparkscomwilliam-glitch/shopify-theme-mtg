@@ -1,0 +1,104 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "ag_adv_header": {
+      "type": "ag-adv-header",
+      "settings": {}
+    },
+    "ag_adv_hero": {
+      "type": "ag-adv-hero",
+      "settings": {}
+    },
+    "ag_adv_press_bar": {
+      "type": "ag-adv-press-bar",
+      "blocks": {
+        "p1": { "type": "press", "settings": { "name": "Forbes" } },
+        "p2": { "type": "press", "settings": { "name": "Vogue" } },
+        "p3": { "type": "press", "settings": { "name": "Wired" } },
+        "p4": { "type": "press", "settings": { "name": "Goop" } },
+        "p5": { "type": "press", "settings": { "name": "Well+Good" } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4", "p5"],
+      "settings": {}
+    },
+    "ag_adv_intro": {
+      "type": "ag-adv-intro",
+      "settings": {}
+    },
+    "ag_adv_product": {
+      "type": "ag-adv-product",
+      "settings": {}
+    },
+    "ag_adv_benefits": {
+      "type": "ag-adv-benefits",
+      "blocks": {
+        "b1": { "type": "benefit", "settings": { "title": "Endormissement rapide", "description": "<p>Calme le mental sans somnolence forcée.</p>" } },
+        "b2": { "type": "benefit", "settings": { "title": "Sommeil profond",       "description": "<p>Des phases REM plus longues, moins de réveils.</p>" } },
+        "b3": { "type": "benefit", "settings": { "title": "Sans accoutumance",      "description": "<p>Non addictif, aucun effet rebond le matin.</p>" } },
+        "b4": { "type": "benefit", "settings": { "title": "Cliniquement testé",     "description": "<p>Formule certifiée par labo tiers, ingrédients clean.</p>" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4"],
+      "settings": {}
+    },
+    "ag_adv_mechanism": {
+      "type": "ag-adv-mechanism",
+      "blocks": {
+        "s1": { "type": "step", "settings": { "icon_emoji": "🌙", "name": "Apply before bed",          "text": "<p>Stick a small patch behind your ear — discreet, painless, stays on all night.</p>" } },
+        "s2": { "type": "step", "settings": { "icon_emoji": "💧", "name": "Steady transdermal release", "text": "<p>The natural blend diffuses through the skin slowly over hours.</p>" } },
+        "s3": { "type": "step", "settings": { "icon_emoji": "✨", "name": "Wake up clear",              "text": "<p>Peel off in the morning. No residue, no grogginess, no fog.</p>" } }
+      },
+      "block_order": ["s1", "s2", "s3"],
+      "settings": {}
+    },
+    "ag_adv_testimonials": {
+      "type": "ag-adv-testimonials",
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Dana R.",    "meta": "Verified Buyer · 3 weeks ago", "rating": 5, "content": "<p>Okay I'm a skeptic and I'll admit I was wrong. <b>First week I felt nothing.</b> Second week I slept through the night for the first time since having kids.</p>", "likes": "1,204", "shares": "86" } },
+        "r2": { "type": "review", "settings": { "name": "Marcus T.",  "meta": "Verified Buyer · 1 month ago", "rating": 5, "content": "<p>The big one for me: <b>zero grogginess in the morning.</b> Genuinely didn't expect it to work.</p>", "likes": "842", "shares": "53" } },
+        "r3": { "type": "review", "settings": { "name": "Priya N.",   "meta": "Verified Buyer · 2 weeks ago", "rating": 4, "content": "<p>Took me about four nights to notice a difference. Now I actually look forward to bed instead of dreading it.</p>", "likes": "967", "shares": "71" } },
+        "r4": { "type": "review", "settings": { "name": "Sam K.",     "meta": "Verified Buyer · 5 days ago",  "rating": 5, "content": "<p>I travel constantly and time zones wreck me. This is the first thing that's helped me reset without feeling drugged. <b>Stays on all night.</b></p>", "likes": "611", "shares": "40" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4"],
+      "settings": {}
+    },
+    "ag_adv_endorsement": {
+      "type": "ag-adv-endorsement",
+      "settings": {}
+    },
+    "ag_adv_cta": {
+      "type": "ag-adv-cta",
+      "settings": {}
+    },
+    "ag_adv_trust": {
+      "type": "ag-adv-trust",
+      "blocks": {
+        "t1": { "type": "badge", "settings": { "label": "Secure Payment" } },
+        "t2": { "type": "badge", "settings": { "label": "SSL Encrypted" } },
+        "t3": { "type": "badge", "settings": { "label": "Money-Back Guarantee" } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {}
+    }
+  },
+  "order": [
+    "ag_adv_header",
+    "ag_adv_hero",
+    "ag_adv_press_bar",
+    "ag_adv_intro",
+    "ag_adv_product",
+    "ag_adv_benefits",
+    "ag_adv_mechanism",
+    "ag_adv_testimonials",
+    "ag_adv_endorsement",
+    "ag_adv_cta",
+    "ag_adv_trust"
+  ]
+}

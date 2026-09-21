@@ -1,0 +1,394 @@
+{% comment %} ag-adv-testimonials.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-schema-head' %}
+
+{%- capture ag_vars -%}
+  {%- if section.settings.ag_bg != blank -%}--ag-section-bg:{{ section.settings.ag_bg }};{%- endif -%}
+  {%- if section.settings.ag_radius and section.settings.ag_radius > 0 -%}--ag-section-radius:{{ section.settings.ag_radius }}px;{%- endif -%}
+  {%- if section.settings.ag_accent != blank -%}--ag-section-accent:{{ section.settings.ag_accent }};{%- endif -%}
+  {%- if section.settings.ag_accent_soft != blank -%}--ag-section-accent-soft:{{ section.settings.ag_accent_soft }};{%- endif -%}
+{%- endcapture -%}
+{%- capture ag_root_style -%}{% if section.settings.ag_bg != blank %}background:{{ section.settings.ag_bg }};{% endif %}{{ ag_vars }}{%- endcapture -%}
+
+
+{%- liquid
+  assign show_agg     = section.settings.show_aggregate
+  assign rating       = section.settings.overall_rating
+  assign reviews_n    = section.settings.reviews_count
+  assign rating_floor = rating | floor
+  assign rating_dec   = rating | minus: rating_floor
+-%}
+
+<div class="ag-adv spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ ag_root_style }}">
+  <div class="ag-adv__wrap">
+    <section class="ag-adv-testimonials">
+
+      <div class="ag-adv-thread-h">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="ag-adv-thread-h__tag">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2>{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <p>{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="ag-adv-thread">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'review' -%}
+            {%- assign r = block.settings.rating | default: 5 -%}
+            {%- assign r_floor = r | floor -%}
+            <article class="ag-adv-post" {{ block.shopify_attributes }}>
+              <header class="ag-adv-post__ph">
+                <span class="ag-adv-post__av">
+                  {%- if block.settings.photo != blank -%}
+                    <img src="{{ block.settings.photo | image_url: width: 92 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag }}
+                  {%- endif -%}
+                </span>
+                <div>
+                  <div class="ag-adv-post__nm">{{ block.settings.name }}{%- if block.settings.verified -%} <span class="ag-adv-post__vf">✓</span>{%- endif -%}</div>
+                  <div class="ag-adv-post__hd">{{ block.settings.meta }}</div>
+                </div>
+                <div class="ag-adv-post__st ag-adv__stars">
+                  {%- for i in (1..5) -%}
+                    {%- if i <= r_floor -%}★{%- else -%}☆{%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </header>
+
+              {%- if block.settings.title != blank -%}
+                <p class="ag-adv-post__tx"><b>{{ block.settings.title }}</b></p>
+              {%- endif -%}
+              {%- if block.settings.content != blank -%}
+                <div class="ag-adv-post__tx">{{ block.settings.content }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.attached != blank -%}
+                <div class="ag-adv-post__att">
+                  <img src="{{ block.settings.attached | image_url: width: 800 }}" alt="" loading="lazy">
+                </div>
+              {%- endif -%}
+
+              <footer class="ag-adv-post__ft">
+                <span>♡ {{ block.settings.likes | default: '0' }}</span>
+                <span>↺ {{ block.settings.shares | default: '0' }}</span>
+                <span>↩ Reply</span>
+              </footer>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if show_agg -%}
+        <div class="ag-adv-agg">
+          <div class="ag-adv-agg__score">
+            <div class="ag-adv-agg__b">{{ rating }}</div>
+            <div class="ag-adv-agg__sts ag-adv__stars">
+              {%- for i in (1..5) -%}
+                {%- if i <= rating_floor -%}★{%- else -%}☆{%- endif -%}
+              {%- endfor -%}
+            </div>
+            <small class="ag-adv-agg__sub">{{ reviews_n }} verified reviews</small>
+          </div>
+          <div class="ag-adv-dist">
+            <div class="ag-adv-dist__r"><span>5★</span><span class="ag-adv-dist__bar"><i style="width:{{ section.settings.dist_5 }}%"></i></span><span>{{ section.settings.dist_5 }}%</span></div>
+            <div class="ag-adv-dist__r"><span>4★</span><span class="ag-adv-dist__bar"><i style="width:{{ section.settings.dist_4 }}%"></i></span><span>{{ section.settings.dist_4 }}%</span></div>
+            <div class="ag-adv-dist__r"><span>3★</span><span class="ag-adv-dist__bar"><i style="width:{{ section.settings.dist_3 }}%"></i></span><span>{{ section.settings.dist_3 }}%</span></div>
+            <div class="ag-adv-dist__r"><span>2★</span><span class="ag-adv-dist__bar"><i style="width:{{ section.settings.dist_2 }}%"></i></span><span>{{ section.settings.dist_2 }}%</span></div>
+            <div class="ag-adv-dist__r"><span>1★</span><span class="ag-adv-dist__bar"><i style="width:{{ section.settings.dist_1 }}%"></i></span><span>{{ section.settings.dist_1 }}%</span></div>
+          </div>
+        </div>
+      {%- endif -%}
+
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Adv — Témoignages",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "En-tête"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Pré-titre",
+      "default": "★★★★★ Real reviews"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "What customers keep saying"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "A small sample of the verified reviews that convinced me to look closer."
+    },
+    {
+      "type": "header",
+      "content": "Note globale"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_aggregate",
+      "label": "Afficher la carte de note globale",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overall_rating",
+      "label": "Note globale",
+      "min": 1,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.6
+    },
+    {
+      "type": "text",
+      "id": "reviews_count",
+      "label": "Nombre d'avis (texte)",
+      "default": "8,412"
+    },
+    {
+      "type": "range",
+      "id": "dist_5",
+      "label": "Distribution 5 étoiles (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 78
+    },
+    {
+      "type": "range",
+      "id": "dist_4",
+      "label": "Distribution 4 étoiles (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "dist_3",
+      "label": "Distribution 3 étoiles (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "dist_2",
+      "label": "Distribution 2 étoiles (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "dist_1",
+      "label": "Distribution 1 étoile (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Apparence personnalisée"
+    },
+    {
+      "type": "color_background",
+      "id": "ag_bg",
+      "label": "Fond de la section",
+      "info": "Override le fond. Supporte solide ou dégradé."
+    },
+    {
+      "type": "range",
+      "id": "ag_radius",
+      "label": "Radius des éléments (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = utilise la valeur par défaut du design"
+    },
+    {
+      "type": "color",
+      "id": "ag_accent",
+      "label": "Couleur d'accent",
+      "info": "Mots highlighted, eyebrow, badges, icônes, étoiles, etc."
+    },
+    {
+      "type": "color",
+      "id": "ag_accent_soft",
+      "label": "Couleur d'accent — pastilles soft",
+      "info": "Fond des pills, icônes douces, badges légers"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Témoignage",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Photo du reviewer"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom + ville",
+          "default": "Dana R."
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Afficher le badge ✓ vérifié",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Méta (statut + date)",
+          "default": "Verified Buyer · 3 weeks ago"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Note (étoiles)",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre du témoignage (optionnel)"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Okay I'm a skeptic and I'll admit I was wrong. First week I felt nothing. Second week I slept through the night for the first time since having kids.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "attached",
+          "label": "Photo jointe (optionnelle)"
+        },
+        {
+          "type": "text",
+          "id": "likes",
+          "label": "Nombre de likes",
+          "default": "1,204"
+        },
+        {
+          "type": "text",
+          "id": "shares",
+          "label": "Nombre de partages",
+          "default": "86"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Adv — Témoignages",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "name": "Dana R.",
+            "meta": "Verified Buyer · 3 weeks ago",
+            "content": "<p>Okay I'm a skeptic and I'll admit I was wrong. <b>First week I felt nothing.</b> Second week I slept through the night for the first time since having kids.</p>",
+            "likes": "1,204",
+            "shares": "86"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Marcus T.",
+            "meta": "Verified Buyer · 1 month ago",
+            "content": "<p>The big one for me: <b>zero grogginess in the morning.</b> That's the whole reason I gave up on melatonin. Genuinely didn't expect it to work.</p>",
+            "likes": "842",
+            "shares": "53"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Priya N.",
+            "meta": "Verified Buyer · 2 weeks ago",
+            "rating": 4,
+            "content": "<p>Took me about four nights to notice a difference, so give it a little time. Now I actually look forward to bed instead of dreading it.</p>",
+            "likes": "967",
+            "shares": "71"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Sam K.",
+            "meta": "Verified Buyer · 5 days ago",
+            "content": "<p>I travel constantly and time zones wreck me. This is the first thing that's helped me reset without feeling drugged. <b>Stays on all night.</b></p>",
+            "likes": "611",
+            "shares": "40"
+          }
+        }
+      ]
+    }
+  ],
+  "tag": "section",
+  "class": "ag-adv-section"
+}
+{% endschema %}

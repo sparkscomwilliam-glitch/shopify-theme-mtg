@@ -1,0 +1,534 @@
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+
+  .ag-hero-10-{{ section.id }} {
+    --heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-weight: {{ section.settings.heading_font.weight | default: 700 }};
+    --body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+    --body-weight: {{ section.settings.body_font.weight | default: 500 }};
+    --cta-bg: {{ section.settings.cta_bg_color | default: '#fff302' }};
+    --cta-color: {{ section.settings.cta_text_color | default: '#000000' }};
+    --stars-color: {{ section.settings.stars_color | default: '#ffffff' }};
+    --text-color: {{ section.settings.text_color | default: '#ffffff' }};
+
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow: hidden;
+    background: #000;
+    box-sizing: border-box;
+  }
+
+  /* ─── PHOTO GRID ─── */
+  .ag-hero-10__grid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .ag-hero-10__grid-item {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ag-hero-10__grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Placeholder for missing images */
+  .ag-hero-10__grid-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #222;
+  }
+
+  /* ─── CROSSHAIR LINES ─── */
+  .ag-hero-10__crosshair {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ag-hero-10__crosshair::before,
+  .ag-hero-10__crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Vertical line */
+  .ag-hero-10__crosshair::before {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  /* Horizontal line */
+  .ag-hero-10__crosshair::after {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+
+  /* ─── GRADIENT OVERLAY ─── */
+  .ag-hero-10__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    /* Mobile: dark gradient from bottom */
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,0) 24.5%,
+      rgba(152,152,152,0.35) 50.5%,
+      rgba(47,47,47,0.70) 77.4%,
+      rgb(21,21,21) 95.7%
+    );
+  }
+
+  /* ─── CONTENT ─── */
+  .ag-hero-10__content {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px clamp(40px, 6vh, 60px);
+    /* On mobile, content sits in the bottom half */
+    min-height: {{ section.settings.section_height_mobile }}px;
+    justify-content: flex-end;
+  }
+
+  .ag-hero-10__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 351px;
+  }
+
+  /* ─── STARS + REVIEW ─── */
+  .ag-hero-10__review {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .ag-hero-10__stars {
+    display: flex;
+    gap: 3px;
+    color: var(--stars-color);
+  }
+
+  .ag-hero-10__stars svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  .ag-hero-10__review-text {
+    font-family: var(--body-font);
+    font-weight: var(--body-weight);
+    font-size: var(--ag-fs-lead);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  /* ─── HEADING ─── */
+  .ag-hero-10__heading {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-weight);
+    font-size: var(--ag-fs-display-xl);
+    line-height: 0.7;
+    color: var(--text-color);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  /* ─── BODY TEXT ─── */
+  .ag-hero-10__body {
+    font-family: var(--body-font);
+    font-weight: var(--body-weight);
+    font-size: var(--ag-fs-lead);
+    line-height: 1.4;
+    color: var(--text-color);
+    margin: 0;
+    text-align: center;
+  }
+
+  /* ─── CTA BLOCK ─── */
+  .ag-hero-10__cta-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .ag-hero-10__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: var(--ag-btn-h-lg);
+    background: var(--cta-bg);
+    color: var(--cta-color);
+    border-radius: var(--ag-btn-radius-pill);
+    font-family: var(--body-font);
+    font-weight: 700;
+    font-size: var(--ag-fs-cta-lg);
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    padding: 0 var(--ag-btn-px-lg);
+    box-sizing: border-box;
+  }
+
+  .ag-hero-10__btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  .ag-hero-10__guarantee {
+    font-family: var(--body-font);
+    font-weight: var(--body-weight);
+    font-size: var(--ag-fs-eyebrow);
+    color: var(--text-color);
+    margin: 0;
+    text-align: center;
+    opacity: 0.85;
+  }
+
+  /* ─── DESKTOP ─── */
+  @media (min-width: 768px) {
+    .ag-hero-10-{{ section.id }} {
+      min-height: {{ section.settings.section_height_desktop }}px;
+    }
+
+    /* On desktop, grid occupies right 50% */
+    .ag-hero-10__grid {
+      left: 50%;
+      width: 50%;
+    }
+
+    /* Crosshair scoped to right half */
+    .ag-hero-10__crosshair {
+      left: 50%;
+      width: 50%;
+    }
+
+    /* Gradient: left→right, black to transparent */
+    .ag-hero-10__overlay {
+      background: linear-gradient(
+        to right,
+        #000 50.5%,
+        rgba(35,35,35,0.81) 60.1%,
+        rgba(217,217,217,0) 76.4%
+      );
+    }
+
+    .ag-hero-10__content {
+      min-height: {{ section.settings.section_height_desktop }}px;
+      align-items: flex-start;
+      text-align: left;
+      padding: clamp(100px, 14vh, 139px) 40px clamp(40px, 6vh, 60px) {{ section.settings.desktop_padding | append: 'px' }};
+      justify-content: flex-start;
+    }
+
+    .ag-hero-10__inner {
+      align-items: flex-start;
+      max-width: 553px;
+      gap: 29px;
+    }
+
+    .ag-hero-10__review {
+      align-items: flex-start;
+    }
+
+    .ag-hero-10__stars svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .ag-hero-10__heading {
+      line-height: 0.74;
+      text-align: left;
+    }
+
+    .ag-hero-10__body {
+      line-height: 1.29;
+      text-align: left;
+    }
+
+    .ag-hero-10__cta-block {
+      width: 100%;
+    }
+
+    .ag-hero-10__guarantee {
+      font-size: var(--ag-fs-small);
+      text-align: left;
+    }
+  }
+{%- endstyle -%}
+
+<div class="ag-hero-10 ag-hero-10-{{ section.id }}">
+
+  {%- comment -%} ── PHOTO GRID (background) ── {%- endcomment -%}
+  <div class="ag-hero-10__grid" aria-hidden="true">
+    {%- assign photo_ids = 'photo_1,photo_2,photo_3,photo_4' | split: ',' -%}
+    {%- for photo_id in photo_ids -%}
+      <div class="ag-hero-10__grid-item">
+        {%- assign img = section.settings[photo_id] -%}
+        {%- if img != blank -%}
+          <img
+            src="{{ img | image_url: width: 800 }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            width="{{ img.width }}"
+            height="{{ img.height }}"
+          >
+        {%- else -%}
+          <div class="ag-hero-10__grid-placeholder"></div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+
+    {%- comment -%} ── CROSSHAIR LINES ── {%- endcomment -%}
+    <div class="ag-hero-10__crosshair"></div>
+  </div>
+
+  {%- comment -%} ── GRADIENT OVERLAY ── {%- endcomment -%}
+  <div class="ag-hero-10__overlay"></div>
+
+  {%- comment -%} ── FOREGROUND CONTENT ── {%- endcomment -%}
+  <div class="ag-hero-10__content">
+    <div class="ag-hero-10__inner">
+
+      {%- comment -%} Stars + Review {%- endcomment -%}
+      {%- if section.settings.review_text != blank -%}
+        <div class="ag-hero-10__review">
+          <div class="ag-hero-10__stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+            {%- endfor -%}
+          </div>
+          <p class="ag-hero-10__review-text">{{ section.settings.review_text }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Main Heading {%- endcomment -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ag-hero-10__heading">{{ section.settings.heading | upcase | newline_to_br }}</h2>
+      {%- endif -%}
+
+      {%- comment -%} Body Text {%- endcomment -%}
+      {%- if section.settings.body_text != blank -%}
+        <p class="ag-hero-10__body">{{ section.settings.body_text }}</p>
+      {%- endif -%}
+
+      {%- comment -%} CTA Button + Guarantee {%- endcomment -%}
+      <div class="ag-hero-10__cta-block">
+        {%- if section.settings.cta_text != blank -%}
+          <a
+            href="{{ section.settings.cta_link | default: '#' }}"
+            class="ag-hero-10__btn"
+          >
+            {{- section.settings.cta_text -}}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.guarantee_text != blank -%}
+          <p class="ag-hero-10__guarantee">{{ section.settings.guarantee_text }}</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG Hero 10 (Photo Grid)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Photo Grid (2×2)"
+    },
+    {
+      "type": "image_picker",
+      "id": "photo_1",
+      "label": "Photo 1 — Top Left"
+    },
+    {
+      "type": "image_picker",
+      "id": "photo_2",
+      "label": "Photo 2 — Top Right"
+    },
+    {
+      "type": "image_picker",
+      "id": "photo_3",
+      "label": "Photo 3 — Bottom Left"
+    },
+    {
+      "type": "image_picker",
+      "id": "photo_4",
+      "label": "Photo 4 — Bottom Right"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Review Bar"
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "label": "Review Text",
+      "default": "OVER 100,000+ HAPPY CUSTOMERS"
+    },
+    {
+      "type": "color",
+      "id": "stars_color",
+      "label": "Stars Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Style That Performs",
+      "info": "Text will be displayed in uppercase automatically."
+    },
+    {
+      "type": "header",
+      "content": "Body Text"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body Text",
+      "default": "Joge has helped over 100,000+ footballers improve their speed, agility and comfort on the pitch."
+    },
+    {
+      "type": "header",
+      "content": "Call To Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button Background Color",
+      "default": "#fff302"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Guarantee Text (below button)",
+      "default": "Guarantee Risk Reversal"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height_desktop",
+      "label": "Desktop Section Height",
+      "min": 500,
+      "max": 1000,
+      "step": 10,
+      "default": 760,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Mobile Section Height",
+      "min": 500,
+      "max": 1000,
+      "step": 10,
+      "default": 760,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop Left Padding",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "default": 100,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AG Hero 10 (Photo Grid)"
+    }
+  ]
+}
+{% endschema %}

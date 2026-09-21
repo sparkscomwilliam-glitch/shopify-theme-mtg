@@ -1,0 +1,304 @@
+{% comment %} ag-adv-2-reasons.liquid — propriété de James Sparks {% endcomment %}
+{% render 'ag-adv-2-schema-head' %}
+
+{%- liquid
+  assign s = section.settings
+-%}
+
+{%- capture root_style -%}
+  {% if s.bg_color != blank %}background:{{ s.bg_color }};{% endif %}
+  {% if s.accent_color != blank %}--ag2-coral:{{ s.accent_color }};{% endif %}
+  {% if s.accent_deep != blank %}--ag2-coral-deep:{{ s.accent_deep }};{% endif %}
+  {% if s.accent_soft != blank %}--ag2-coral-tint:{{ s.accent_soft }};{% endif %}
+  {% if s.text_color != blank %}--ag2-ink:{{ s.text_color }};{% endif %}
+  {% if s.body_color != blank %}--ag2-ink-soft:{{ s.body_color }};{% endif %}
+  {% if s.muted_color != blank %}--ag2-gray:{{ s.muted_color }};{% endif %}
+{%- endcapture -%}
+
+<div class="ag-adv-2 spacing-style" style="{% render 'spacing-style', settings: section.settings %}{{ root_style | strip_newlines }}">
+  <div class="ag-adv-2__col-wide">
+    {%- if s.kicker != blank or s.heading != blank -%}
+      <div class="ag-adv-2__shead">
+        {%- if s.kicker != blank -%}
+          <span class="ag-adv-2__kicker">{{ s.kicker }}</span>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2>{{ s.heading }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'reason' -%}
+        {%- assign idx = forloop.index -%}
+        {%- assign is_flip = false -%}
+        {%- assign mod = idx | modulo: 2 -%}
+        {%- if mod == 0 -%}{%- assign is_flip = true -%}{%- endif -%}
+        <div class="ag-adv-2-reasons__item{% if is_flip %} is-flip{% endif %}" {{ block.shopify_attributes }}>
+          <div class="ag-adv-2-reasons__img">
+            <div class="ag-adv-2__ph">
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 800 }}"
+                     alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                     loading="lazy"
+                     width="{{ block.settings.image.width }}"
+                     height="{{ block.settings.image.height }}">
+              {%- else -%}
+                <span>{{ block.settings.image_placeholder | default: 'Illustration' }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="ag-adv-2-reasons__text">
+            {%- if block.settings.number != blank -%}
+              <span class="ag-adv-2-reasons__num">{{ block.settings.number }}</span>
+            {%- endif -%}
+            {%- if block.settings.title != blank -%}
+              <h3>{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.body != blank -%}
+              {{ block.settings.body }}
+            {%- endif -%}
+            {%- if block.settings.stat_big != blank or block.settings.stat_label != blank -%}
+              <span class="ag-adv-2-reasons__stat">
+                {%- if block.settings.stat_big != blank -%}<b>{{ block.settings.stat_big }}</b>{%- endif -%}
+                {%- if block.settings.stat_label != blank -%}{{ block.settings.stat_label }}{%- endif -%}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if s.cta_text != blank -%}
+      <div class="ag-adv-2__btn-center">
+        <a href="{{ s.cta_link | default: '#offre' }}" class="ag-adv-2__btn ag-adv-2__btn--coral ag-adv-2__btn--lg">
+          {{ s.cta_text }} <span class="ag-adv-2__arr">&rarr;</span>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AG-Adv-2 — Reasons",
+  "tag": "section",
+  "class": "ag-adv-2-section",
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Pourquoi ça marche"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre H2",
+      "default": "5 raisons pour lesquelles ma peau a changé en 8 semaines"
+    },
+    {
+      "type": "header",
+      "content": "CTA (fin de section)"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton",
+      "default": "Essayer Lumira aujourd'hui"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "info": "Supporte couleur solide ou dégradé",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (numéros, CTA)",
+      "default": "#ff6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_deep",
+      "label": "Couleur d'accent profonde",
+      "default": "#e85459"
+    },
+    {
+      "type": "color",
+      "id": "accent_soft",
+      "label": "Couleur d'accent — pastille stat",
+      "default": "#fff4f3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur des titres",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Couleur du texte",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Couleur secondaire",
+      "default": "#8c8c8c"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reason",
+      "name": "Raison",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Numéro",
+          "default": "01"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_placeholder",
+          "label": "Texte placeholder image",
+          "default": "Illustration"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Il répare la barrière, il ne la masque pas"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Texte",
+          "default": "<p>La plupart des crèmes posent un film hydratant qui s'évapore en quelques heures. Lumira apporte les céramides identiques à ceux de la peau.</p>"
+        },
+        {
+          "type": "text",
+          "id": "stat_big",
+          "label": "Stat — chiffre/highlight",
+          "default": "+38 %"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Stat — label",
+          "default": "hydratation mesurée à J14"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "AG-Adv-2 — Reasons",
+      "blocks": [
+        {
+          "type": "reason",
+          "settings": {
+            "number": "01",
+            "title": "Il répare la barrière, il ne la masque pas",
+            "body": "<p>La plupart des crèmes posent un film hydratant qui s'évapore en quelques heures. Lumira apporte les céramides identiques à ceux de la peau.</p><p>Résultat : dès la deuxième semaine, cette sensation de tiraillement vers 16 h avait complètement disparu.</p>",
+            "stat_big": "+38 %",
+            "stat_label": "hydratation mesurée à J14"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "number": "02",
+            "title": "Une concentration que peu de marques osent",
+            "body": "<p>Le complexe de 5 peptides est dosé à un niveau clinique. C'est coûteux à produire, et c'est précisément pour ça que les grandes marques le diluent.</p>",
+            "stat_big": "5",
+            "stat_label": "peptides actifs par dose"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "number": "03",
+            "title": "Les ridules se repulpent de l'intérieur",
+            "body": "<p>En relançant la production de collagène, la peau se repulpe naturellement. Pas d'effet « tiré », pas de fini plâtreux.</p>",
+            "stat_big": "9 sur 10",
+            "stat_label": "ont vu leurs ridules atténuées*"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "number": "04",
+            "title": "Il remplace 4 produits par un seul",
+            "body": "<p>J'ai rangé mon sérum, mon contour des yeux, mon « booster » et ma crème de nuit. Une seule étape, matin et soir.</p>",
+            "stat_big": "2 min",
+            "stat_label": "de routine, matin & soir"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "number": "05",
+            "title": "Il m'a fait économiser des centaines d'euros",
+            "body": "<p>Quand j'ai additionné ce que je dépensais chaque mois en produits qui ne marchaient pas, le calcul m'a fait mal.</p>",
+            "stat_big": "−70 %",
+            "stat_label": "vs mon ancienne routine"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

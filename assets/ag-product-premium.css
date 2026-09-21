@@ -1,0 +1,715 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* =====================================================
+   AG PRODUCT PREMIUM — Therabody-Inspired Product Page
+   =====================================================
+   Scoped under .ag-premium-product to avoid conflicts
+   with the rest of the theme.
+   ===================================================== */
+
+/* --- Google Fonts (Serif for title) --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+/* =====================
+   1. GLOBAL / SECTION
+   ===================== */
+
+.ag-premium-product .section-background {
+  background-color: #F7F5EF !important;
+}
+
+.ag-premium-product .product-information {
+  background-color: #F7F5EF;
+}
+
+/* Global border-radius on key elements */
+.ag-premium-product .product-media > * {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.ag-premium-product .product-media__image {
+  border-radius: 12px;
+}
+
+.ag-premium-product .slideshow-controls__thumbnail {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+/* =====================
+   2. EYEBROW TEXT
+   ===================== */
+
+.ag-eyebrow {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  margin-bottom: 4px;
+}
+
+/* =====================
+   3. PRODUCT TITLE (Serif)
+   ===================== */
+
+.ag-premium-product .product-details h1,
+.ag-premium-product .product-details .ag-product-title-serif {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+  font-weight: 500;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  color: #1A1A1A;
+}
+
+/* Generation badge next to title */
+.ag-gen-badge {
+  display: inline-block;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1.5px solid #B0B0B0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: #555;
+  vertical-align: middle;
+  margin-left: 10px;
+  position: relative;
+  top: -4px;
+}
+
+/* =====================
+   4. TRUST BADGES
+   ===================== */
+
+.ag-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.ag-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #EAE6DB !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.ag-trust-badge svg,
+.ag-trust-badge .ag-trust-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* =====================
+   5. URGENCY TIMER
+   ===================== */
+
+.ag-urgency-timer-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -8px;
+  position: relative;
+  z-index: 2;
+}
+
+.ag-urgency-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #C04040;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 10px 10px 0 0;
+  white-space: nowrap;
+}
+
+.ag-urgency-timer__days {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-weight: 700;
+  min-width: 22px;
+  text-align: center;
+}
+
+/* =====================
+   6. VARIANT PICKER — CARD STYLE
+   ===================== */
+
+/* Wrapper styling for the options fieldset */
+.ag-premium-product .variant-option--buttons {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.ag-premium-product .variant-option--buttons legend {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* Hide default button pills */
+.ag-premium-product .variant-option__button-label__pill {
+  display: none !important;
+}
+
+/* Restyle default text for card mode */
+.ag-premium-product .variant-option__button-label .variant-option__button-label__text {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #1A1A1A;
+}
+
+/* The card label */
+.ag-premium-product label.variant-option__button-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 15px !important;
+  border: 1px solid #1a1a1a !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  background: #F7F5EF !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.ag-premium-product .variant-option__button-label:hover {
+  border-color: #C0BDB5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Selected state */
+.ag-premium-product .variant-option__button-label:has(input:checked) {
+  border-color: #1A1A1A;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Hide radio button visually */
+.ag-premium-product .variant-option__button-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ------- Variant card inner elements ------- */
+.ag-variant-card-thumb {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #F0EDE5;
+}
+
+.ag-variant-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ag-variant-card-info {
+  flex-grow: 1 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between !important;
+  margin-left: 15px !important;
+  min-width: 0;
+  gap: 12px !important;
+}
+
+.ag-variant-card-name {
+  font-family: sans-serif !important;
+  font-size: 0.92rem;
+  font-weight: 500 !important;
+  color: #1A1A1A;
+  text-align: left !important;
+  flex-grow: 1 !important;
+}
+
+.ag-variant-card-pricing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto !important;
+}
+
+.ag-variant-card-price {
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #B83B40 !important;
+}
+
+.ag-variant-card-compare {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* =====================
+   7. BUY BUTTONS & ATC
+   ===================== */
+
+/* Force the entire form wrapper to be vertical */
+.ag-premium-product .product-form__buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+/* Stop quantity + button from sitting side-by-side */
+.ag-premium-product .product-form__buttons > * {
+  width: 100% !important;
+  max-width: none !important;
+  flex: 0 0 100% !important;
+}
+
+/* Isolate quantity on its own line */
+.ag-premium-product quantity-input,
+.ag-premium-product quantity-input.quantity {
+  display: flex !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-bottom: 4px !important;
+}
+
+/* ATC Button */
+.ag-premium-product .product-form__submit,
+.ag-premium-product button[name="add"] {
+  width: 100% !important;
+  display: block !important;
+  background-color: #1a1a1a !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 18px 0 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  cursor: pointer;
+  text-align: center;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+}
+
+/* Shopify Dynamic Checkout */
+.ag-premium-product .shopify-payment-button,
+.ag-premium-product .shopify-payment-button__button {
+  border-radius: 12px !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: block !important;
+}
+
+.ag-premium-product .ag-premium-atc:hover {
+  background-color: #333 !important;
+}
+
+.ag-premium-product .ag-premium-atc:active {
+  transform: scale(0.98);
+}
+
+.ag-premium-product .ag-premium-atc:disabled {
+  background-color: #999 !important;
+  cursor: not-allowed;
+}
+
+/* Hide the icon in premium ATC, keeping text only */
+.ag-premium-product .ag-premium-atc .add-to-cart-icon {
+  display: none;
+}
+
+/* =====================
+   8. INSTALLMENT LOGOS
+   ===================== */
+
+.ag-installment-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  color: #777;
+}
+
+.ag-installment-info svg {
+  height: 18px;
+  width: auto;
+}
+
+.ag-installment-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ag-installment-logo--afterpay svg {
+  height: 16px;
+}
+
+.ag-installment-logo--klarna svg {
+  height: 16px;
+}
+
+/* =====================
+   9. SALE BADGE ON IMAGE
+   ===================== */
+
+.ag-premium-product .ag-sale-badge-overlay {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 5;
+  background-color: #C04040;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 8px;
+}
+
+/* =====================
+   10. REVIEWS STARS
+   ===================== */
+
+.ag-reviews-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.ag-review-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.ag-review-stars svg {
+  width: 16px;
+  height: 16px;
+  fill: #1A1A1A;
+}
+
+.ag-review-stars svg.ag-star-half {
+  fill: url(#ag-star-gradient);
+}
+
+.ag-review-count {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.82rem;
+  color: #555;
+}
+
+/* =====================================================
+   11. DESKTOP LAYOUT — Carousel with Left Thumbnails
+   ===================================================== */
+
+@media screen and (min-width: 750px) {
+
+  /* Fix main layout grid: media left, details right */
+  .ag-premium-product .product-information__grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 40px !important;
+    align-items: start;
+    width: 100% !important;
+  }
+
+  /* Media column full width */
+  .ag-premium-product .product-information__media {
+    width: 100% !important;
+  }
+
+  /* Ensure media-gallery fills container */
+  .ag-premium-product media-gallery {
+    width: 100% !important;
+  }
+
+  /* Rounded corners on main image */
+  .ag-premium-product .product-media__image,
+  .ag-premium-product slideshow-container img,
+  .ag-premium-product slideshow-slides img {
+    border-radius: 12px !important;
+  }
+
+  /* Thumbnail enhancements */
+  .ag-premium-product .slideshow-controls__thumbnail {
+    border-radius: 8px !important;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+    aspect-ratio: 1 / 1 !important;
+    width: 60px !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ag-premium-product .slideshow-controls__thumbnail img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .ag-premium-product .slideshow-controls__thumbnail[aria-selected="true"],
+  .ag-premium-product .slideshow-controls__thumbnail:hover {
+    border-color: #1A1A1A;
+  }
+
+  /* Product details column */
+  .ag-premium-product .product-details {
+    padding-left: clamp(24px, 3vw, 48px) !important;
+    width: 100% !important;
+  }
+}
+
+/* =====================================================
+   12. MOBILE LAYOUT — 75/25 Split (Therabody style)
+   ===================================================== */
+
+@media screen and (max-width: 749px) {
+
+  /* CRITICAL: Prevent horizontal page scroll */
+  .ag-premium-product {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .ag-premium-product .product-information__media {
+    padding: 0 20px !important;
+    overflow: hidden !important;
+  }
+
+  /* Media gallery container — overflow hidden */
+  .ag-premium-product media-gallery {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Slideshow component: flex row for 75/25 split */
+  .ag-premium-product slideshow-component {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+    overflow: hidden !important;
+  }
+
+  /* Main image area — 75% width, MUST contain its own overflow */
+  .ag-premium-product slideshow-container {
+    width: 75% !important;
+    min-width: 0 !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Slideshow slides must stay within container */
+  .ag-premium-product slideshow-slides {
+    overflow: hidden !important;
+  }
+
+  .ag-premium-product slideshow-container img,
+  .ag-premium-product slideshow-slides img {
+    border-radius: 12px !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+
+  /* Thumbnails column on the right — 25% */
+  .ag-premium-product slideshow-controls[thumbnails] {
+    width: 25% !important;
+    min-width: 0 !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 400px !important;
+    overflow: hidden !important;
+  }
+
+  /* Force the inner scroll container to be vertical */
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnails-container {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: none;
+    width: 100% !important;
+  }
+
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnails-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Force thumbnails list to be a vertical column */
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnails {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Each thumbnail button: fill column width */
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnail {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+  }
+
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnail[aria-selected="true"] {
+    border-color: #1A1A1A;
+    outline: none !important;
+  }
+
+  .ag-premium-product slideshow-controls[thumbnails] .slideshow-controls__thumbnail img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  .ag-premium-product slideshow-controls[thumbnails] scroll-hint {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    overflow: hidden auto !important;
+  }
+
+  /* Hide non-thumbnail mobile controls (dots, counter) */
+  .ag-premium-product .media-gallery__mobile-controls:not([thumbnails]) {
+    display: none !important;
+  }
+
+  .ag-premium-product .slideshow-controls[counter],
+  .ag-premium-product .slideshow-controls[dots] {
+    display: none !important;
+  }
+
+  /* Thumbnail styling */
+  .ag-premium-product .slideshow-controls__thumbnail {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+  }
+
+  .ag-premium-product .slideshow-controls__thumbnail[aria-selected="true"] {
+    border-color: #1A1A1A;
+  }
+
+  .ag-premium-product .slideshow-controls__thumbnail img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Hide slideshow arrows on mobile */
+  .ag-premium-product .slideshow__arrows {
+    display: none !important;
+  }
+
+  /* Remove zoom button border/icon on mobile */
+  .ag-premium-product product-modal-opener {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .ag-premium-product .product__media-icon,
+  .ag-premium-product .product-media-modal__toggle {
+    display: none !important;
+  }
+
+  /* Urgency timer */
+  .ag-urgency-timer-wrapper {
+    justify-content: flex-end;
+  }
+}
+
+/* =====================
+   13. ANIMATIONS
+   ===================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .ag-premium-product .variant-option__button-label {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  }
+
+  .ag-premium-product .variant-option__button-label:active {
+    transform: scale(0.985);
+  }
+
+  .ag-trust-badge {
+    transition: background-color 0.2s ease;
+  }
+
+  .ag-trust-badge:hover {
+    background-color: #E5E2DA;
+  }
+}
+
+/* =====================
+   14. DARK MODE COMPAT
+   ===================== */
+
+/* Ensure we always force the premium look regardless of color scheme */
+.ag-premium-product,
+.ag-premium-product .section-background {
+  --color-background: #F7F5EF;
+}

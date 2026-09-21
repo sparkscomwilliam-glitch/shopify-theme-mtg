@@ -1,0 +1,179 @@
+/* =====================================================
+   AG FEATURE 1 — Custom Product Feature Cards
+   ===================================================== */
+
+.ag-feature-1 {
+  display: block;
+}
+
+.ag-feature-1__container .title-wrapper {
+  margin-bottom: 40px;
+}
+
+.ag-feature-1__description {
+  margin-top: 10px;
+  font-family: var(--font-body-family);
+  font-size: clamp(1.4rem, 1.5vw, 1.8rem);
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.ag-feature-1__cards-wrapper {
+  width: 100%;
+}
+
+.ag-feature-1__cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.ag-feature-1__card {
+  flex: 1;
+  min-width: 0;
+}
+
+.ag-feature-1__card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #1A1A1A;
+  border-radius: 4px; /* Adjust to match the sharp appearance from images */
+  overflow: hidden;
+  background-color: #F8F8F8;
+}
+
+/* On the desktop image, the card background for the image is slightly gray/white */
+.ag-feature-1__card-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 120%; /* Keep aspect ratio roughly consistent */
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ag-feature-1__card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ag-feature-1__card-info {
+  /* Using fallback for old browsers, but relying on inline style var */
+  background-color: var(--card-bg, #ffffff);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+  border-top: 1px solid #1A1A1A;
+}
+
+.ag-feature-1__card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-feature-1__card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ag-feature-1__card-title {
+  font-family: var(--font-heading-family);
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: #1A1A1A;
+}
+
+.ag-feature-1__card-text {
+  font-family: var(--font-body-family);
+  font-size: 14px;
+  line-height: 1.4;
+  color: #1A1A1A;
+  margin: 0;
+  flex-grow: 1; /* Pushes button to bottom */
+}
+
+.ag-feature-1__card-text p {
+  margin: 0;
+}
+
+.ag-feature-1__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 15px;
+  background-color: #4A3C38;
+  color: #ffffff;
+  font-family: var(--font-body-family);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border-radius: 8px; /* Slightly rounded as in desktop image */
+  transition: background-color 0.3s ease;
+}
+
+.ag-feature-1__button:hover {
+  background-color: #2F2522;
+}
+
+/* DESKTOP LAYOUT */
+@media screen and (min-width: 750px) {
+  .ag-feature-1__cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+/* MOBILE LAYOUT */
+@media screen and (max-width: 749px) {
+  .ag-feature-1__cards-wrapper {
+    /* Extending the container to the edge of the screen so scrolling cards clip at screen edge */
+    margin-right: -1.5rem;
+    margin-left: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  
+  .ag-feature-1__cards {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 15px;
+    padding-bottom: 20px; /* Allows for scrollbar on older devices */
+    /* Hide scrollbar */
+    scrollbar-width: none;
+  }
+  
+  .ag-feature-1__cards::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .ag-feature-1__card {
+    /* The first image implies it should fit about 80-85% of screen to let the next peek in */
+    flex: 0 0 85%;
+    max-width: 85%;
+    scroll-snap-align: start;
+  }
+}
