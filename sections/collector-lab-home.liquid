@@ -1,0 +1,174 @@
+{% liquid
+  assign featured_product = section.settings.featured_product
+  if featured_product == blank
+    assign featured_product = collections.all.products.first
+  endif
+%}
+
+{{ 'collector-lab.css' | asset_url | stylesheet_tag }}
+
+<section class="lab-home lab-home--{{ section.id }}">
+  <div class="lab-shell">
+    <div class="lab-hero">
+      <div class="lab-hero__copy">
+        <span class="lab-mono lab-kicker"><span></span> Collector Lab / Édition 01</span>
+        <h1>{{ section.settings.heading }}</h1>
+        <p class="lab-hero__lead">{{ section.settings.subheading }}</p>
+
+        <div class="lab-actions">
+          <a class="lab-button lab-button--primary" href="{{ routes.all_products_collection_url }}">Explorer la sélection <span>↗</span></a>
+          <a class="lab-button lab-button--secondary" href="#lab-compatibility-{{ section.id }}">Vérifier les formats</a>
+        </div>
+
+        <div class="lab-hero__standards" aria-label="Principes de sélection">
+          <div><span class="lab-mono">01</span><strong>Dimensions lisibles</strong><small>Avant toute recommandation</small></div>
+          <div><span class="lab-mono">02</span><strong>Usage documenté</strong><small>Ranger, transporter, exposer</small></div>
+          <div><span class="lab-mono">03</span><strong>Limites affichées</strong><small>Sans promesse absolue</small></div>
+        </div>
+      </div>
+
+      <div class="lab-specimen">
+        <div class="lab-specimen__top lab-mono"><span>SPECIMEN / 001</span><span>OBJECT STUDY</span></div>
+        <div class="lab-specimen__stage">
+          <span class="lab-measure lab-measure--x lab-mono">largeur utile</span>
+          <span class="lab-measure lab-measure--y lab-mono">hauteur utile</span>
+          {% if featured_product != blank %}
+            <a href="{{ featured_product.url }}" class="lab-specimen__media">
+              {% if featured_product.featured_image %}
+                {{ featured_product.featured_image | image_url: width: 1000 | image_tag: loading: 'eager', widths: '400, 600, 800, 1000', sizes: '(max-width: 799px) 82vw, 42vw', alt: featured_product.title }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'lab-placeholder' }}
+              {% endif %}
+            </a>
+          {% else %}
+            <div class="lab-specimen__media">{{ 'product-1' | placeholder_svg_tag: 'lab-placeholder' }}</div>
+          {% endif %}
+        </div>
+
+        <div class="lab-specimen__caption">
+          <div>
+            <span class="lab-mono">SÉLECTION ACTIVE</span>
+            <h2>{% if featured_product != blank %}{{ featured_product.title }}{% else %}Votre prochain objet{% endif %}</h2>
+          </div>
+          {% if featured_product != blank %}<strong>{{ featured_product.price | money }}</strong>{% endif %}
+        </div>
+        <div class="lab-specimen__data lab-mono">
+          <span>FORMAT <b>VOIR FICHE</b></span>
+          <span>COMPATIBILITÉ <b>À CONFIRMER</b></span>
+          <span>USAGE <b>SELON PRODUIT</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-intro" id="lab-compatibility-{{ section.id }}">
+      <div class="lab-section-heading">
+        <span class="lab-mono lab-kicker"><span></span> Matrice de compatibilité</span>
+        <h2>Le bon format avant le bon produit.</h2>
+        <p>Une lecture simple des dimensions, des protections et de l’usage réel. Chaque fiche produit doit confirmer les formats pris en charge.</p>
+      </div>
+
+      <div class="lab-chip-row" aria-label="Formats de cartes et protections">
+        <span class="lab-chip"><i></i> Standard <b class="lab-mono">63 × 88</b></span>
+        <span class="lab-chip"><i></i> Japanese <b class="lab-mono">59 × 86</b></span>
+        <span class="lab-chip"><i></i> Toploader <b class="lab-mono">3 × 4</b></span>
+        <span class="lab-chip lab-chip--violet"><i></i> Slabs <b class="lab-mono">PSA / BGS / CGC</b></span>
+      </div>
+    </div>
+
+    <div class="lab-protection-grid">
+      <article class="lab-level-card">
+        <div class="lab-level-card__top"><span class="lab-mono">NIVEAU 01</span><span class="lab-level-dot"></span></div>
+        <h3>Quotidien</h3>
+        <p>Pour consulter et classer régulièrement une collection active.</p>
+        <ul><li>Accès rapide</li><li>Organisation claire</li><li>Protection courante</li></ul>
+      </article>
+      <article class="lab-level-card lab-level-card--featured">
+        <div class="lab-level-card__top"><span class="lab-mono">NIVEAU 02</span><span class="lab-level-dot"></span></div>
+        <h3>Collection</h3>
+        <p>Pour conserver, transporter et documenter une sélection suivie.</p>
+        <ul><li>Protection renforcée</li><li>Formats contrôlés</li><li>Manipulation réduite</li></ul>
+      </article>
+      <article class="lab-level-card">
+        <div class="lab-level-card__top"><span class="lab-mono">NIVEAU 03</span><span class="lab-level-dot"></span></div>
+        <h3>Grail</h3>
+        <p>Pour les pièces que l’on souhaite isoler, préserver et exposer.</p>
+        <ul><li>Protection rigide</li><li>Exposition maîtrisée</li><li>Contrôle de l’environnement</li></ul>
+      </article>
+    </div>
+
+    <div class="lab-capacity">
+      <div class="lab-capacity__intro">
+        <span class="lab-mono lab-kicker"><span></span> Capacity card</span>
+        <h2>Une capacité qui dit ce qu’elle mesure.</h2>
+        <p>Le volume annoncé seul ne suffit pas. Nous distinguons la capacité théorique de la capacité réellement testée.</p>
+      </div>
+      <div class="lab-capacity__grid">
+        <div><span class="lab-mono">01 / NUE</span><strong>Capacité fabricant</strong><small>Valeur de référence</small></div>
+        <div><span class="lab-mono">02 / SLEEVED</span><strong>Mesure avec sleeves</strong><small>Type de sleeve précisé</small></div>
+        <div><span class="lab-mono">03 / TOPLOADED</span><strong>Mesure avec toploaders</strong><small>Format exact précisé</small></div>
+        <div><span class="lab-mono">04 / CHARGÉE</span><strong>Test en usage réel</strong><small>Ouverture et manipulation</small></div>
+      </div>
+    </div>
+
+    <div class="lab-proof">
+      <div class="lab-proof__heading">
+        <span class="lab-mono lab-kicker"><span></span> Protocole de preuve</span>
+        <h2>Pas de promesse<br>sans méthode.</h2>
+        <p>Chaque affirmation importante doit être reliée à une mesure, un matériau confirmé ou une démonstration observable.</p>
+      </div>
+      <div class="lab-proof__grid">
+        <article><span class="lab-mono">A / MESURE</span><h3>Dimensions utiles</h3><p>Mesures intérieures et extérieures séparées, avec tolérance quand elle est connue.</p></article>
+        <article><span class="lab-mono">B / MATÉRIAU</span><h3>Composition confirmée</h3><p>Le matériau est nommé seulement lorsqu’il est documenté par une source identifiable.</p></article>
+        <article><span class="lab-mono">C / DÉMONSTRATION</span><h3>Usage visible</h3><p>Insertion, fermeture, transport ou exposition montrés dans des conditions compréhensibles.</p></article>
+        <article><span class="lab-mono">D / SOURCE</span><h3>Origine de la donnée</h3><p>Fabricant, mesure interne ou test terrain : la provenance accompagne la conclusion.</p></article>
+      </div>
+    </div>
+
+    <div class="lab-compare" id="lab-compare-{{ section.id }}">
+      <div class="lab-section-heading lab-section-heading--row">
+        <div><span class="lab-mono lab-kicker"><span></span> Compare table</span><h2>Comparer par usage.</h2></div>
+        <p>Ce guide est indicatif. Les dimensions exactes restent à vérifier sur chaque fiche.</p>
+      </div>
+      <div class="lab-table-wrap">
+        <table>
+          <thead><tr><th>Solution</th><th>Format courant</th><th>Usage principal</th><th>Accès</th><th>Protection</th></tr></thead>
+          <tbody>
+            <tr><th>Binder classique</th><td>Cartes nues ou sleeved</td><td>Consultation fréquente</td><td><span class="lab-rating lab-rating--high">Rapide</span></td><td>Quotidien</td></tr>
+            <tr><th>Toploader binder</th><td>Toploaders compatibles</td><td>Transport contrôlé</td><td><span class="lab-rating">Modéré</span></td><td>Collection</td></tr>
+            <tr><th>Storage box</th><td>Variable selon modèle</td><td>Archive et volume</td><td><span class="lab-rating">Séquentiel</span></td><td>À configurer</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="lab-bundles" id="lab-bundles-{{ section.id }}">
+      <div class="lab-section-heading">
+        <span class="lab-mono lab-kicker"><span></span> Bundle builder</span>
+        <h2>Construire selon la collection,<br>pas selon le bruit.</h2>
+      </div>
+      <div class="lab-bundle-grid">
+        <article><span class="lab-mono">01 / 1–100 CARTES</span><h3>Active Sort</h3><p>Un système compact pour consulter, classer et faire évoluer une petite collection.</p><a href="{{ routes.all_products_collection_url }}">Voir la sélection <span>→</span></a></article>
+        <article><span class="lab-mono">02 / 100–500 CARTES</span><h3>Archive System</h3><p>Une base modulaire pensée pour séparer les séries, formats et niveaux de protection.</p><a href="{{ routes.all_products_collection_url }}">Voir la sélection <span>→</span></a></article>
+        <article><span class="lab-mono">03 / PIÈCES CLÉS</span><h3>Grail Display</h3><p>Une configuration ciblée pour isoler et présenter les cartes les plus importantes.</p><a href="{{ routes.all_products_collection_url }}">Voir la sélection <span>→</span></a></article>
+      </div>
+    </div>
+
+    <aside class="lab-warning" aria-label="Points de vigilance">
+      <span class="lab-warning__icon">!</span>
+      <div><span class="lab-mono">À VÉRIFIER AVANT ACHAT</span><h3>La protection dépend toujours du contexte.</h3><p>Contrôlez le format exact, l’épaisseur avec sleeve, l’exposition à la lumière et le niveau d’humidité. Aucun rangement n’élimine à lui seul tous les risques.</p></div>
+      <a href="#lab-compatibility-{{ section.id }}">Revoir les formats ↑</a>
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collector Lab — accueil",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Titre", "default": "La précision au service de votre collection." },
+    { "type": "textarea", "id": "subheading", "label": "Introduction", "default": "Protection, rangement et exposition : des solutions choisies selon leurs dimensions, leurs matériaux et leur usage réel." },
+    { "type": "product", "id": "featured_product", "label": "Produit mis en avant" }
+  ],
+  "presets": [{ "name": "Collector Lab — accueil" }]
+}
+{% endschema %}

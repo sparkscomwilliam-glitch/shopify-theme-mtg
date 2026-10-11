@@ -1,0 +1,144 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign featured_product = section.settings.product
+  assign product_title = section.settings.fallback_title
+  assign product_price = section.settings.fallback_price
+  assign selected_variant = blank
+  if featured_product != blank
+    assign product_title = featured_product.title
+    assign product_price = featured_product.price | money
+    assign selected_variant = featured_product.selected_or_first_available_variant
+  endif
+  assign form_id = 'CollectorVaultFeatureForm-' | append: section.id
+%}
+
+<section
+  class="cv-section cv-section--surface cv-graded"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultHeading-{{ section.id }}"
+>
+  <div class="cv-inner">
+    {% render 'collector-vault-section-header',
+      section_id: section.id,
+      kicker: section.settings.kicker,
+      title: section.settings.heading,
+      description: section.settings.description,
+      show_action: section.settings.show_action,
+      action_label: section.settings.action_label,
+      action_link: section.settings.action_link
+    %}
+
+    <div class="cv-graded__feature">
+      <div class="cv-graded__copy">
+        <p class="cv-kicker">{{ section.settings.feature_kicker }}</p>
+        <h3>{{ product_title }}</h3>
+        <p>{{ section.settings.feature_text }}</p>
+        <div class="cv-chip-row">
+          {% if section.settings.chip_1 != blank %}<span class="cv-chip">{{ section.settings.chip_1 }}</span>{% endif %}
+          {% if section.settings.chip_2 != blank %}<span class="cv-chip">{{ section.settings.chip_2 }}</span>{% endif %}
+          {% if section.settings.chip_3 != blank %}<span class="cv-chip">{{ section.settings.chip_3 }}</span>{% endif %}
+        </div>
+        <p class="cv-graded__price">{{ product_price }}</p>
+
+        {% if featured_product != blank and selected_variant != blank %}
+          <product-form-component data-section-id="{{ section.id }}">
+            {% form 'product', featured_product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
+              <input type="hidden" name="id" value="{{ selected_variant.id }}">
+              <button class="cv-button cv-button--large cv-button--primary add-to-cart-button" type="submit" name="add" {% unless selected_variant.available %}disabled{% endunless %}>
+                {% if selected_variant.available %}{{ section.settings.button_label }}{% else %}Indisponible{% endif %} <span aria-hidden="true">↗</span>
+              </button>
+            {% endform %}
+          </product-form-component>
+        {% else %}
+          <a class="cv-button cv-button--large cv-button--primary" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </div>
+
+      <div class="cv-graded__gallery" aria-label="{{ section.settings.gallery_label | escape }}">
+        {% for block in section.blocks limit: 3 %}
+          {% liquid
+            assign slab_image = block.settings.image
+            if slab_image == blank and block.settings.product.featured_image
+              assign slab_image = block.settings.product.featured_image
+            endif
+            case block.settings.accent
+              when 'violet'
+                assign slab_accent = 'var(--cv-violet)'
+              when 'hot'
+                assign slab_accent = 'var(--cv-hot)'
+              else
+                assign slab_accent = 'var(--cv-accent)'
+            endcase
+          %}
+          <article class="cv-slab cv-slab--{{ forloop.index }}" style="--slab-accent: {{ slab_accent }};" {{ block.shopify_attributes }}>
+            <p class="cv-slab__label">{{ block.settings.label }}</p>
+            <div class="cv-slab__media">
+              {% if slab_image %}
+                {{ slab_image | image_url: width: 500 | image_tag: loading: 'lazy', widths: '200, 320, 500', alt: slab_image.alt | default: block.settings.label }}
+              {% endif %}
+            </div>
+            <strong>{{ block.settings.grade }}</strong>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Pièce gradée",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "CERTIFIED / CURATED" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Les pièces centrales de la collection." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Chaque carte présente son grade, son organisme et sa disponibilité réelle." },
+    { "type": "checkbox", "id": "show_action", "label": "Afficher le bouton de l’en-tête", "default": true },
+    { "type": "text", "id": "action_label", "label": "Bouton de l’en-tête", "default": "Voir tous les produits" },
+    { "type": "url", "id": "action_link", "label": "Lien de l’en-tête" },
+    { "type": "product", "id": "product", "label": "Produit principal" },
+    { "type": "text", "id": "feature_kicker", "label": "Étiquette produit", "default": "VAULT FEATURE / CERTIFIED 10" },
+    { "type": "text", "id": "fallback_title", "label": "Titre de secours", "default": "Aurora Fragment — First Edition" },
+    { "type": "text", "id": "fallback_price", "label": "Prix de secours", "default": "CHF 389.00" },
+    { "type": "textarea", "id": "feature_text", "label": "Texte produit", "default": "Une pièce rare accompagnée de son grade, de sa certification et d’un condition report lisible." },
+    { "type": "text", "id": "chip_1", "label": "Badge 1", "default": "GRADE 10" },
+    { "type": "text", "id": "chip_2", "label": "Badge 2", "default": "POP 12" },
+    { "type": "text", "id": "chip_3", "label": "Badge 3", "default": "CERT. NS-1048" },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "Ajouter au vault" },
+    { "type": "url", "id": "button_link", "label": "Lien si aucun produit" },
+    { "type": "text", "id": "gallery_label", "label": "Description accessible de la galerie", "default": "Sélection de cartes gradées" },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#151c24" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "slab",
+      "name": "Carte gradée",
+      "limit": 3,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Produit" },
+        { "type": "image_picker", "id": "image", "label": "Image personnalisée" },
+        { "type": "text", "id": "label", "label": "Certification", "default": "N/S CERTIFIED" },
+        { "type": "text", "id": "grade", "label": "Grade", "default": "10" },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Pièce gradée",
+      "blocks": [
+        { "type": "slab", "settings": { "grade": "9.5", "accent": "violet" } },
+        { "type": "slab", "settings": { "grade": "10", "accent": "teal" } },
+        { "type": "slab", "settings": { "grade": "10", "accent": "hot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

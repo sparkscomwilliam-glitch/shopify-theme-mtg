@@ -1,0 +1,111 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+{{ 'collector-vault-home-enhancements.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign feature_image = section.settings.image
+  if feature_image == blank and section.settings.product.featured_image
+    assign feature_image = section.settings.product.featured_image
+  endif
+%}
+
+<section
+  class="cv-section cv-offers"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultOffer-{{ section.id }}"
+>
+  <div class="cv-inner">
+    <article class="cv-offer-feature">
+      <div class="cv-offer-feature__copy">
+        <p class="cv-kicker">{{ section.settings.kicker }}</p>
+        <h2 id="CollectorVaultOffer-{{ section.id }}">{{ section.settings.heading }}</h2>
+        <div class="cv-offer-feature__body rte">{{ section.settings.text }}</div>
+        {% if section.settings.meta != blank %}<p class="cv-offer-feature__meta">{{ section.settings.meta }}</p>{% endif %}
+        {% if section.settings.button_label != blank %}
+          <a class="cv-button cv-button--large cv-button--primary" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </div>
+      <div class="cv-offer-feature__media{% if feature_image == blank %} cv-offer-feature__media--empty{% endif %}">
+        {% if feature_image != blank %}
+          {{ feature_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200', alt: section.settings.image_alt | default: section.settings.heading }}
+        {% endif %}
+        <span aria-hidden="true"></span>
+      </div>
+    </article>
+
+    <div class="cv-offer-stack">
+      {% for block in section.blocks limit: 2 %}
+        {% liquid
+          assign offer_image = block.settings.image
+          if offer_image == blank and block.settings.product.featured_image
+            assign offer_image = block.settings.product.featured_image
+          endif
+        %}
+        <a class="cv-offer-card cv-offer-card--{{ block.settings.accent }}" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+          <div class="cv-offer-card__media{% if offer_image == blank %} cv-offer-card__media--empty{% endif %}">
+            {% if offer_image != blank %}
+              {{ offer_image | image_url: width: 720 | image_tag: loading: 'lazy', widths: '320, 480, 720', alt: block.settings.image_alt | default: block.settings.title }}
+            {% endif %}
+          </div>
+          <div class="cv-offer-card__copy">
+            <p class="cv-kicker">{{ block.settings.kicker }}</p>
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.text }}</p>
+            <span class="cv-offer-card__action">{{ block.settings.action }} <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Offres privées",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "PREORDER / RELEASE 18.10.26" },
+    { "type": "textarea", "id": "heading", "label": "Titre", "default": "Réservez le prochain set avant le drop." },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Quantités annoncées, date de sortie visible et expédition organisée dès réception du stock.</p>" },
+    { "type": "text", "id": "meta", "label": "Spécifications", "default": "LANGUE / EN · DISPLAY / 24 PACKS · EXPÉDITION / JOUR DE SORTIE" },
+    { "type": "product", "id": "product", "label": "Produit principal" },
+    { "type": "image_picker", "id": "image", "label": "Image principale", "info": "Prioritaire sur la photo du produit sélectionné." },
+    { "type": "text", "id": "image_alt", "label": "Description de l’image principale" },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "Voir les précommandes" },
+    { "type": "url", "id": "button_link", "label": "Lien du bouton" },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#0b0f14" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offre secondaire",
+      "limit": 2,
+      "settings": [
+        { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "SINGLES / FILTRES" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Cartes à l’unité, sans hasard." },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Filtrez par langue, rareté et état." },
+        { "type": "product", "id": "product", "label": "Produit à illustrer" },
+        { "type": "image_picker", "id": "image", "label": "Image personnalisée" },
+        { "type": "text", "id": "image_alt", "label": "Description de l’image" },
+        { "type": "text", "id": "action", "label": "Action", "default": "Explorer les singles" },
+        { "type": "url", "id": "link", "label": "Lien" },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Offres privées",
+      "blocks": [
+        { "type": "offer", "settings": { "kicker": "SINGLES / FILTRES", "title": "Cartes à l’unité, sans hasard.", "text": "Filtrez par langue, rareté et état.", "action": "Explorer les singles", "accent": "teal" } },
+        { "type": "offer", "settings": { "kicker": "BUYBACK / ESTIMATION", "title": "Transformez vos doubles.", "text": "Estimation claire et offre de reprise.", "action": "Vendre mes cartes", "accent": "hot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

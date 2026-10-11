@@ -1,0 +1,20 @@
+{% liquid
+  assign heading_id = 'CollectorVaultHeading-' | append: section_id
+%}
+
+<header class="cv-heading">
+  {% if kicker != blank %}
+    <p class="cv-kicker">{{ kicker }}</p>
+  {% endif %}
+  {% if title != blank %}
+    <h2 id="{{ heading_id }}">{{ title }}</h2>
+  {% endif %}
+  {% if description != blank %}
+    <div class="cv-heading__description rte">{{ description }}</div>
+  {% endif %}
+  {% if show_action and action_label != blank %}
+    <a class="cv-button cv-button--secondary cv-heading__action" href="{{ action_link | default: routes.all_products_collection_url }}">
+      {{ action_label }} <span aria-hidden="true">↗</span>
+    </a>
+  {% endif %}
+</header>

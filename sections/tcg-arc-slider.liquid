@@ -1,0 +1,243 @@
+<script src="{{ 'tcg-arc-slider.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+{% liquid
+  assign manual_product_count = 0
+  for block in section.blocks
+    if block.settings.product != blank
+      assign manual_product_count = manual_product_count | plus: 1
+    endif
+  endfor
+
+  assign source_collection = section.settings.collection
+  if source_collection == blank
+    assign source_collection = collections.all
+  endif
+
+  assign actual_product_count = manual_product_count
+  if actual_product_count == 0
+    assign actual_product_count = source_collection.products_count
+    if actual_product_count > section.settings.max_products
+      assign actual_product_count = section.settings.max_products
+    endif
+  endif
+
+  assign leading_placeholders = 0
+  assign trailing_placeholders = 0
+  if section.settings.pad_placeholders
+    case actual_product_count
+      when 0
+        assign leading_placeholders = 2
+        assign trailing_placeholders = 3
+      when 1
+        assign leading_placeholders = 2
+        assign trailing_placeholders = 2
+      when 2
+        assign leading_placeholders = 1
+        assign trailing_placeholders = 2
+      when 3
+        assign leading_placeholders = 1
+        assign trailing_placeholders = 1
+      when 4
+        assign trailing_placeholders = 1
+    endcase
+  endif
+%}
+
+<section class="tcg-arc-section tcg-arc-section--{{ section.id }}">
+  <tcg-arc-slider class="tcg-arc" data-initial-index="{{ leading_placeholders }}">
+    <header class="tcg-arc__header">
+      {% if section.settings.eyebrow != blank %}<span class="tcg-arc__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+      <h2>{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}<p>{{ section.settings.subheading }}</p>{% endif %}
+    </header>
+
+    <div class="tcg-arc__viewport">
+      <div class="tcg-arc__track" data-tcg-track role="list" aria-label="Objets à collectionner">
+        {% if leading_placeholders > 0 %}
+          {% for i in (1..leading_placeholders) %}
+            {% render 'tcg-arc-card', placeholder_index: i %}
+          {% endfor %}
+        {% endif %}
+
+        {% if manual_product_count > 0 %}
+          {% for block in section.blocks %}
+            {% if block.settings.product != blank %}
+              {% render 'tcg-arc-card', product: block.settings.product, image_override: block.settings.image, block: block, placeholder_index: forloop.index %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for product in source_collection.products limit: section.settings.max_products %}
+            {% render 'tcg-arc-card', product: product, placeholder_index: forloop.index %}
+          {% endfor %}
+        {% endif %}
+
+        {% if trailing_placeholders > 0 %}
+          {% for i in (1..trailing_placeholders) %}
+            {% assign placeholder_number = i | plus: leading_placeholders %}
+            {% render 'tcg-arc-card', placeholder_index: placeholder_number %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="tcg-arc__footer">
+      <button type="button" class="tcg-arc__arrow" data-tcg-previous aria-label="Produit précédent">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="tcg-arc__active" aria-live="polite">
+        <div class="tcg-arc__meta">
+          <h3 data-tcg-active-title>Produit</h3>
+          <p data-tcg-active-price></p>
+        </div>
+        <a href="{{ routes.all_products_collection_url }}" class="tcg-arc__cta" data-tcg-active-link>Voir la fiche</a>
+      </div>
+
+      <button type="button" class="tcg-arc__arrow" data-tcg-next aria-label="Produit suivant">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </tcg-arc-slider>
+</section>
+
+{% style %}
+  .tcg-arc-section--{{ section.id }} {
+    --arc-bg: var(--tcg-bg, #0f1115);
+    --arc-surface: var(--tcg-surface, #181b21);
+    --arc-text: var(--tcg-text, #e5e7eb);
+    --arc-muted: var(--tcg-muted, #9ca3af);
+    --arc-line: var(--tcg-border, #2a2f38);
+    --arc-accent: var(--tcg-accent, #f59e0b);
+    --arc-accent-text: var(--tcg-accent-text, var(--arc-accent));
+    --arc-accent-hover: var(--tcg-accent-hover, #d97706);
+    --arc-accent-contrast: var(--tcg-accent-contrast, #0f1115);
+    background: var(--arc-bg);
+    color: var(--arc-text);
+    padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+
+  .tcg-arc-section--{{ section.id }} * { box-sizing: border-box; }
+  .tcg-arc { display: block; width: 100%; }
+  .tcg-arc__header { width: min(100% - 32px, 920px); margin: 0 auto 28px; text-align: center; }
+  .tcg-arc__eyebrow { display: inline-block; color: var(--arc-accent-text); font-size: 11px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; }
+  .tcg-arc__header h2 { margin: 12px 0 0; color: var(--arc-text); font-family: 'Sora', var(--font-heading--family), sans-serif; font-size: clamp(38px, 5vw, 76px); font-weight: 630; line-height: .98; letter-spacing: -.055em; text-wrap: balance; }
+  .tcg-arc__header p { max-width: 620px; margin: 18px auto 0; color: var(--arc-muted); font-size: clamp(14px, 1.3vw, 18px); line-height: 1.55; }
+  .tcg-arc__viewport { position: relative; width: min(100%, 1500px); margin-inline: auto; overflow: hidden; }
+  .tcg-arc__viewport::before, .tcg-arc__viewport::after { content: ''; position: absolute; z-index: 4; top: 0; bottom: 0; width: clamp(18px, 7vw, 120px); pointer-events: none; }
+  .tcg-arc__viewport::before { left: 0; background: linear-gradient(90deg, var(--arc-bg), transparent); }
+  .tcg-arc__viewport::after { right: 0; background: linear-gradient(-90deg, var(--arc-bg), transparent); }
+  .tcg-arc__track {
+    --arc-card-width: clamp(250px, 25vw, 360px);
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(16px, 1.8vw, 28px);
+    width: 100%;
+    height: clamp(560px, 50vw, 740px);
+    padding: 32px calc((100% - var(--arc-card-width)) / 2) 88px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+  }
+  .tcg-arc__track::-webkit-scrollbar { display: none; }
+  .tcg-arc-card {
+    position: relative;
+    flex: 0 0 var(--arc-card-width);
+    width: var(--arc-card-width);
+    aspect-ratio: 9 / 16;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    scroll-snap-align: center;
+    transform-origin: 50% 100%;
+    transition: transform .42s cubic-bezier(.2,.75,.2,1), filter .35s ease, opacity .35s ease;
+    filter: brightness(.2) saturate(.55);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tcg-arc-card__frame { position: absolute; inset: 0; display: block; overflow: hidden; border: 1px solid var(--arc-line); border-radius: inherit; background: var(--arc-surface); box-shadow: 0 26px 70px rgb(0 0 0 / .28); }
+  .tcg-arc-card img, .tcg-arc-card__placeholder { display: block; width: 100%; height: 100%; object-fit: {{ section.settings.image_fit }}; background: var(--arc-surface); }
+  .tcg-arc-card__empty-copy { position: absolute; inset: auto 18px 20px; padding: 14px; border: 1px solid var(--arc-line); border-radius: 12px; background: color-mix(in srgb, var(--arc-surface) 88%, transparent); text-align: left; }
+  .tcg-arc-card__empty-copy strong, .tcg-arc-card__empty-copy small { display: block; }
+  .tcg-arc-card__empty-copy strong { color: var(--arc-text); font-size: 15px; }
+  .tcg-arc-card__empty-copy small { margin-top: 3px; color: var(--arc-muted); font-size: 11px; }
+  .tcg-arc-card[data-distance='0'] { z-index: 3; transform: translateY(0) rotate(0) scale(1.055); filter: none; opacity: 1; pointer-events: auto; }
+  .tcg-arc-card[data-distance='-1'] { z-index: 2; transform: translateX(24px) translateY(42px) rotate(-5deg) scale(.84); filter: brightness(.48) saturate(.72); opacity: .78; pointer-events: auto; }
+  .tcg-arc-card[data-distance='1'] { z-index: 2; transform: translateX(-24px) translateY(42px) rotate(5deg) scale(.84); filter: brightness(.48) saturate(.72); opacity: .78; pointer-events: auto; }
+  .tcg-arc-card[data-distance='-2'] { transform: translateY(100px) rotate(-9deg) scale(.76); }
+  .tcg-arc-card[data-distance='2'] { transform: translateY(100px) rotate(9deg) scale(.76); }
+  .tcg-arc-card[data-distance='-3'] { transform: translateY(145px) rotate(-12deg) scale(.68); }
+  .tcg-arc-card[data-distance='3'] { transform: translateY(145px) rotate(12deg) scale(.68); }
+  .tcg-arc-card:focus-visible { outline: 3px solid var(--arc-accent); outline-offset: 6px; }
+  .tcg-arc__footer { width: min(100% - 32px, 900px); margin: -18px auto 0; display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; align-items: center; gap: clamp(18px, 5vw, 70px); }
+  .tcg-arc__active { min-width: 0; text-align: center; }
+  .tcg-arc__meta { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-bottom: 18px; }
+  .tcg-arc__active h3 { margin: 0; color: var(--arc-text); font-family: 'Sora', var(--font-heading--family), sans-serif; font-size: clamp(22px, 2.4vw, 36px); font-weight: 600; line-height: 1.1; letter-spacing: -.035em; }
+  .tcg-arc__active p { margin: 0; color: var(--arc-accent-text); font-size: 16px; font-weight: 800; white-space: nowrap; }
+  .tcg-arc__cta { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; padding: 0 24px; border-radius: 999px; background: var(--arc-accent); color: var(--arc-accent-contrast); font-size: 13px; font-weight: 850; text-decoration: none; }
+  .tcg-arc__cta:hover { background: var(--arc-accent-hover); color: var(--arc-accent-contrast); }
+  .tcg-arc__arrow { display: grid; place-items: center; width: 58px; height: 58px; padding: 0; border: 1px solid var(--arc-line); border-radius: 50%; background: var(--arc-surface); color: var(--arc-text); cursor: pointer; transition: border-color .2s ease, color .2s ease, transform .2s ease, opacity .2s ease; }
+  .tcg-arc__arrow svg { width: 23px; height: 23px; }
+  .tcg-arc__arrow:hover:not(:disabled) { border-color: var(--arc-accent); color: var(--arc-accent); transform: translateY(-2px); }
+  .tcg-arc__arrow:focus-visible { outline: 3px solid var(--arc-accent); outline-offset: 4px; }
+  .tcg-arc__arrow:disabled { opacity: .28; cursor: not-allowed; }
+
+  @media (max-width: 749px) {
+    .tcg-arc-section--{{ section.id }} { padding-block: calc({{ section.settings.padding_top }}px * .72) calc({{ section.settings.padding_bottom }}px * .72); }
+    .tcg-arc__header { margin-bottom: 14px; }
+    .tcg-arc__header h2 { font-size: clamp(38px, 12vw, 56px); }
+    .tcg-arc__header p { max-width: 340px; }
+    .tcg-arc__track { --arc-card-width: min(66vw, 300px); gap: 10px; height: min(148vw, 610px); padding-top: 20px; padding-bottom: 82px; }
+    .tcg-arc-card { border-radius: 16px; }
+    .tcg-arc-card[data-distance='0'] { transform: scale(1.035); }
+    .tcg-arc-card[data-distance='-1'] { transform: translateX(52px) translateY(32px) rotate(-4deg) scale(.84); }
+    .tcg-arc-card[data-distance='1'] { transform: translateX(-52px) translateY(32px) rotate(4deg) scale(.84); }
+    .tcg-arc-card[data-distance='-2'], .tcg-arc-card[data-distance='2'] { transform: translateY(72px) scale(.76); }
+    .tcg-arc__footer { margin-top: -22px; grid-template-columns: 46px minmax(0, 1fr) 46px; gap: 10px; }
+    .tcg-arc__arrow { width: 44px; height: 44px; }
+    .tcg-arc__meta { flex-wrap: wrap; column-gap: 9px; row-gap: 2px; margin-bottom: 14px; }
+    .tcg-arc__active h3 { font-size: 20px; }
+    .tcg-arc__active p { font-size: 14px; }
+    .tcg-arc__cta { min-height: 46px; padding-inline: 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tcg-arc-card, .tcg-arc__arrow { transition: none; }
+    .tcg-arc__track { scroll-behavior: auto; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Slider TCG en arc",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Sélection TCG" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Les cartes qui font vibrer les collectionneurs" },
+    { "type": "textarea", "id": "subheading", "label": "Sous-titre", "default": "Faites défiler la sélection et découvrez chaque carte sous son meilleur jour." },
+    { "type": "collection", "id": "collection", "label": "Collection par défaut" },
+    { "type": "range", "id": "max_products", "label": "Nombre maximal de produits", "min": 3, "max": 12, "step": 1, "default": 8 },
+    { "type": "select", "id": "image_fit", "label": "Ajustement des images 9:16", "options": [{ "value": "cover", "label": "Remplir" }, { "value": "contain", "label": "Afficher en entier" }], "default": "cover" },
+    { "type": "checkbox", "id": "pad_placeholders", "label": "Afficher des cartes d’exemple si la sélection est courte", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Espacement supérieur", "min": 40, "max": 160, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacement inférieur", "min": 40, "max": 160, "step": 8, "unit": "px", "default": 104 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produit",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Produit" },
+        { "type": "image_picker", "id": "image", "label": "Image verticale 9:16 personnalisée" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Slider TCG en arc" }]
+}
+{% endschema %}

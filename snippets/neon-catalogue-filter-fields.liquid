@@ -1,0 +1,109 @@
+{%- comment -%}
+  Native Shopify storefront filters for the Neon Specimen catalogue.
+
+  Accepts:
+  - results: a collection-like object exposing `filters`
+  - context: unique suffix used for input ids
+{%- endcomment -%}
+
+{%- for filter in results.filters -%}
+  {%- liquid
+    assign group_open = false
+    if filter.active_values.size > 0
+      assign group_open = true
+    endif
+    if filter.type == 'price_range' and filter.min_value.value != blank or filter.type == 'price_range' and filter.max_value.value != blank
+      assign group_open = true
+    endif
+  -%}
+  <details class="neon-filter-group"{% if group_open or forloop.index <= 4 %} open{% endif %}>
+    <summary class="neon-filter-group__summary">
+      <span>{{ filter.label | escape }}</span>
+      <span class="neon-filter-group__count">
+        {%- if filter.active_values.size > 0 -%}{{ filter.active_values.size }}{%- endif -%}
+      </span>
+      <span class="neon-filter-group__chevron" aria-hidden="true">
+        {{- 'icon-caret.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+
+    <div class="neon-filter-group__body">
+      {%- case filter.type -%}
+        {%- when 'boolean', 'list' -%}
+          <ul class="neon-filter-options" role="list">
+            {%- for value in filter.values -%}
+              {%- assign input_id = 'NeonFilter-' | append: context | append: '-' | append: filter.param_name | handle | append: '-' | append: forloop.index -%}
+              <li>
+                <label class="neon-filter-option" for="{{ input_id }}">
+                  <input
+                    id="{{ input_id }}"
+                    type="checkbox"
+                    name="{{ value.param_name }}"
+                    value="{{ value.value }}"
+                    {% if value.active %}checked{% endif %}
+                    {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                    data-neon-filter-input
+                  >
+                  <span class="neon-filter-option__box" aria-hidden="true"></span>
+                  {%- if value.swatch -%}
+                    <span
+                      class="neon-filter-option__swatch"
+                      style="--swatch-color: {{ value.swatch.color | default: '#26e6c5' }};"
+                      aria-hidden="true"
+                    ></span>
+                  {%- endif -%}
+                  <span class="neon-filter-option__label">{{ value.label | escape }}</span>
+                  <span class="neon-filter-option__count">{{ value.count }}</span>
+                </label>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+        {%- when 'price_range' -%}
+          {%- liquid
+            assign range_max = filter.range_max | divided_by: 100.0
+            assign min_value = filter.min_value.value | default: 0 | divided_by: 100.0
+            assign max_value = filter.max_value.value | default: filter.range_max | divided_by: 100.0
+          -%}
+          <div class="neon-price-filter">
+            <label>
+              <span>Min.</span>
+              <span class="neon-price-filter__input">
+                <span>{{ cart.currency.symbol }}</span>
+                <input
+                  type="number"
+                  name="{{ filter.min_value.param_name }}"
+                  value="{% if filter.min_value.value != blank %}{{ min_value }}{% endif %}"
+                  min="0"
+                  max="{{ range_max }}"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="0"
+                  data-neon-filter-input
+                >
+              </span>
+            </label>
+            <span class="neon-price-filter__dash" aria-hidden="true">—</span>
+            <label>
+              <span>Max.</span>
+              <span class="neon-price-filter__input">
+                <span>{{ cart.currency.symbol }}</span>
+                <input
+                  type="number"
+                  name="{{ filter.max_value.param_name }}"
+                  value="{% if filter.max_value.value != blank %}{{ max_value }}{% endif %}"
+                  min="0"
+                  max="{{ range_max }}"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="{{ range_max }}"
+                  data-neon-filter-input
+                >
+              </span>
+            </label>
+          </div>
+          <p class="neon-price-filter__maximum">Jusqu’à {{ filter.range_max | money }}</p>
+      {%- endcase -%}
+    </div>
+  </details>
+{%- endfor -%}

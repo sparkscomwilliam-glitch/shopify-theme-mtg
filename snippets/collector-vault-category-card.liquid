@@ -1,0 +1,43 @@
+{% liquid
+  assign card_collection = collection
+  assign card_link = link
+  if card_link == blank and card_collection != blank
+    assign card_link = card_collection.url
+  endif
+  if card_link == blank
+    assign card_link = routes.all_products_collection_url
+  endif
+  assign card_image = image
+  if card_image == blank and product != blank and product.featured_image
+    assign card_image = product.featured_image
+  endif
+  if card_image == blank and card_collection != blank and card_collection.image
+    assign card_image = card_collection.image
+  endif
+%}
+
+<a class="cv-category cv-category--{{ accent | default: 'teal' }}{% if card_image != blank %} cv-category--media{% endif %}" href="{{ card_link }}" {{ block_attributes }}>
+  {% if card_image != blank %}
+    <div class="cv-category__media">
+      {{ card_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 760, 1000', alt: image_alt | default: title }}
+      <span class="cv-category__media-glow" aria-hidden="true"></span>
+    </div>
+  {% endif %}
+
+  <div class="cv-category__body">
+    <div class="cv-category__copy">
+      {% if number != blank %}<p class="cv-kicker">{{ number }}</p>{% endif %}
+      {% if logo_svg != blank %}
+        <div class="cv-category__logo cv-category__logo--svg" aria-label="{{ logo_alt | default: title | escape }}">{{ logo_svg }}</div>
+      {% elsif logo_image != blank %}
+        <div class="cv-category__logo">
+          {{ logo_image | image_url: width: 520 | image_tag: loading: 'lazy', widths: '180, 320, 520', alt: logo_alt | default: title }}
+        </div>
+      {% else %}
+        <h3>{{ title | default: card_collection.title | default: 'Collection' }}</h3>
+      {% endif %}
+      {% if description != blank %}<p>{{ description }}</p>{% endif %}
+    </div>
+    <span class="cv-category__action">{{ action | default: 'Explorer' }} <span aria-hidden="true">↗</span></span>
+  </div>
+</a>

@@ -1,0 +1,84 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+{{ 'collector-vault-home-enhancements.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cv-section cv-section--surface cv-category-section"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultHeading-{{ section.id }}"
+>
+  <div class="cv-inner">
+    {% render 'collector-vault-section-header',
+      section_id: section.id,
+      kicker: section.settings.kicker,
+      title: section.settings.heading,
+      description: section.settings.description,
+      show_action: false
+    %}
+
+    <div class="cv-category-grid">
+      {% for block in section.blocks limit: 3 %}
+        {% render 'collector-vault-category-card',
+          collection: block.settings.collection,
+          product: block.settings.product,
+          image: block.settings.image,
+          image_alt: block.settings.image_alt,
+          link: block.settings.link,
+          number: block.settings.number,
+          title: block.settings.title,
+          description: block.settings.description,
+          action: block.settings.action,
+          accent: block.settings.accent,
+          block_attributes: block.shopify_attributes
+        %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Par usage",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "ACCESSOIRES / PAR USAGE" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Protégez selon votre façon de collectionner." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Jouer, classer ou exposer : chaque besoin mène directement aux bons formats." },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#151c24" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "goal",
+      "name": "Usage",
+      "limit": 3,
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection Shopify" },
+        { "type": "product", "id": "product", "label": "Produit à illustrer" },
+        { "type": "image_picker", "id": "image", "label": "Image personnalisée", "info": "Prioritaire sur la photo du produit ou de la collection." },
+        { "type": "text", "id": "image_alt", "label": "Description de l’image" },
+        { "type": "url", "id": "link", "label": "Lien personnalisé" },
+        { "type": "text", "id": "number", "label": "Index", "default": "01 / PLAY" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Jouer" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Sleeves, deck boxes et tapis pensés pour le jeu quotidien." },
+        { "type": "text", "id": "action", "label": "Action", "default": "Choisir mon équipement" },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Par usage",
+      "blocks": [
+        { "type": "goal", "settings": { "number": "01 / PLAY", "title": "Jouer", "description": "Sleeves, deck boxes et tapis pensés pour le jeu quotidien.", "action": "Choisir mon équipement", "accent": "teal" } },
+        { "type": "goal", "settings": { "number": "02 / ARCHIVE", "title": "Classer", "description": "Binders, intercalaires et stockage pour suivre vos sets.", "action": "Organiser ma collection", "accent": "violet" } },
+        { "type": "goal", "settings": { "number": "03 / DISPLAY", "title": "Exposer", "description": "Magnetic holders, stands et protections UV pour vos pièces fortes.", "action": "Créer ma vitrine", "accent": "hot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,265 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+{{ 'collector-vault-home-enhancements.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'collector-live-search.js' | asset_url }}" defer></script>
+
+{% liquid
+  assign featured_product = section.settings.featured_product
+  assign feature_title = section.settings.feature_title
+  assign feature_price = section.settings.feature_price
+  if featured_product != blank
+    assign feature_title = featured_product.title
+    assign feature_price = featured_product.price | money
+  endif
+%}
+
+<section
+  class="cv-section cv-hero"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultHero-{{ section.id }}"
+>
+  <div class="cv-inner cv-hero__desktop">
+    <div class="cv-hero__copy">
+      {% if section.settings.kicker != blank %}<p class="cv-kicker cv-hero__tag">{{ section.settings.kicker }}</p>{% endif %}
+      <h1 id="CollectorVaultHero-{{ section.id }}">{{ section.settings.heading }}</h1>
+      {% if section.settings.text != blank %}<div class="cv-hero__lead rte">{{ section.settings.text }}</div>{% endif %}
+
+      <div class="cv-hero__actions">
+        {% if section.settings.primary_label != blank %}
+          <a class="cv-button cv-button--large cv-button--primary" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">{{ section.settings.primary_label }} <span aria-hidden="true">↗</span></a>
+        {% endif %}
+        {% if section.settings.secondary_label != blank %}
+          <a class="cv-button cv-button--large cv-button--secondary" href="{{ section.settings.secondary_link | default: routes.all_products_collection_url }}">{{ section.settings.secondary_label }} <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </div>
+
+      {% if section.settings.trust_line != blank %}<p class="cv-hero__trust">{{ section.settings.trust_line }}</p>{% endif %}
+    </div>
+
+    <div class="cv-hero__stage" aria-label="{{ section.settings.stage_label | escape }}">
+      {% for block in section.blocks limit: 3 %}
+        {% liquid
+          assign specimen_product = block.settings.product
+          assign specimen_title = block.settings.title
+          if specimen_product != blank
+            assign specimen_title = specimen_product.title
+          endif
+          case block.settings.accent
+            when 'violet'
+              assign specimen_accent = 'var(--cv-violet)'
+              assign specimen_background = '#242039'
+            when 'hot'
+              assign specimen_accent = 'var(--cv-hot)'
+              assign specimen_background = '#31201f'
+            else
+              assign specimen_accent = 'var(--cv-accent)'
+              assign specimen_background = '#122a2b'
+          endcase
+        %}
+        <article class="cv-specimen-card cv-specimen-card--{{ forloop.index }}" style="--card-accent: {{ specimen_accent }}; --card-bg: {{ specimen_background }};" {{ block.shopify_attributes }}>
+          <p class="cv-specimen-card__label">{{ block.settings.label }}</p>
+          <div class="cv-specimen-card__media">
+            {% if specimen_product.featured_image %}
+              {{ specimen_product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy', widths: '220, 340, 500', alt: specimen_product.featured_image.alt | default: specimen_title }}
+            {% else %}
+              <div class="cv-specimen-card__fallback"></div>
+            {% endif %}
+          </div>
+          <h3>{{ specimen_title }}</h3>
+        </article>
+      {% endfor %}
+
+      <div class="cv-hero__product-info">
+        <div>
+          <h3>{{ feature_title }}</h3>
+          <strong>{{ feature_price }}</strong>
+        </div>
+        <p>{{ section.settings.feature_note }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-hero__mobile">
+    {% if section.settings.kicker != blank %}
+      <p class="cv-kicker cv-hero-mobile__tag">{{ section.settings.kicker }}</p>
+    {% endif %}
+
+    <h1 class="cv-hero-mobile__heading">{{ section.settings.heading }}</h1>
+
+    {% if section.settings.mobile_text != blank %}
+      <div class="cv-hero-mobile__lead rte">{{ section.settings.mobile_text }}</div>
+    {% endif %}
+
+    <div class="cv-hero-mobile__fan" aria-hidden="true">
+      <img
+        class="cv-hero-mobile__card cv-hero-mobile__card--left"
+        src="{{ 'collector-hero-card-left.png' | asset_url }}"
+        alt=""
+        width="119"
+        height="166"
+        loading="eager"
+      >
+      <img
+        class="cv-hero-mobile__card cv-hero-mobile__card--right"
+        src="{{ 'collector-hero-card-right.png' | asset_url }}"
+        alt=""
+        width="119"
+        height="166"
+        loading="eager"
+      >
+      <img
+        class="cv-hero-mobile__card cv-hero-mobile__card--center"
+        src="{{ 'collector-hero-card-center.png' | asset_url }}"
+        alt=""
+        width="119"
+        height="169"
+        loading="eager"
+      >
+    </div>
+
+    <form
+      class="cv-hero-mobile__search"
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search"
+      data-cv-search-launch
+      aria-controls="CollectorVaultSearchSheet-{{ section.id }}"
+    >
+      <img src="{{ 'collector-search-icon.svg' | asset_url }}" alt="" width="24" height="24">
+      <label class="visually-hidden" for="CollectorVaultSearch-{{ section.id }}">{{ section.settings.mobile_search_label }}</label>
+      <input
+        id="CollectorVaultSearch-{{ section.id }}"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ section.settings.mobile_search_placeholder | escape }}"
+        autocomplete="off"
+        aria-haspopup="dialog"
+      >
+    </form>
+
+    {% if section.settings.mobile_trust_line != blank %}
+      <p class="cv-hero-mobile__trust">{{ section.settings.mobile_trust_line }}</p>
+    {% endif %}
+  </div>
+
+  <div
+    id="CollectorVaultSearchSheet-{{ section.id }}"
+    class="cv-live-search"
+    data-cv-live-search
+    data-predictive-url="{{ routes.predictive_search_url }}"
+    data-search-url="{{ routes.search_url }}"
+    aria-hidden="true"
+  >
+    <button class="cv-live-search__backdrop" type="button" data-cv-search-close aria-label="Fermer la recherche"></button>
+
+    <section
+      class="cv-live-search__sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="CollectorVaultSearchTitle-{{ section.id }}"
+      tabindex="-1"
+    >
+      <span class="cv-live-search__handle" aria-hidden="true"></span>
+
+      <header class="cv-live-search__header">
+        <div>
+          <p class="cv-kicker">RECHERCHE / CATALOGUE</p>
+          <h2 id="CollectorVaultSearchTitle-{{ section.id }}">Trouver une pièce</h2>
+        </div>
+        <button class="cv-live-search__close" type="button" data-cv-search-close aria-label="Fermer la recherche">×</button>
+      </header>
+
+      <form class="cv-live-search__form" action="{{ routes.search_url }}" method="get" role="search" data-cv-search-form>
+        <img src="{{ 'collector-search-icon.svg' | asset_url }}" alt="" width="24" height="24">
+        <label class="visually-hidden" for="CollectorVaultLiveSearch-{{ section.id }}">{{ section.settings.mobile_search_label }}</label>
+        <input
+          id="CollectorVaultLiveSearch-{{ section.id }}"
+          type="search"
+          name="q"
+          placeholder="Nom, série, type de produit..."
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          data-cv-search-input
+        >
+        <button class="cv-live-search__clear" type="button" data-cv-search-clear hidden>Effacer</button>
+      </form>
+
+      <div class="cv-live-search__toolbar">
+        <p class="cv-live-search__status" data-cv-search-status aria-live="polite">Commencez à écrire pour rechercher dans le catalogue.</p>
+        <label class="cv-live-search__sort">
+          <span>Trier</span>
+          <select data-cv-search-sort disabled>
+            <option value="relevance">Pertinence</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="title-asc">A–Z</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="cv-live-search__results" data-cv-search-results></div>
+
+      <a class="cv-live-search__all" href="{{ routes.search_url }}" data-cv-search-all hidden>
+        Voir tous les résultats <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Hero",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "COLLECTOR VAULT · CERTIFIED · CURATED" },
+    { "type": "textarea", "id": "heading", "label": "Titre", "default": "Des pièces choisies. Des preuves visibles. Une collection maîtrisée." },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Explorez une sélection plus courte de cartes gradées, produits scellés et protections pensées pour durer.</p>" },
+    { "type": "text", "id": "primary_label", "label": "Bouton principal", "default": "Voir les pièces certifiées" },
+    { "type": "url", "id": "primary_link", "label": "Lien principal" },
+    { "type": "text", "id": "secondary_label", "label": "Bouton secondaire", "default": "Découvrir le scellé" },
+    { "type": "url", "id": "secondary_link", "label": "Lien secondaire" },
+    { "type": "text", "id": "trust_line", "label": "Ligne de réassurance", "default": "✦ STOCK SUISSE   ✦ EXPÉDITION SUIVIE   ✦ PAIEMENT SÉCURISÉ" },
+    { "type": "header", "content": "Version mobile" },
+    { "type": "richtext", "id": "mobile_text", "label": "Texte mobile", "default": "<p>Explorez une sélection de cartes gradées, produits scellés et protections pensées pour durer.</p>" },
+    { "type": "text", "id": "mobile_search_label", "label": "Libellé accessible de recherche", "default": "Rechercher" },
+    { "type": "text", "id": "mobile_search_placeholder", "label": "Texte du champ de recherche", "default": "Search for products..." },
+    { "type": "text", "id": "mobile_trust_line", "label": "Réassurance mobile", "default": "EXPÉDITION SUIVIE ✦ PAIEMENTS SÉCURISÉ" },
+    { "type": "text", "id": "stage_label", "label": "Description accessible du visuel", "default": "Sélection Collector Vault" },
+    { "type": "product", "id": "featured_product", "label": "Produit mis en avant" },
+    { "type": "text", "id": "feature_title", "label": "Titre de secours", "default": "Aurora Fragment · Certified 10" },
+    { "type": "text", "id": "feature_price", "label": "Prix de secours", "default": "CHF 389.00" },
+    { "type": "text", "id": "feature_note", "label": "Note produit", "default": "Exemplaire unique · authentifié · expédition sous 24 h" },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#0b0f14" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "specimen",
+      "name": "Produit du visuel",
+      "limit": 3,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Produit" },
+        { "type": "text", "id": "label", "label": "Étiquette", "default": "GRADED / 10" },
+        { "type": "text", "id": "title", "label": "Titre de secours", "default": "PRISM SPECIMEN" },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Hero",
+      "blocks": [
+        { "type": "specimen", "settings": { "label": "SEALED / JP", "title": "NEON BURST", "accent": "violet" } },
+        { "type": "specimen", "settings": { "label": "GRADED / 10", "title": "PRISM SPECIMEN", "accent": "teal" } },
+        { "type": "specimen", "settings": { "label": "BOOSTER / EN", "title": "VOID ARCHIVE", "accent": "hot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

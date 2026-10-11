@@ -1,0 +1,57 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cv-section cv-section--surface cv-benefits"
+  style="--cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="cv-inner cv-inner--compact">
+    {% for block in section.blocks %}
+      <article class="cv-benefit cv-benefit--{{ block.settings.accent }}" {{ block.shopify_attributes }}>
+        <span class="cv-benefit__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+        <div>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Réassurance",
+  "settings": [
+    { "type": "text", "id": "accessibility_label", "label": "Description accessible", "default": "Services de la boutique" },
+    { "type": "color", "id": "surface", "label": "Fond", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bénéfice",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Symbole", "default": "✓" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Stock contrôlé" },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Chaque produit est vérifié avant sa mise en ligne." },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Réassurance",
+      "blocks": [
+        { "type": "benefit", "settings": { "icon": "✓", "title": "Stock contrôlé", "text": "Chaque produit est vérifié avant sa mise en ligne.", "accent": "teal" } },
+        { "type": "benefit", "settings": { "icon": "✦", "title": "Paiements suisses", "text": "TWINT, cartes et solutions de paiement sécurisées.", "accent": "violet" } },
+        { "type": "benefit", "settings": { "icon": "→", "title": "Livraison suivie", "text": "Expédition rapide depuis la Suisse, avec suivi.", "accent": "hot" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

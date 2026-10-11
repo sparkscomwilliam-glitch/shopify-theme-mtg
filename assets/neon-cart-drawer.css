@@ -1,0 +1,150 @@
+.neon-cart {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  inset: 0;
+  border: 0;
+  color: #f7f5f0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.neon-cart::backdrop {
+  background: rgba(3, 7, 10, .72);
+  backdrop-filter: blur(5px);
+  animation: neon-cart-fade-in .28s ease both;
+}
+
+.neon-cart__panel {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100%, 470px);
+  height: 100%;
+  border-left: 1px solid #2c3744;
+  background: #111720;
+  box-shadow: -28px 0 80px rgba(0, 0, 0, .4);
+  animation: neon-cart-slide-in .36s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.neon-cart.is-closing .neon-cart__panel { animation: neon-cart-slide-out .24s ease-in both; }
+.neon-cart.is-closing::backdrop { animation: neon-cart-fade-out .24s ease-in both; }
+
+.neon-cart__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 26px 24px 22px;
+  border-bottom: 1px solid #2c3744;
+}
+
+.neon-cart__header p { margin: 0 0 7px; color: #28d7be; font: 500 10px/1 'IBM Plex Mono', monospace; letter-spacing: .12em; }
+.neon-cart__header h2 { margin: 0; color: #f7f5f0; font: 700 25px/1.15 Sora, Manrope, sans-serif; letter-spacing: -.025em; }
+.neon-cart__close { flex: 0 0 40px; width: 40px; height: 40px; padding: 0; border: 1px solid #35404d; border-radius: 50%; color: #dce2e8; background: #202833; font-size: 25px; line-height: 1; cursor: pointer; }
+.neon-cart__close:hover { color: #07110f; border-color: #28d7be; background: #28d7be; }
+.neon-cart__body { min-height: 0; padding: 12px 24px 24px; overflow-y: auto; }
+.neon-cart__loading, .neon-cart__empty { display: grid; min-height: 260px; place-items: center; padding: 30px; color: #a9b4c2; text-align: center; }
+.neon-cart__empty strong { display: block; margin-bottom: 9px; color: #f7f5f0; font: 700 24px/1.2 Sora, sans-serif; }
+.neon-cart__item { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 18px 0; border-bottom: 1px solid #2c3744; }
+.neon-cart__image { width: 92px; aspect-ratio: 1; overflow: hidden; border: 1px solid #2c3744; border-radius: 13px; background: #151b24; }
+.neon-cart__image img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.neon-cart__copy { min-width: 0; }
+.neon-cart__title { display: -webkit-box; margin: 1px 0 7px; overflow: hidden; color: #f7f5f0; font: 650 14px/1.35 Inter, sans-serif; text-decoration: none; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.neon-cart__variant { margin: 0 0 12px; color: #8793a3; font: 500 10px/1.35 'IBM Plex Mono', monospace; }
+.neon-cart__quantity { display: inline-grid; grid-template-columns: 31px 34px 31px; height: 34px; border: 1px solid #35404d; border-radius: 10px; background: #0e1116; }
+.neon-cart__quantity button { padding: 0; border: 0; color: #a9b4c2; background: transparent; cursor: pointer; }
+.neon-cart__quantity output { display: grid; place-items: center; color: #f7f5f0; font-size: 13px; }
+.neon-cart__line-price { margin-top: 2px; color: #28d7be; font: 650 14px/1.3 Sora, sans-serif; white-space: nowrap; }
+.neon-cart__remove { display: block; margin-top: 16px; padding: 0; border: 0; color: #8793a3; background: transparent; font: 500 10px/1 'IBM Plex Mono', monospace; text-decoration: underline; cursor: pointer; }
+.neon-cart__footer { padding: 22px 24px calc(22px + env(safe-area-inset-bottom)); border-top: 1px solid #2c3744; background: #151b24; }
+.neon-cart__subtotal { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
+.neon-cart__subtotal span { color: #dce2e8; font-size: 14px; }
+.neon-cart__subtotal strong { color: #28d7be; font: 700 22px/1 Sora, sans-serif; }
+.neon-cart__footer > p { margin: 8px 0 18px; color: #8793a3; font-size: 11px; }
+.neon-cart__checkout, .neon-cart__continue { display: flex; width: 100%; min-height: 50px; align-items: center; justify-content: center; gap: 10px; border-radius: 999px; font-size: 14px; font-weight: 650; text-decoration: none; }
+.neon-cart__checkout { color: #07110f; background: #28d7be; }
+.neon-cart__continue { margin-top: 10px; border: 1px solid #35404d; color: #f7f5f0; background: transparent; cursor: pointer; }
+.neon-cart__error { padding: 12px; border: 1px solid #87503f; border-radius: 12px; color: #ffb29f; background: #301c18; font-size: 13px; }
+
+@keyframes neon-cart-slide-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes neon-cart-slide-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
+@keyframes neon-cart-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes neon-cart-fade-out { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 520px) {
+  .neon-cart__header, .neon-cart__body, .neon-cart__footer { padding-inline: 18px; }
+  .neon-cart__item { grid-template-columns: 76px minmax(0, 1fr); }
+  .neon-cart__image { width: 76px; }
+  .neon-cart__line { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .neon-cart__line-price { margin: 0; }
+  .neon-cart__remove { margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-cart::backdrop, .neon-cart__panel, .neon-cart.is-closing .neon-cart__panel, .neon-cart.is-closing::backdrop { animation-duration: .01ms; }
+}
+
+html[data-tcg-theme='light'] .neon-cart {
+  color: var(--tcg-text);
+}
+
+html[data-tcg-theme='light'] .neon-cart__panel,
+html[data-tcg-theme='light'] .neon-cart__footer {
+  color: var(--tcg-text);
+  background: var(--tcg-surface);
+  border-color: var(--tcg-border);
+}
+
+html[data-tcg-theme='light'] .neon-cart__header,
+html[data-tcg-theme='light'] .neon-cart__item,
+html[data-tcg-theme='light'] .neon-cart__footer {
+  border-color: var(--tcg-border);
+}
+
+html[data-tcg-theme='light'] .neon-cart__header h2,
+html[data-tcg-theme='light'] .neon-cart__empty strong,
+html[data-tcg-theme='light'] .neon-cart__title,
+html[data-tcg-theme='light'] .neon-cart__quantity output,
+html[data-tcg-theme='light'] .neon-cart__continue {
+  color: var(--tcg-text);
+}
+
+html[data-tcg-theme='light'] .neon-cart__close,
+html[data-tcg-theme='light'] .neon-cart__quantity,
+html[data-tcg-theme='light'] .neon-cart__image {
+  color: var(--tcg-text);
+  background: var(--tcg-bg);
+  border-color: var(--tcg-border);
+}
+
+html[data-tcg-theme='light'] .neon-cart__variant,
+html[data-tcg-theme='light'] .neon-cart__remove,
+html[data-tcg-theme='light'] .neon-cart__footer > p {
+  color: var(--tcg-muted);
+}
+
+html[data-tcg-theme='light'] .neon-cart__checkout {
+  color: #07110f !important;
+  background: var(--tcg-accent);
+}
+
+/* The light drawer keeps a dark checkout dock for visual anchoring. */
+html[data-tcg-theme='light'] .neon-cart__footer {
+  color: #e8f3f1;
+  background: #0b0f14;
+  border-color: #2a3743;
+}
+
+html[data-tcg-theme='light'] .neon-cart__footer .neon-cart__continue {
+  color: #e8f3f1 !important;
+  border-color: #35404d;
+}
+
+html[data-tcg-theme='light'] .neon-cart__footer .neon-cart__subtotal span {
+  color: #dce2e8;
+}

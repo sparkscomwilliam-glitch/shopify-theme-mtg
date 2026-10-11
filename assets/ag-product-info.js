@@ -311,6 +311,13 @@
         drawer.open();
         return true;
       }
+      const neonDrawer = document.querySelector('neon-cart-drawer');
+      if (neonDrawer && typeof neonDrawer.open === 'function') {
+        neonDrawer.open();
+        return true;
+      }
+      document.dispatchEvent(new CustomEvent('neon:cart:open'));
+      if (document.querySelector('[data-neon-cart-dialog]')) return true;
       return false;
     }
 
@@ -376,11 +383,9 @@
         );
 
         // Explicitly open the cart drawer — bypasses the `auto-open` attribute
-        // (which depends on the theme's `auto_open_cart_drawer` setting).
-        // Fallback: if no drawer exists on this page, redirect to /cart.
-        if (!this.openCartDrawer()) {
-          window.location.href = (window.Theme && window.Theme.routes && window.Theme.routes.cart_url) || '/cart';
-        }
+        // (which depends on the theme's `auto_open_cart_drawer` setting). The
+        // storefront deliberately never redirects an add-to-cart to /cart.
+        this.openCartDrawer();
       } catch (error) {
         console.error('[ag-product-info] add to cart failed:', error);
         this.showCtaError('Network error. Please retry.');

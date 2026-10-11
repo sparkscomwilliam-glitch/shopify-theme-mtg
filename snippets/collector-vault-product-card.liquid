@@ -1,0 +1,65 @@
+{% liquid
+  assign card_product = product
+  assign card_url = routes.all_products_collection_url
+  assign card_title = fallback_title
+  assign card_price = fallback_price
+  assign selected_variant = blank
+
+  if card_product != blank
+    assign card_url = card_product.url
+    assign card_title = card_product.title
+    assign card_price = card_product.price | money
+    assign selected_variant = card_product.selected_or_first_available_variant
+  endif
+
+  assign form_id = 'CollectorVaultProductForm-' | append: section_id | append: '-' | append: card_index
+%}
+
+<article class="cv-product-card{% if highlight %} cv-product-card--highlight{% endif %}" {{ block_attributes }}>
+  <a class="cv-product-card__media" href="{{ card_url }}" aria-label="{{ card_title | escape }}">
+    {% if card_product.featured_image %}
+      {{ card_product.featured_image
+        | image_url: width: 900
+        | image_tag:
+          loading: 'lazy',
+          widths: '320, 480, 640, 900',
+          sizes: '(max-width: 749px) 78vw, (max-width: 1099px) 42vw, 22vw',
+          alt: card_product.featured_image.alt | default: card_title
+      }}
+    {% else %}
+      <span class="cv-product-card__placeholder" aria-hidden="true"><span></span></span>
+    {% endif %}
+  </a>
+
+  {% if eyebrow != blank %}<p class="cv-kicker cv-product-card__eyebrow">{{ eyebrow }}</p>{% endif %}
+
+  <div class="cv-product-card__title-row">
+    <h3><a href="{{ card_url }}">{{ card_title | default: 'Produit Collector Vault' }}</a></h3>
+    {% if card_price != blank %}<p>{{ card_price }}</p>{% endif %}
+  </div>
+
+  {% if chip_1 != blank or chip_2 != blank %}
+    <div class="cv-chip-row">
+      {% if chip_1 != blank %}<span class="cv-chip">{{ chip_1 }}</span>{% endif %}
+      {% if chip_2 != blank %}<span class="cv-chip">{{ chip_2 }}</span>{% endif %}
+    </div>
+  {% endif %}
+
+  {% if card_product != blank and selected_variant != blank %}
+    <product-form-component data-section-id="{{ section_id }}" class="cv-product-card__form">
+      {% form 'product', card_product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+        <button
+          class="cv-button cv-button--primary cv-product-card__button add-to-cart-button"
+          type="submit"
+          name="add"
+          {% unless selected_variant.available %}disabled{% endunless %}
+        >
+          {% if selected_variant.available %}{{ button_label | default: 'Ajouter au panier' }}{% else %}Indisponible{% endif %}
+        </button>
+      {% endform %}
+    </product-form-component>
+  {% else %}
+    <a class="cv-button cv-button--primary cv-product-card__button" href="{{ card_url }}">{{ button_label | default: 'Voir le catalogue' }}</a>
+  {% endif %}
+</article>

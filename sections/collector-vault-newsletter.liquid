@@ -1,0 +1,61 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cv-section cv-newsletter"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultNewsletter-{{ section.id }}"
+>
+  <div class="cv-inner">
+    <div class="cv-newsletter__panel">
+      <div class="cv-newsletter__copy">
+        <p class="cv-kicker">{{ section.settings.kicker }}</p>
+        <h2 id="CollectorVaultNewsletter-{{ section.id }}">{{ section.settings.heading }}</h2>
+        <p>{{ section.settings.text }}</p>
+      </div>
+
+      <div>
+        {% form 'customer', class: 'cv-newsletter__form' %}
+          <div class="cv-newsletter__form-row">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label class="visually-hidden" for="CollectorVaultEmail-{{ section.id }}">{{ section.settings.email_label }}</label>
+            <input
+              class="cv-newsletter__input"
+              id="CollectorVaultEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              autocomplete="email"
+              placeholder="{{ section.settings.placeholder }}"
+              required
+            >
+            <button class="cv-button cv-button--large cv-button--primary" type="submit">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></button>
+          </div>
+          {% if form.posted_successfully? %}<p class="cv-newsletter__message" role="status">{{ section.settings.success_message }}</p>{% endif %}
+          {% if form.errors %}<div class="cv-newsletter__message cv-newsletter__message--error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Newsletter",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "PRIVATE VAULT / EARLY ACCESS" },
+    { "type": "textarea", "id": "heading", "label": "Titre", "default": "Entrez dans le vault avant les prochains arrivages." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Sélections certifiées, nouveaux grades et pièces uniques — en priorité." },
+    { "type": "text", "id": "email_label", "label": "Libellé du champ", "default": "Adresse e-mail" },
+    { "type": "text", "id": "placeholder", "label": "Texte du champ", "default": "votre@email.ch" },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "M’alerter" },
+    { "type": "text", "id": "success_message", "label": "Message de confirmation", "default": "Vous êtes maintenant inscrit au Private Vault." },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#0b0f14" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "presets": [{ "name": "Vault — Newsletter" }]
+}
+{% endschema %}

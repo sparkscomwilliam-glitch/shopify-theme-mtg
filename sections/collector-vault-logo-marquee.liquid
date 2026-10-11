@@ -1,0 +1,99 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+{{ 'collector-vault-home-enhancements.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cv-section cv-logo-marquee"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }}; --cv-marquee-speed: {{ section.settings.mobile_speed }}s;"
+  aria-labelledby="CollectorVaultLogos-{{ section.id }}"
+>
+  <div class="cv-logo-marquee__inner">
+    <div class="cv-logo-marquee__heading-wrap">
+      {% if section.settings.kicker != blank %}<p class="cv-kicker">{{ section.settings.kicker }}</p>{% endif %}
+      <h2 id="CollectorVaultLogos-{{ section.id }}">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="cv-logo-marquee__viewport" aria-label="{{ section.settings.accessibility_label | escape }}">
+      <div class="cv-logo-marquee__track">
+        {% for duplicate in (1..2) %}
+          <div class="cv-logo-marquee__set"{% if duplicate == 2 %} aria-hidden="true"{% endif %}>
+            {% for block in section.blocks %}
+              {% capture logo_content %}
+                {% if block.settings.svg_code != blank %}
+                  <span class="cv-logo-marquee__svg" aria-hidden="true">{{ block.settings.svg_code }}</span>
+                {% elsif block.settings.logo_image != blank %}
+                  {{ block.settings.logo_image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '140, 240, 360', alt: block.settings.logo_alt }}
+                {% else %}
+                  <span class="cv-logo-marquee__wordmark">{{ block.settings.logo_text }}</span>
+                {% endif %}
+              {% endcapture %}
+
+              {% if block.settings.link != blank %}
+                <a
+                  class="cv-logo-marquee__item cv-logo-marquee__item--{{ block.settings.accent }}"
+                  href="{{ block.settings.link }}"
+                  {% if duplicate == 1 %}{{ block.shopify_attributes }}{% endif %}
+                  {% if duplicate == 2 %}tabindex="-1"{% endif %}
+                  aria-label="{{ block.settings.logo_alt | default: block.settings.logo_text | escape }}"
+                >{{ logo_content }}</a>
+              {% else %}
+                <div
+                  class="cv-logo-marquee__item cv-logo-marquee__item--{{ block.settings.accent }}"
+                  {% if duplicate == 1 %}{{ block.shopify_attributes }}{% endif %}
+                >{{ logo_content }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Logos défilants",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "DISCOVER / BY UNIVERSE" },
+    { "type": "textarea", "id": "heading", "label": "Titre", "default": "Les univers majeurs de la collection." },
+    { "type": "text", "id": "accessibility_label", "label": "Description accessible", "default": "Univers disponibles dans le catalogue" },
+    { "type": "range", "id": "mobile_speed", "label": "Vitesse mobile", "min": 12, "max": 50, "step": 2, "unit": "s", "default": 26 },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#151c24" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo / univers",
+      "limit": 10,
+      "settings": [
+        { "type": "textarea", "id": "svg_code", "label": "Code SVG (prioritaire)", "info": "Collez ici le SVG complet. Il remplace automatiquement l’image et le texte." },
+        { "type": "image_picker", "id": "logo_image", "label": "Image ou SVG importé" },
+        { "type": "text", "id": "logo_text", "label": "Nom de secours", "default": "TCG UNIVERSE" },
+        { "type": "text", "id": "logo_alt", "label": "Description du logo", "default": "Univers TCG" },
+        { "type": "url", "id": "link", "label": "Lien" },
+        { "type": "select", "id": "accent", "label": "Lueur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" },
+          { "value": "violet", "label": "Violet" },
+          { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Logos défilants",
+      "blocks": [
+        { "type": "logo", "settings": { "logo_text": "POKÉMON", "logo_alt": "Pokémon", "accent": "teal" } },
+        { "type": "logo", "settings": { "logo_text": "ONE PIECE", "logo_alt": "One Piece", "accent": "violet" } },
+        { "type": "logo", "settings": { "logo_text": "YU-GI-OH!", "logo_alt": "Yu-Gi-Oh!", "accent": "hot" } },
+        { "type": "logo", "settings": { "logo_text": "LORCANA", "logo_alt": "Lorcana", "accent": "violet" } },
+        { "type": "logo", "settings": { "logo_text": "MAGIC", "logo_alt": "Magic", "accent": "teal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

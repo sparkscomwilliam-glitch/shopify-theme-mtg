@@ -1,341 +1,145 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
 {
   "sections": {
-    "ag_hero_modern_9VwLRz": {
-      "type": "ag-hero-modern",
-      "blocks": {
-        "benefice_Y6kNg8": {
-          "type": "benefice",
-          "settings": {
-            "benefit_text": "Livraison Gratuite"
-          }
-        },
-        "benefice_wFnVBJ": {
-          "type": "benefice",
-          "settings": {
-            "benefit_text": "Qualité Premium"
-          }
-        },
-        "benefice_3yP3zc": {
-          "type": "benefice",
-          "settings": {
-            "benefit_text": "Support 24/7"
-          }
-        },
-        "benefice_7DQkTn": {
-          "type": "benefice",
-          "settings": {
-            "benefit_text": "Retours Gratuits"
-          }
-        }
-      },
-      "block_order": [
-        "benefice_Y6kNg8",
-        "benefice_wFnVBJ",
-        "benefice_3yP3zc",
-        "benefice_7DQkTn"
-      ],
-      "name": "AG Hero Modern",
+    "vault_hero": {
+      "type": "collector-vault-hero",
       "settings": {
-        "bg_color": "#f4f4f4",
-        "text_color": "#111111",
-        "title_font": "playfair_display_n4",
-        "trust_text": "<p>Plus de 10 000 clients satisfaits</p>",
-        "title": "Élevez Votre Quotidien",
-        "subtitle": "Découvrez notre nouvelle collection pensée pour l'élégance et le confort absolu.",
-        "btn_text": "Découvrir la collection",
-        "btn_link": "shopify://products/t-shirt-blue",
-        "image_desktop": "shopify://shop_images/jaimerai-cr-er-une-image-graphique-de-montagne-avec-des-reflet-de-couch-de-soleil.png",
-        "image_mobile": "shopify://shop_images/jaimerai-cr-er-une-image-graphique-de-montagne-avec-des-reflet-de-couch-de-soleil.png"
-      }
+        "kicker": "COLLECTOR VAULT · CERTIFIED · CURATED",
+        "heading": "Des pièces choisies. Des preuves visibles. Une collection maîtrisée.",
+        "text": "<p>Explorez une sélection plus courte de cartes gradées, produits scellés et protections pensées pour durer.</p>",
+        "primary_label": "Voir les pièces certifiées",
+        "primary_link": "",
+        "secondary_label": "Découvrir le scellé",
+        "secondary_link": "",
+        "trust_line": "✦ STOCK SUISSE   ✦ EXPÉDITION SUIVIE   ✦ PAIEMENT SÉCURISÉ",
+        "mobile_text": "<p>Explorez une sélection de cartes gradées, produits scellés et protections pensées pour durer.</p>",
+        "mobile_search_label": "Rechercher",
+        "mobile_search_placeholder": "Search for products...",
+        "mobile_trust_line": "EXPÉDITION SUIVIE ✦ PAIEMENTS SÉCURISÉ",
+        "stage_label": "Sélection Collector Vault",
+        "featured_product": "",
+        "feature_title": "Aurora Fragment · Certified 10",
+        "feature_price": "CHF 389.00",
+        "feature_note": "Exemplaire unique · authentifié · expédition sous 24 h",
+        "background": "#0b0f14",
+        "surface": "#151c24",
+        "accent": "#26e6c5",
+        "secondary": "#8b7cff",
+        "hot": "#ff6b4a"
+      },
+      "blocks": {
+        "hero_left": { "type": "specimen", "settings": { "product": "", "label": "SEALED / JP", "title": "NEON BURST", "accent": "violet" } },
+        "hero_center": { "type": "specimen", "settings": { "product": "", "label": "GRADED / 10", "title": "PRISM SPECIMEN", "accent": "teal" } },
+        "hero_right": { "type": "specimen", "settings": { "product": "", "label": "BOOSTER / EN", "title": "VOID ARCHIVE", "accent": "hot" } }
+      },
+      "block_order": ["hero_left", "hero_center", "hero_right"]
     },
-    "hero_jVaWmY": {
-      "type": "hero",
-      "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
-          "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground-heading)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
-          "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-secondary",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
+    "vault_graded": {
+      "type": "collector-vault-logo-marquee",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-6",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
-      }
+        "kicker": "DISCOVER / BY UNIVERSE",
+        "heading": "Les univers majeurs de la collection.",
+        "accessibility_label": "Univers disponibles dans le catalogue",
+        "mobile_speed": 26,
+        "background": "#151c24",
+        "surface": "#151c24",
+        "accent": "#26e6c5",
+        "secondary": "#8b7cff",
+        "hot": "#ff6b4a"
+      },
+      "blocks": {
+        "logo_pokemon": { "type": "logo", "settings": { "svg_code": "", "logo_image": "", "logo_text": "POKÉMON", "logo_alt": "Pokémon", "link": "", "accent": "teal" } },
+        "logo_onepiece": { "type": "logo", "settings": { "svg_code": "", "logo_image": "", "logo_text": "ONE PIECE", "logo_alt": "One Piece", "link": "", "accent": "violet" } },
+        "logo_yugioh": { "type": "logo", "settings": { "svg_code": "", "logo_image": "", "logo_text": "YU-GI-OH!", "logo_alt": "Yu-Gi-Oh!", "link": "", "accent": "hot" } },
+        "logo_lorcana": { "type": "logo", "settings": { "svg_code": "", "logo_image": "", "logo_text": "LORCANA", "logo_alt": "Lorcana", "link": "", "accent": "violet" } },
+        "logo_magic": { "type": "logo", "settings": { "svg_code": "", "logo_image": "", "logo_text": "MAGIC", "logo_alt": "Magic", "link": "", "accent": "teal" } }
+      },
+      "block_order": ["logo_pokemon", "logo_onepiece", "logo_yugioh", "logo_lorcana", "logo_magic"]
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "vault_benefits": {
+      "type": "collector-vault-benefits",
+      "settings": { "accessibility_label": "Services de la boutique", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" },
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
-          "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
-        },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 4,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
-        }
+        "benefit_stock": { "type": "benefit", "settings": { "icon": "✓", "title": "Stock contrôlé", "text": "Chaque produit est vérifié avant sa mise en ligne.", "accent": "teal" } },
+        "benefit_payment": { "type": "benefit", "settings": { "icon": "✦", "title": "Paiements suisses", "text": "TWINT, cartes et solutions de paiement sécurisées.", "accent": "violet" } },
+        "benefit_shipping": { "type": "benefit", "settings": { "icon": "→", "title": "Livraison suivie", "text": "Expédition rapide depuis la Suisse, avec suivi.", "accent": "hot" } }
       },
-      "name": "Featured collection",
+      "block_order": ["benefit_stock", "benefit_payment", "benefit_shipping"]
+    },
+    "vault_curated": {
+      "type": "collector-vault-curated",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      }
+        "kicker": "CURATED RELEASES / SEALED",
+        "heading": "Le scellé sélectionné pour durer.",
+        "description": "Des sorties choisies pour la collection, la conservation et l’ouverture réfléchie.",
+        "show_action": true,
+        "action_label": "Voir tous les produits",
+        "action_link": "",
+        "background": "#151c24",
+        "surface": "#151c24",
+        "accent": "#26e6c5",
+        "secondary": "#8b7cff",
+        "hot": "#ff6b4a"
+      },
+      "blocks": {
+        "curated_1": { "type": "product", "settings": { "product": "", "fallback_title": "Neon Rift Booster Box", "fallback_price": "CHF 129.90", "eyebrow": "SEALED / EN", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": true, "button_label": "Ajouter au panier" } },
+        "curated_2": { "type": "product", "settings": { "product": "", "fallback_title": "Arc Pulse Trainer Box", "fallback_price": "CHF 79.90", "eyebrow": "SEALED / JP", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } },
+        "curated_3": { "type": "product", "settings": { "product": "", "fallback_title": "Prism Specimen", "fallback_price": "CHF 149.00", "eyebrow": "GRADED / 10", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } },
+        "curated_4": { "type": "product", "settings": { "product": "", "fallback_title": "Vault Binder 360", "fallback_price": "CHF 49.90", "eyebrow": "PROTECTION / 360", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } }
+      },
+      "block_order": ["curated_1", "curated_2", "curated_3", "curated_4"]
+    },
+    "vault_universes": {
+      "type": "collector-vault-universes",
+      "settings": { "kicker": "SHOP / PAR UNIVERS", "heading": "Trouvez votre prochain drop.", "description": "Scellé, singles et produits de collection : commencez par votre univers favori.", "background": "#0b0f14", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" },
+      "blocks": {
+        "universe_1": { "type": "universe", "settings": { "collection": "", "link": "", "number": "01 / TCG", "title": "Pokémon", "description": "Displays, ETB, boosters et singles sélectionnés.", "action": "Explorer", "accent": "teal" } },
+        "universe_2": { "type": "universe", "settings": { "collection": "", "link": "", "number": "02 / TCG", "title": "One Piece", "description": "Nouveaux sets, displays et cartes japonaises.", "action": "Explorer", "accent": "violet" } },
+        "universe_3": { "type": "universe", "settings": { "collection": "", "link": "", "number": "03 / TCG", "title": "Yu-Gi-Oh!", "description": "Boosters, decks et pièces pour collectionneurs.", "action": "Explorer", "accent": "hot" } },
+        "universe_4": { "type": "universe", "settings": { "collection": "", "link": "", "number": "04 / TCG", "title": "Lorcana", "description": "Produits scellés et essentiels de jeu.", "action": "Explorer", "accent": "violet" } },
+        "universe_5": { "type": "universe", "settings": { "collection": "", "link": "", "number": "05 / TCG", "title": "Magic", "description": "Sets, bundles et accessoires de table.", "action": "Explorer", "accent": "hot" } },
+        "universe_6": { "type": "universe", "settings": { "collection": "", "link": "", "number": "06 / GEAR", "title": "Accessoires", "description": "Sleeves, binders, toploaders et rangement.", "action": "Explorer", "accent": "teal" } }
+      },
+      "block_order": ["universe_1", "universe_2", "universe_3", "universe_4", "universe_5", "universe_6"]
+    },
+    "vault_goals": {
+      "type": "collector-vault-goals",
+      "settings": { "kicker": "ACCESSOIRES / PAR USAGE", "heading": "Protégez selon votre façon de collectionner.", "description": "Jouer, classer ou exposer : chaque besoin mène directement aux bons formats.", "background": "#151c24", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" },
+      "blocks": {
+        "goal_play": { "type": "goal", "settings": { "collection": "", "link": "", "number": "01 / PLAY", "title": "Jouer", "description": "Sleeves, deck boxes et tapis pensés pour le jeu quotidien.", "action": "Choisir mon équipement", "accent": "teal" } },
+        "goal_archive": { "type": "goal", "settings": { "collection": "", "link": "", "number": "02 / ARCHIVE", "title": "Classer", "description": "Binders, intercalaires et stockage pour suivre vos sets.", "action": "Organiser ma collection", "accent": "violet" } },
+        "goal_display": { "type": "goal", "settings": { "collection": "", "link": "", "number": "03 / DISPLAY", "title": "Exposer", "description": "Magnetic holders, stands et protections UV pour vos pièces fortes.", "action": "Créer ma vitrine", "accent": "hot" } }
+      },
+      "block_order": ["goal_play", "goal_archive", "goal_display"]
+    },
+    "vault_offers": {
+      "type": "collector-vault-private-offers",
+      "settings": { "kicker": "PREORDER / RELEASE 18.10.26", "heading": "Réservez le prochain set avant le drop.", "text": "<p>Quantités annoncées, date de sortie visible et expédition organisée dès réception du stock.</p>", "meta": "LANGUE / EN · DISPLAY / 24 PACKS · EXPÉDITION / JOUR DE SORTIE", "button_label": "Voir les précommandes", "button_link": "", "background": "#0b0f14", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" },
+      "blocks": {
+        "offer_singles": { "type": "offer", "settings": { "kicker": "SINGLES / FILTRES", "title": "Cartes à l’unité, sans hasard.", "text": "Filtrez par langue, rareté et état.", "action": "Explorer les singles", "link": "", "accent": "teal" } },
+        "offer_buyback": { "type": "offer", "settings": { "kicker": "BUYBACK / ESTIMATION", "title": "Transformez vos doubles.", "text": "Estimation claire et offre de reprise.", "action": "Vendre mes cartes", "link": "", "accent": "hot" } }
+      },
+      "block_order": ["offer_singles", "offer_buyback"]
+    },
+    "vault_essentials": {
+      "type": "collector-vault-essentials",
+      "settings": { "kicker": "BEST SELLERS / CETTE SEMAINE", "heading": "Les choix de la communauté.", "description": "Des essentiels souvent ajoutés au panier, du booster à la protection longue durée.", "show_action": true, "action_label": "Voir tous les produits", "action_link": "", "background": "#0b0f14", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" },
+      "blocks": {
+        "essential_1": { "type": "product", "settings": { "product": "", "fallback_title": "Stellar Load Booster", "fallback_price": "CHF 7.90", "eyebrow": "BOOSTER / EN", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } },
+        "essential_2": { "type": "product", "settings": { "product": "", "fallback_title": "Eclipse Binder 480", "fallback_price": "CHF 59.90", "eyebrow": "BINDER / 480", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": true, "button_label": "Ajouter au panier" } },
+        "essential_3": { "type": "product", "settings": { "product": "", "fallback_title": "Magnetic Holder", "fallback_price": "CHF 4.90", "eyebrow": "DISPLAY / 35PT", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } },
+        "essential_4": { "type": "product", "settings": { "product": "", "fallback_title": "Deck Vault 100+", "fallback_price": "CHF 18.90", "eyebrow": "STORAGE / 100+", "chip_1": "63 × 88 MM", "chip_2": "SLEEVED", "highlight": false, "button_label": "Ajouter au panier" } }
+      },
+      "block_order": ["essential_1", "essential_2", "essential_3", "essential_4"]
+    },
+    "vault_newsletter": {
+      "type": "collector-vault-newsletter",
+      "settings": { "kicker": "PRIVATE VAULT / EARLY ACCESS", "heading": "Entrez dans le vault avant les prochains arrivages.", "text": "Sélections certifiées, nouveaux grades et pièces uniques — en priorité.", "email_label": "Adresse e-mail", "placeholder": "votre@email.ch", "button_label": "M’alerter", "success_message": "Vous êtes maintenant inscrit au Private Vault.", "background": "#0b0f14", "surface": "#151c24", "accent": "#26e6c5", "secondary": "#8b7cff", "hot": "#ff6b4a" }
     }
   },
-  "order": [
-    "ag_hero_modern_9VwLRz",
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
-  ]
+  "order": ["vault_hero", "vault_graded", "vault_benefits", "vault_curated", "vault_universes", "vault_goals", "vault_offers", "vault_essentials", "vault_newsletter"]
 }

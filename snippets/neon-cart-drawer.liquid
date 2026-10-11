@@ -1,0 +1,29 @@
+{{ 'neon-cart-drawer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'neon-cart-drawer.js' | asset_url }}" defer></script>
+
+<neon-cart-drawer data-cart-url="{{ routes.cart_url }}" data-cart-add-url="{{ routes.cart_add_url }}">
+  <dialog id="NeonCartDrawer" class="neon-cart" data-neon-cart-dialog aria-labelledby="NeonCartDrawerTitle">
+    <div class="neon-cart__panel">
+      <header class="neon-cart__header">
+        <div>
+          <p>NEON SPECIMEN</p>
+          <h2 id="NeonCartDrawerTitle">Votre panier <span data-neon-cart-heading-count></span></h2>
+        </div>
+        <button type="button" class="neon-cart__close" data-neon-cart-close aria-label="Fermer le panier">×</button>
+      </header>
+
+      <div class="neon-cart__body" data-neon-cart-items aria-live="polite" aria-busy="true"></div>
+
+      <footer class="neon-cart__footer" data-neon-cart-footer hidden>
+        <div class="neon-cart__subtotal">
+          <span>Sous-total</span>
+          <strong data-neon-cart-subtotal></strong>
+        </div>
+        <p>Taxes et frais d’expédition calculés au paiement.</p>
+        <a class="neon-cart__checkout" href="/checkout">Finaliser la commande <span aria-hidden="true">↗</span></a>
+        <button class="neon-cart__continue" type="button" data-neon-cart-close>Continuer mes achats</button>
+      </footer>
+    </div>
+  </dialog>
+  <div class="visually-hidden" data-neon-cart-live aria-live="polite" aria-atomic="true"></div>
+</neon-cart-drawer>

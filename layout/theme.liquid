@@ -6,6 +6,24 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          theme = localStorage.getItem('nwe12-tcg-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        } catch (_) {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.tcgTheme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+    {{ 'tcg-theme.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'tcg-theme-toggle.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
@@ -135,5 +153,7 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+    {% render 'neon-cart-drawer' %}
   </body>
 </html>

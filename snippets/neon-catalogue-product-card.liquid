@@ -1,0 +1,92 @@
+{%- comment -%}
+  Product card used by the Neon Specimen collection catalogue.
+
+  Accepts:
+  - product: Shopify product object
+  - section_id: parent section id
+  - card_index: unique index in the current page
+  - show_vendor: boolean
+  - show_quick_add: boolean
+{%- endcomment -%}
+
+{%- liquid
+  assign card_variant = product.selected_or_first_available_variant
+  assign form_id = 'NeonCatalogueProductForm-' | append: section_id | append: '-' | append: card_index
+  assign card_meta = product.type
+  if show_vendor and product.vendor != blank
+    assign card_meta = product.vendor
+  endif
+  if card_meta == blank
+    assign card_meta = 'Collector item'
+  endif
+-%}
+
+<article class="neon-product-card" data-product-id="{{ product.id }}">
+  <a class="neon-product-card__media" href="{{ product.url | within: collection }}" aria-label="{{ product.title | escape }}">
+    {%- if product.featured_image -%}
+      {{- product.featured_image
+        | image_url: width: 900
+        | image_tag:
+          loading: 'lazy',
+          widths: '240, 360, 480, 640, 900',
+          sizes: '(max-width: 749px) 46vw, (max-width: 1099px) 31vw, 23vw',
+          alt: product.featured_image.alt | default: product.title
+      -}}
+    {%- else -%}
+      <span class="neon-product-card__placeholder" aria-hidden="true">
+        <span></span>
+      </span>
+    {%- endif -%}
+
+    {%- if product.available == false -%}
+      <span class="neon-product-card__badge neon-product-card__badge--sold">Épuisé</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="neon-product-card__badge">Drop</span>
+    {%- endif -%}
+  </a>
+
+  <div class="neon-product-card__content">
+    <p class="neon-product-card__meta">{{ card_meta | escape }}</p>
+    <div class="neon-product-card__heading">
+      <h2><a href="{{ product.url | within: collection }}">{{ product.title }}</a></h2>
+      <div class="neon-product-card__price">
+        {%- if product.price_varies -%}<span class="neon-product-card__from">Dès</span>{%- endif -%}
+        <strong>{{ product.price | money }}</strong>
+        {%- if product.compare_at_price > product.price -%}
+          <s>{{ product.compare_at_price | money }}</s>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if product.tags.size > 0 -%}
+      <div class="neon-product-card__chips" aria-label="Caractéristiques">
+        {%- for tag in product.tags limit: 2 -%}<span>{{ tag | escape }}</span>{%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if show_quick_add and card_variant != blank and product.variants_count == 1 -%}
+      <product-form-component
+        class="neon-product-card__form"
+        data-section-id="{{ section_id }}"
+        data-product-id="{{ product.id }}"
+        on:submit="/handleSubmit"
+      >
+        <span class="visually-hidden" aria-live="assertive" role="status" aria-atomic="true" ref="liveRegion"></span>
+        {%- form 'product', product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input type="hidden" name="id" ref="variantId" value="{{ card_variant.id }}"{% unless card_variant.available %} disabled{% endunless %}>
+          <input type="hidden" name="quantity" value="1">
+          {%- render 'add-to-cart-button',
+            add_to_cart_text: 'Ajouter au panier',
+            class: 'neon-product-card__button add-to-cart-button',
+            can_add_to_cart: card_variant.available,
+            product: product
+          -%}
+        {%- endform -%}
+      </product-form-component>
+    {%- else -%}
+      <a class="neon-product-card__button" href="{{ product.url | within: collection }}">
+        {%- if product.available -%}Choisir les options{%- else -%}Voir le produit{%- endif -%}
+      </a>
+    {%- endif -%}
+  </div>
+</article>

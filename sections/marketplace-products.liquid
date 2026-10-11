@@ -1,0 +1,59 @@
+{% assign marketplace_products = collections.all.products %}
+
+<section class="lab-products lab-products--{{ section.id }}">
+  <div class="lab-products__shell">
+    <div class="lab-products__heading">
+      <div>
+        <span class="lab-mono lab-kicker"><span></span> Catalogue indexé</span>
+        <h2>Objets de protection<br>et d’organisation.</h2>
+      </div>
+      <a href="{{ routes.all_products_collection_url }}" class="lab-products__all">Voir tout le catalogue <span>→</span></a>
+    </div>
+
+    <div class="lab-products__grid">
+      {% for product in marketplace_products limit: 8 %}
+        <article class="lab-product-card">
+          <a href="{{ product.url }}" class="lab-product-card__media">
+            <span class="lab-product-card__index lab-mono">OBJ / {{ forloop.index | prepend: '0' }}</span>
+            {% if product.featured_image %}
+              {{ product.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '320, 480, 640, 800', sizes: '(max-width: 749px) 100vw, 33vw', alt: product.title }}
+            {% else %}
+              {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'lab-product-placeholder' }}
+            {% endif %}
+          </a>
+          <div class="lab-product-card__body">
+            <span class="lab-mono">FICHE PRODUIT</span>
+            <div class="lab-product-card__row">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+              <strong>{{ product.price | money }}</strong>
+            </div>
+            <div class="lab-product-card__footer">
+              <span>Dimensions et compatibilité sur la fiche</span>
+              <a href="{{ product.url }}" aria-label="Voir la fiche de {{ product.title }}">↗</a>
+            </div>
+          </div>
+        </article>
+      {% else %}
+        {% for i in (1..3) %}
+          <article class="lab-product-card lab-product-card--empty">
+            <div class="lab-product-card__media"><span class="lab-product-card__index lab-mono">OBJ / 0{{ i }}</span>{{ 'product-' | append: i | placeholder_svg_tag: 'lab-product-placeholder' }}</div>
+            <div class="lab-product-card__body"><span class="lab-mono">EMPLACEMENT PRODUIT</span><div class="lab-product-card__row"><span>Votre prochain objet</span></div></div>
+          </article>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    <div class="lab-products__cta">
+      <div><span class="lab-mono">COLLECTOR LAB / SYSTÈME</span><h2>Construisez une collection<br>plus simple à comprendre.</h2></div>
+      <a href="{{ routes.all_products_collection_url }}" class="lab-button lab-button--primary">Explorer le catalogue <span>↗</span></a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Produits Collector Lab",
+  "settings": [],
+  "presets": [{ "name": "Produits Collector Lab" }]
+}
+{% endschema %}

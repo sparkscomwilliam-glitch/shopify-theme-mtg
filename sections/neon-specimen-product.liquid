@@ -1,0 +1,312 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign collection_title = section.settings.breadcrumb_collection
+  if collection_title == blank
+    assign collection_title = product.collections.first.title | default: 'Catalogue'
+  endif
+  assign product_description = section.settings.description_override
+  if product_description == blank
+    assign product_description = product.description | strip_html | truncatewords: 36
+  endif
+  assign product_form_id = 'NeonProductForm-' | append: section.id
+%}
+
+{{ 'neon-specimen-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'neon-specimen-product.js' | asset_url }}" defer></script>
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+<neon-product
+  class="ns-product"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
+  data-locale="{{ request.locale.iso_code | default: 'fr-CH' | escape }}"
+  data-in-stock-label="{{ section.settings.in_stock_label | escape }}"
+  data-sold-out-label="{{ section.settings.sold_out_label | escape }}"
+  data-add-label="{{ section.settings.add_to_cart_label | escape }}"
+>
+  <nav class="ns-product__breadcrumb" aria-label="Fil d’Ariane">
+    <a href="{{ routes.root_url }}">Accueil</a>
+    <span aria-hidden="true">/</span>
+    {% if product.collections.first != blank %}
+      <a href="{{ product.collections.first.url }}">{{ collection_title }}</a>
+    {% else %}
+      <a href="{{ routes.all_products_collection_url }}">{{ collection_title }}</a>
+    {% endif %}
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{{ product.title }}</span>
+  </nav>
+
+  <div class="ns-product__layout">
+    <section class="ns-product__gallery" aria-label="Médias de {{ product.title | escape }}">
+      <div class="ns-product__stage" data-neon-stage>
+        <span class="ns-product__glow ns-product__glow--teal" aria-hidden="true"></span>
+        <span class="ns-product__glow ns-product__glow--violet" aria-hidden="true"></span>
+        <span class="ns-product__view-count" data-neon-view-count>
+          VUE 01 / {{ product.images.size | at_least: 1 | prepend: '0' | slice: -2, 2 }}
+        </span>
+
+        {% if featured_media != blank %}
+          <button
+            class="ns-product__main-media"
+            type="button"
+            data-neon-zoom-open
+            aria-label="Agrandir l’image de {{ product.title | escape }}"
+          >
+            {{
+              featured_media.preview_image
+              | image_url: width: 1400
+              | image_tag:
+                widths: '420, 640, 900, 1200, 1400',
+                sizes: '(min-width: 990px) 620px, (min-width: 750px) 52vw, 92vw',
+                loading: 'eager',
+                fetchpriority: 'high',
+                alt: featured_media.alt | default: product.title,
+                data-neon-main-image: ''
+            }}
+          </button>
+          {% if section.settings.show_zoom %}
+            <button class="ns-product__zoom-chip" type="button" data-neon-zoom-open>
+              <span aria-hidden="true">＋</span> AGRANDIR
+            </button>
+          {% endif %}
+        {% else %}
+          <div class="ns-product__main-media ns-product__main-media--placeholder">
+            {{ 'product-1' | placeholder_svg_tag: 'ns-product__placeholder' }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if product.media.size > 1 %}
+        <div class="ns-product__thumbnails" role="group" aria-label="Choisir une vue">
+          {% for media in product.media %}
+            {% if media.media_type == 'image' %}
+              <button
+                class="ns-product__thumbnail{% if media.id == featured_media.id %} is-active{% endif %}"
+                type="button"
+                data-neon-thumbnail
+                data-media-index="{{ forloop.index }}"
+                data-media-id="{{ media.id }}"
+                data-media-src="{{ media.preview_image | image_url: width: 1400 }}"
+                data-media-alt="{{ media.alt | default: product.title | escape }}"
+                aria-label="Afficher la vue {{ forloop.index }}"
+                aria-pressed="{% if media.id == featured_media.id %}true{% else %}false{% endif %}"
+              >
+                {{
+                  media.preview_image
+                  | image_url: width: 240
+                  | image_tag: loading: 'lazy', widths: '120, 180, 240', sizes: '150px', alt: media.alt
+                }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="ns-product__purchase" aria-labelledby="NeonProductTitle-{{ section.id }}">
+      <div class="ns-product__status-row">
+        <span class="ns-product__chip ns-product__chip--stock" data-neon-stock-chip>
+          {% if current_variant.available %}
+            {{ section.settings.in_stock_label }}{% if current_variant.inventory_quantity > 0 %} · STOCK {{ current_variant.inventory_quantity }}{% endif %}
+          {% else %}
+            {{ section.settings.sold_out_label }}
+          {% endif %}
+        </span>
+        {% if section.settings.authenticity_label != blank %}
+          <span class="ns-product__chip ns-product__chip--auth">{{ section.settings.authenticity_label }}</span>
+        {% endif %}
+      </div>
+
+      <p class="ns-product__eyebrow">
+        {{ section.settings.archive_label }}
+        {% if current_variant.sku != blank %} / <span data-neon-sku>{{ current_variant.sku }}</span>{% endif %}
+      </p>
+
+      <h1 id="NeonProductTitle-{{ section.id }}">{{ product.title }}</h1>
+
+      <div class="ns-product__price-row">
+        <span class="ns-product__price" data-neon-price>{{ current_variant.price | money_with_currency }}</span>
+        <s class="ns-product__compare{% unless current_variant.compare_at_price > current_variant.price %} is-hidden{% endunless %}" data-neon-compare>
+          {{ current_variant.compare_at_price | money_with_currency }}
+        </s>
+        {% if section.settings.tax_label != blank %}
+          <span class="ns-product__chip ns-product__chip--tax">{{ section.settings.tax_label }}</span>
+        {% endif %}
+      </div>
+
+      {% if product_description != blank %}
+        <div class="ns-product__description rte">{{ product_description }}</div>
+      {% endif %}
+
+      <div class="ns-product__divider"></div>
+
+      {% form 'product', product, id: product_form_id, data-neon-product-form: 'true' %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-neon-variant-id>
+
+        {% unless product.has_only_default_variant %}
+          <div class="ns-product__options">
+            {% for option in product.options_with_values %}
+              <fieldset class="ns-product__option" data-neon-option-group data-option-position="{{ option.position }}">
+                <legend>{{ option.name }}</legend>
+                <div class="ns-product__option-values">
+                  {% for value in option.values %}
+                    {% assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index %}
+                    <input
+                      class="visually-hidden"
+                      type="radio"
+                      id="{{ input_id }}"
+                      name="options[{{ option.name | escape }}]"
+                      value="{{ value | escape }}"
+                      {% if option.selected_value == value %}checked{% endif %}
+                      data-neon-option
+                    >
+                    <label for="{{ input_id }}">{{ value }}</label>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            {% endfor %}
+          </div>
+        {% endunless %}
+
+        <div class="ns-product__buy-row">
+          <div class="ns-product__quantity" data-neon-quantity>
+            <button type="button" data-neon-quantity-minus aria-label="Réduire la quantité">−</button>
+            <label class="visually-hidden" for="NeonQuantity-{{ section.id }}">Quantité</label>
+            <input
+              id="NeonQuantity-{{ section.id }}"
+              type="number"
+              name="quantity"
+              value="{{ current_variant.quantity_rule.min | default: 1 }}"
+              min="{{ current_variant.quantity_rule.min | default: 1 }}"
+              step="{{ current_variant.quantity_rule.increment | default: 1 }}"
+              {% if current_variant.quantity_rule.max %}max="{{ current_variant.quantity_rule.max }}"{% endif %}
+              inputmode="numeric"
+              data-neon-quantity-input
+            >
+            <button type="button" data-neon-quantity-plus aria-label="Augmenter la quantité">＋</button>
+          </div>
+          <button
+            type="submit"
+            class="ns-product__add"
+            data-neon-add
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            <span data-neon-add-label>
+              {% if current_variant.available %}{{ section.settings.add_to_cart_label }}{% else %}{{ section.settings.sold_out_label }}{% endif %}
+            </span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+
+        <p class="ns-product__form-error" data-neon-form-error role="alert" hidden></p>
+      {% endform %}
+
+      {% if section.settings.collection_cta_label != blank %}
+        <a class="ns-product__secondary" href="{{ section.settings.collection_cta_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.collection_cta_label }}
+        </a>
+      {% endif %}
+
+      <ul class="ns-product__proofs" role="list">
+        {% for block in section.blocks %}
+          {% if block.type == 'proof' and block.settings.text != blank %}
+            <li {{ block.shopify_attributes }}><span aria-hidden="true">✓</span>{{ block.settings.text }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  {% assign info_blocks = section.blocks | where: 'type', 'information' %}
+  {% if info_blocks.size > 0 %}
+    <section class="ns-product__information" aria-label="Informations produit">
+      {% for block in info_blocks %}
+        <article class="ns-product__information-card" {{ block.shopify_attributes }}>
+          {% if block.settings.kicker != blank %}<p>{{ block.settings.kicker }}</p>{% endif %}
+          <h2>{{ block.settings.heading }}</h2>
+          <div class="rte">{{ block.settings.content }}</div>
+          {% if block.settings.meta_label != blank or block.settings.meta_value != blank %}
+            <dl>
+              <dt>{{ block.settings.meta_label }}</dt>
+              <dd>{{ block.settings.meta_value }}</dd>
+            </dl>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <script type="application/json" data-neon-variants>{{ product.variants | json }}</script>
+
+  {% if featured_media != blank and section.settings.show_zoom %}
+    <dialog class="ns-product__zoom-dialog" data-neon-zoom-dialog aria-label="Image agrandie de {{ product.title | escape }}">
+      <button type="button" class="ns-product__zoom-close" data-neon-zoom-close aria-label="Fermer l’image agrandie">×</button>
+      {{
+        featured_media.preview_image
+        | image_url: width: 2400
+        | image_tag: loading: 'lazy', widths: '900, 1400, 1800, 2400', sizes: '92vw', alt: featured_media.alt | default: product.title, data-neon-zoom-image: ''
+      }}
+    </dialog>
+  {% endif %}
+</neon-product>
+
+{% schema %}
+{
+  "name": "Produit Neon Specimen",
+  "tag": "section",
+  "class": "ns-product-section",
+  "settings": [
+    { "type": "text", "id": "breadcrumb_collection", "label": "Libellé de collection", "default": "Pièces gradées" },
+    { "type": "text", "id": "in_stock_label", "label": "Badge en stock", "default": "PIÈCE DISPONIBLE" },
+    { "type": "text", "id": "sold_out_label", "label": "Badge épuisé", "default": "ÉPUISÉ" },
+    { "type": "text", "id": "authenticity_label", "label": "Badge authenticité", "default": "AUTHENTICITÉ VÉRIFIÉE" },
+    { "type": "text", "id": "archive_label", "label": "Métadonnée au-dessus du titre", "default": "NEON ARCHIVE" },
+    { "type": "richtext", "id": "description_override", "label": "Description courte personnalisée" },
+    { "type": "text", "id": "tax_label", "label": "Badge fiscal", "default": "TVA INCLUSE" },
+    { "type": "text", "id": "add_to_cart_label", "label": "Bouton ajouter", "default": "Ajouter au panier" },
+    { "type": "text", "id": "collection_cta_label", "label": "Bouton secondaire", "default": "Voir toute la collection" },
+    { "type": "url", "id": "collection_cta_link", "label": "Lien du bouton secondaire" },
+    { "type": "checkbox", "id": "show_zoom", "label": "Activer l’agrandissement", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "proof",
+      "name": "Preuve d’achat",
+      "limit": 5,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Texte", "default": "Expédition assurée depuis la Suisse" }
+      ]
+    },
+    {
+      "type": "information",
+      "name": "Carte d’information",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "PROOF BLOCK" },
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Condition documentée" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Ajoutez ici la provenance, les mesures ou les détails de protection du produit.</p>" },
+        { "type": "text", "id": "meta_label", "label": "Libellé technique", "default": "SOURCE" },
+        { "type": "text", "id": "meta_value", "label": "Valeur technique", "default": "Vérifiée" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Produit Neon Specimen",
+      "blocks": [
+        { "type": "proof", "settings": { "text": "Expédition assurée depuis la Suisse" } },
+        { "type": "proof", "settings": { "text": "Retour sous 14 jours · emballage scellé" } },
+        { "type": "proof", "settings": { "text": "Rapport d’état inclus avant expédition" } },
+        { "type": "information", "settings": { "kicker": "PROVENANCE", "heading": "Une traçabilité claire", "content": "<p>Documentez l’origine, l’édition et les éléments d’authentification de cette pièce.</p>", "meta_label": "STATUT", "meta_value": "Vérifié" } },
+        { "type": "information", "settings": { "kicker": "CONDITION", "heading": "État observé", "content": "<p>Présentez les bords, la surface, le centrage et les limites visibles sans jargon inutile.</p>", "meta_label": "RAPPORT", "meta_value": "Inclus" } },
+        { "type": "information", "settings": { "kicker": "PROTECTION", "heading": "Transport maîtrisé", "content": "<p>Précisez la méthode de protection, de scellement et les conditions de retour.</p>", "meta_label": "NIVEAU", "meta_value": "Collection" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

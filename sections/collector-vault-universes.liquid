@@ -1,0 +1,87 @@
+{{ 'collector-vault-sections.css' | asset_url | stylesheet_tag }}
+{{ 'collector-vault-home-enhancements.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cv-section cv-category-section"
+  style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
+  aria-labelledby="CollectorVaultHeading-{{ section.id }}"
+>
+  <div class="cv-inner">
+    {% render 'collector-vault-section-header',
+      section_id: section.id,
+      kicker: section.settings.kicker,
+      title: section.settings.heading,
+      description: section.settings.description,
+      show_action: false
+    %}
+
+    <div class="cv-category-grid">
+      {% for block in section.blocks limit: 6 %}
+        {% render 'collector-vault-category-card',
+          collection: block.settings.collection,
+          link: block.settings.link,
+          number: block.settings.number,
+          title: block.settings.title,
+          description: block.settings.description,
+          action: block.settings.action,
+          accent: block.settings.accent,
+          logo_svg: block.settings.logo_svg,
+          logo_image: block.settings.logo_image,
+          logo_alt: block.settings.logo_alt,
+          block_attributes: block.shopify_attributes
+        %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vault — Univers",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "SHOP / PAR UNIVERS" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Trouvez votre prochain drop." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Scellé, singles et produits de collection : commencez par votre univers favori." },
+    { "type": "header", "content": "Couleurs" },
+    { "type": "color", "id": "background", "label": "Fond", "default": "#0b0f14" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#151c24" },
+    { "type": "color", "id": "accent", "label": "Accent principal", "default": "#26e6c5" },
+    { "type": "color", "id": "secondary", "label": "Accent secondaire", "default": "#8b7cff" },
+    { "type": "color", "id": "hot", "label": "Accent chaud", "default": "#ff6b4a" }
+  ],
+  "blocks": [
+    {
+      "type": "universe",
+      "name": "Univers",
+      "limit": 6,
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection Shopify" },
+        { "type": "url", "id": "link", "label": "Lien personnalisé" },
+        { "type": "text", "id": "number", "label": "Index", "default": "01 / TCG" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Pokémon" },
+        { "type": "textarea", "id": "logo_svg", "label": "Code SVG du logo (prioritaire)", "info": "Si renseigné, le logo SVG remplace le titre." },
+        { "type": "image_picker", "id": "logo_image", "label": "Image / logo", "info": "Utilisée si aucun code SVG n’est renseigné." },
+        { "type": "text", "id": "logo_alt", "label": "Description du logo" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Displays, ETB, boosters et singles sélectionnés." },
+        { "type": "text", "id": "action", "label": "Action", "default": "Explorer" },
+        { "type": "select", "id": "accent", "label": "Couleur", "default": "teal", "options": [
+          { "value": "teal", "label": "Turquoise" }, { "value": "violet", "label": "Violet" }, { "value": "hot", "label": "Corail" }
+        ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vault — Univers",
+      "blocks": [
+        { "type": "universe", "settings": { "number": "01 / TCG", "title": "Pokémon", "description": "Displays, ETB, boosters et singles sélectionnés.", "accent": "teal" } },
+        { "type": "universe", "settings": { "number": "02 / TCG", "title": "One Piece", "description": "Nouveaux sets, displays et cartes japonaises.", "accent": "violet" } },
+        { "type": "universe", "settings": { "number": "03 / TCG", "title": "Yu-Gi-Oh!", "description": "Boosters, decks et pièces pour collectionneurs.", "accent": "hot" } },
+        { "type": "universe", "settings": { "number": "04 / TCG", "title": "Lorcana", "description": "Produits scellés et essentiels de jeu.", "accent": "violet" } },
+        { "type": "universe", "settings": { "number": "05 / TCG", "title": "Magic", "description": "Sets, bundles et accessoires de table.", "accent": "hot" } },
+        { "type": "universe", "settings": { "number": "06 / GEAR", "title": "Accessoires", "description": "Sleeves, binders, toploaders et rangement.", "accent": "teal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

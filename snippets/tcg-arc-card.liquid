@@ -1,0 +1,38 @@
+{%- liquid
+  assign card_title = 'Ajoutez un objet'
+  assign card_price = 'Bientôt disponible'
+  assign card_url = routes.all_products_collection_url
+  assign card_image = blank
+
+  if product != blank
+    assign card_title = product.title
+    assign card_price = product.price | money
+    assign card_url = product.url
+    assign card_image = product.featured_image
+  endif
+
+  if image_override != blank
+    assign card_image = image_override
+  endif
+-%}
+
+<button
+  type="button"
+  class="tcg-arc-card{% if product == blank %} tcg-arc-card--placeholder{% endif %}"
+  data-tcg-card
+  data-title="{{ card_title | escape }}"
+  data-price="{{ card_price | escape }}"
+  data-url="{{ card_url }}"
+  aria-label="{{ card_title | escape }} — {{ card_price | escape }}"
+  {% if block != blank %}{{ block.shopify_attributes }}{% endif %}
+>
+  <span class="tcg-arc-card__frame">
+    {% if card_image != blank %}
+      {{ card_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(max-width: 749px) 68vw, 20vw', alt: card_title }}
+    {% else %}
+      {% assign placeholder_name = 'product-' | append: placeholder_index %}
+      {{ placeholder_name | placeholder_svg_tag: 'tcg-arc-card__placeholder' }}
+      <span class="tcg-arc-card__empty-copy"><strong>Votre objet</strong><small>Sélectionnez un produit</small></span>
+    {% endif %}
+  </span>
+</button>

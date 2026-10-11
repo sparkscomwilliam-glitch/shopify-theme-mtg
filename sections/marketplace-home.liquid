@@ -1,0 +1,276 @@
+{% liquid
+  assign marketplace_products = collections.all.products
+  assign featured_product = marketplace_products.first
+%}
+
+<section class="mp-home mp-home--{{ section.id }}">
+  <div class="mp-shell">
+    <div class="mp-hero">
+      <div class="mp-hero__content">
+        <div class="mp-eyebrow"><span class="mp-eyebrow__dot"></span>{{ section.settings.eyebrow }}</div>
+        <h1>{{ section.settings.heading }}</h1>
+        <p class="mp-hero__lead">{{ section.settings.subheading }}</p>
+
+        <form action="{{ routes.search_url }}" method="get" role="search" class="mp-search">
+          <label class="visually-hidden" for="MarketplaceSearch-{{ section.id }}">Rechercher dans la boutique</label>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="MarketplaceSearch-{{ section.id }}" type="search" name="q" placeholder="Rechercher un produit, une catégorie…" autocomplete="off">
+          <input type="hidden" name="type" value="product">
+          <button type="submit">Rechercher</button>
+        </form>
+
+        <div class="mp-popular">
+          <span>Populaire :</span>
+          <a href="{{ routes.all_products_collection_url }}">Nouveautés</a>
+          <a href="{{ routes.all_products_collection_url }}?sort_by=best-selling">Meilleures ventes</a>
+          <a href="{{ routes.all_products_collection_url }}?sort_by=price-ascending">Petits prix</a>
+        </div>
+      </div>
+
+      <div class="mp-hero__visual">
+        <div class="mp-hero__glow mp-hero__glow--one"></div>
+        <div class="mp-hero__glow mp-hero__glow--two"></div>
+        <div class="mp-hero__card">
+          <div class="mp-hero__card-top"><span>Choix du moment</span><span class="mp-pill">Tendance</span></div>
+          {% if featured_product != blank %}
+            <a href="{{ featured_product.url }}" class="mp-hero__product">
+              {% if featured_product.featured_image %}
+                {{ featured_product.featured_image | image_url: width: 900 | image_tag: loading: 'eager', widths: '360, 540, 720, 900', sizes: '(max-width: 749px) 80vw, 38vw', alt: featured_product.title }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'mp-placeholder' }}
+              {% endif %}
+            </a>
+            <div class="mp-hero__product-info">
+              <div><span class="mp-kicker">Produit vedette</span><h2>{{ featured_product.title }}</h2></div>
+              <span class="mp-price">{{ featured_product.price | money }}</span>
+            </div>
+          {% else %}
+            <div class="mp-hero__product mp-hero__product--empty">{{ 'product-1' | placeholder_svg_tag: 'mp-placeholder' }}</div>
+            <div class="mp-hero__product-info"><div><span class="mp-kicker">Bientôt disponible</span><h2>Votre prochain favori</h2></div></div>
+          {% endif %}
+        </div>
+        <div class="mp-float-card mp-float-card--rating"><strong>4.9/5</strong><span>★★★★★</span><small>Acheteurs satisfaits</small></div>
+        <div class="mp-float-card mp-float-card--delivery"><span class="mp-float-card__icon">↗</span><div><strong>Expédition rapide</strong><small>Suivi inclus</small></div></div>
+      </div>
+    </div>
+
+    <div class="mp-benefits" aria-label="Nos services">
+      <div class="mp-benefit"><span>🚚</span><div><strong>Livraison suivie</strong><small>Partout en Suisse</small></div></div>
+      <div class="mp-benefit"><span>↩</span><div><strong>Retours faciles</strong><small>30 jours pour changer d’avis</small></div></div>
+      <div class="mp-benefit"><span>🔒</span><div><strong>Paiement sécurisé</strong><small>Vos données sont protégées</small></div></div>
+      <div class="mp-benefit"><span>✦</span><div><strong>Sélection soignée</strong><small>Des produits choisis pour vous</small></div></div>
+    </div>
+
+    <div class="mp-section mp-categories">
+      <div class="mp-section__heading">
+        <div><span class="mp-overline">Explorez</span><h2>Achetez par catégorie</h2></div>
+        <a href="{{ routes.collections_url }}" class="mp-text-link">Toutes les catégories <span>→</span></a>
+      </div>
+
+      <div class="mp-category-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            {% liquid
+              assign category_collection = block.settings.collection
+              assign category_link = routes.all_products_collection_url
+              if category_collection != blank
+                assign category_link = category_collection.url
+              endif
+            %}
+            <a class="mp-category-card mp-category-card--{{ forloop.index }}" href="{{ category_link }}" {{ block.shopify_attributes }}>
+              <div class="mp-category-card__top"><span class="mp-category-card__icon">{{ block.settings.icon }}</span><span class="mp-category-card__arrow">↗</span></div>
+              <div><h3>{{ block.settings.title }}</h3><p>{{ block.settings.caption }}</p></div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mp-promo">
+      <div class="mp-promo__copy">
+        <span class="mp-promo__badge">OFFRE DE BIENVENUE</span>
+        <h2>De belles découvertes,<br>à prix juste.</h2>
+        <p>Explorez notre sélection et trouvez le produit fait pour vous.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="mp-button mp-button--light">Découvrir la sélection <span>→</span></a>
+      </div>
+      <div class="mp-promo__art" aria-hidden="true">
+        <span class="mp-orbit mp-orbit--one"></span><span class="mp-orbit mp-orbit--two"></span>
+        <span class="mp-promo__spark mp-promo__spark--one">✦</span><span class="mp-promo__spark mp-promo__spark--two">✦</span>
+        <strong>NWE<span>12</span></strong>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% style %}
+  .mp-home--{{ section.id }} {
+    --mp-navy: #10253f; --mp-blue: #2d6cdf; --mp-orange: #ff7a45; --mp-cream: #f6f3ed; --mp-ink: #152033; --mp-muted: #667085; --mp-line: #e7e9ed;
+    color: var(--mp-ink); background: #fff; font-family: var(--font-body--family);
+  }
+  .mp-home--{{ section.id }} *, .mp-home--{{ section.id }} *::before, .mp-home--{{ section.id }} *::after { box-sizing: border-box; }
+  .mp-shell { width: min(100% - 36px, 1380px); margin-inline: auto; }
+  .mp-hero { min-height: 620px; margin-top: 22px; display: grid; grid-template-columns: 1.03fr .97fr; background: var(--mp-cream); border-radius: 28px; overflow: hidden; }
+  .mp-hero__content { display: flex; flex-direction: column; justify-content: center; padding: 74px 5.5vw; position: relative; z-index: 2; }
+  .mp-eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 750; color: var(--mp-blue); margin-bottom: 22px; }
+  .mp-eyebrow__dot { width: 8px; height: 8px; background: var(--mp-orange); border-radius: 999px; box-shadow: 0 0 0 5px rgba(255,122,69,.13); }
+  .mp-hero h1 { max-width: 720px; margin: 0; color: var(--mp-navy); font-size: clamp(48px, 5.4vw, 82px); line-height: .98; letter-spacing: -.055em; text-wrap: balance; }
+  .mp-hero__lead { max-width: 600px; margin: 26px 0 32px; color: var(--mp-muted); font-size: clamp(16px, 1.5vw, 20px); line-height: 1.55; }
+  .mp-search { width: min(100%, 650px); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px; background: #fff; padding: 8px 8px 8px 20px; border: 1px solid rgba(16,37,63,.08); border-radius: 16px; box-shadow: 0 16px 40px rgba(16,37,63,.09); }
+  .mp-search svg { color: #667085; }
+  .mp-search input { width: 100%; min-width: 0; height: 48px; border: 0; outline: 0; background: transparent; font: inherit; color: var(--mp-ink); }
+  .mp-search button { height: 48px; border: 0; border-radius: 11px; background: var(--mp-navy); color: #fff; padding: 0 24px; font-weight: 750; cursor: pointer; }
+  .mp-popular { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 19px; font-size: 12px; color: var(--mp-muted); }
+  .mp-popular a { color: var(--mp-navy); text-underline-offset: 3px; }
+  .mp-hero__visual { position: relative; min-height: 620px; display: grid; place-items: center; background: var(--mp-navy); overflow: hidden; }
+  .mp-hero__visual::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.13) 1px, transparent 1px); background-size: 22px 22px; mask-image: linear-gradient(to bottom, black, transparent 92%); }
+  .mp-hero__glow { position: absolute; border-radius: 50%; filter: blur(4px); opacity: .9; }
+  .mp-hero__glow--one { width: 300px; height: 300px; background: var(--mp-blue); top: -90px; right: -80px; }
+  .mp-hero__glow--two { width: 210px; height: 210px; background: var(--mp-orange); bottom: -70px; left: -40px; }
+  .mp-hero__card { position: relative; z-index: 1; width: min(70%, 440px); padding: 16px; background: rgba(255,255,255,.98); border-radius: 24px; box-shadow: 0 34px 90px rgba(0,0,0,.28); transform: rotate(2deg); }
+  .mp-hero__card-top { display: flex; justify-content: space-between; align-items: center; padding: 2px 3px 14px; color: var(--mp-muted); font-size: 12px; font-weight: 700; }
+  .mp-pill { padding: 5px 9px; border-radius: 999px; color: #fff; background: var(--mp-orange); }
+  .mp-hero__product { display: block; height: 330px; border-radius: 16px; overflow: hidden; background: #f2f4f7; }
+  .mp-hero__product img, .mp-placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mp-hero__product-info { display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; padding: 17px 4px 2px; }
+  .mp-hero__product-info h2 { margin: 2px 0 0; color: var(--mp-navy); font-size: 20px; letter-spacing: -.02em; }
+  .mp-kicker { color: var(--mp-muted); text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-weight: 800; }
+  .mp-price { color: var(--mp-blue); font-weight: 800; white-space: nowrap; }
+  .mp-float-card { position: absolute; z-index: 3; display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 14px; box-shadow: 0 16px 50px rgba(0,0,0,.24); color: var(--mp-navy); }
+  .mp-float-card small { display: block; color: var(--mp-muted); font-size: 10px; }
+  .mp-float-card--rating { top: 13%; left: 4%; padding: 12px 15px; flex-wrap: wrap; width: 155px; }
+  .mp-float-card--rating span { color: #ffb224; font-size: 10px; letter-spacing: 1px; }
+  .mp-float-card--rating small { width: 100%; }
+  .mp-float-card--delivery { bottom: 12%; right: 3%; padding: 12px 14px; }
+  .mp-float-card__icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: #eaf1ff; color: var(--mp-blue); font-weight: 900; }
+  .mp-benefits { margin-top: 22px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border: 1px solid var(--mp-line); border-radius: 18px; overflow: hidden; background: var(--mp-line); }
+  .mp-benefit { min-height: 104px; display: flex; align-items: center; gap: 15px; padding: 20px 24px; background: #fff; }
+  .mp-benefit > span { display: grid; place-items: center; width: 43px; height: 43px; flex: 0 0 auto; border-radius: 12px; background: #f4f7fb; font-size: 20px; color: var(--mp-blue); }
+  .mp-benefit strong, .mp-benefit small { display: block; }
+  .mp-benefit strong { font-size: 14px; color: var(--mp-navy); }
+  .mp-benefit small { margin-top: 2px; color: var(--mp-muted); font-size: 11px; }
+  .mp-section { padding: 88px 0 0; }
+  .mp-section__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+  .mp-section__heading h2, .mp-final-cta h2, .mp-promo h2 { margin: 6px 0 0; color: var(--mp-navy); font-size: clamp(31px, 3.2vw, 48px); line-height: 1.08; letter-spacing: -.04em; }
+  .mp-overline { color: var(--mp-blue); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; }
+  .mp-text-link { display: inline-flex; align-items: center; gap: 9px; color: var(--mp-navy); font-size: 13px; font-weight: 750; text-decoration: none; }
+  .mp-text-link span { display: grid; place-items: center; width: 28px; height: 28px; background: var(--mp-cream); border-radius: 50%; transition: transform .2s ease; }
+  .mp-text-link:hover span { transform: translateX(3px); }
+  .mp-category-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .mp-category-card { min-height: 205px; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; color: var(--mp-navy); text-decoration: none; border-radius: 18px; transition: transform .22s ease, box-shadow .22s ease; }
+  .mp-category-card:hover { transform: translateY(-5px); box-shadow: 0 18px 35px rgba(16,37,63,.10); }
+  .mp-category-card--1 { background: #e8f0ff; } .mp-category-card--2 { background: #fff0e9; } .mp-category-card--3 { background: #eaf7f0; }
+  .mp-category-card--4 { background: #f4edff; } .mp-category-card--5 { background: #fff8df; } .mp-category-card--6 { background: #e8f7f8; }
+  .mp-category-card__top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .mp-category-card__icon { font-size: 36px; line-height: 1; }
+  .mp-category-card__arrow { display: grid; place-items: center; width: 29px; height: 29px; background: rgba(255,255,255,.7); border-radius: 50%; }
+  .mp-category-card h3 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+  .mp-category-card p { margin: 5px 0 0; color: var(--mp-muted); font-size: 11px; line-height: 1.4; }
+  .mp-promo { position: relative; min-height: 400px; margin-top: 88px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border-radius: 24px; color: #fff; background: var(--mp-blue); }
+  .mp-promo__copy { padding: 60px 6vw; position: relative; z-index: 2; }
+  .mp-promo h2 { color: #fff; }
+  .mp-promo p { max-width: 520px; margin: 18px 0 28px; color: rgba(255,255,255,.8); font-size: 16px; }
+  .mp-promo__badge { display: inline-block; padding: 7px 10px; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; font-size: 10px; letter-spacing: .12em; font-weight: 800; }
+  .mp-button { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 50px; padding: 0 22px; border-radius: 12px; font-weight: 800; font-size: 13px; text-decoration: none; transition: transform .2s ease; }
+  .mp-button:hover { transform: translateY(-2px); }
+  .mp-button--light { background: #fff; color: var(--mp-blue); }
+  .mp-button--dark { background: var(--mp-navy); color: #fff; }
+  .mp-promo__art { position: relative; display: grid; place-items: center; background: rgba(16,37,63,.24); overflow: hidden; }
+  .mp-promo__art strong { position: relative; z-index: 2; font-size: clamp(54px, 7vw, 105px); letter-spacing: -.07em; color: #fff; transform: rotate(-7deg); text-shadow: 0 18px 45px rgba(0,0,0,.2); }
+  .mp-promo__art strong span { color: var(--mp-orange); }
+  .mp-orbit { position: absolute; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; transform: rotate(-25deg); }
+  .mp-orbit--one { width: 420px; height: 210px; } .mp-orbit--two { width: 550px; height: 280px; }
+  .mp-promo__spark { position: absolute; color: #ffd277; font-size: 32px; }
+  .mp-promo__spark--one { top: 22%; right: 18%; } .mp-promo__spark--two { bottom: 18%; left: 15%; font-size: 20px; }
+  .mp-product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .mp-product-card { min-width: 0; border: 1px solid var(--mp-line); border-radius: 18px; overflow: hidden; background: #fff; transition: transform .22s ease, box-shadow .22s ease; }
+  .mp-product-card:hover { transform: translateY(-4px); box-shadow: 0 18px 45px rgba(16,37,63,.09); }
+  .mp-product-card__media { position: relative; display: block; aspect-ratio: 1 / 1; overflow: hidden; background: #f5f6f7; }
+  .mp-product-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+  .mp-product-card:hover .mp-product-card__media img { transform: scale(1.035); }
+  .mp-sale-badge, .mp-new-badge { position: absolute; z-index: 2; top: 13px; left: 13px; padding: 6px 9px; border-radius: 8px; color: #fff; font-size: 10px; font-weight: 800; }
+  .mp-sale-badge { background: var(--mp-orange); } .mp-new-badge { background: var(--mp-blue); }
+  .mp-product-card__body { padding: 17px; }
+  .mp-stars { color: #ffad19; font-size: 10px; letter-spacing: 1px; }
+  .mp-stars span { color: var(--mp-muted); letter-spacing: 0; }
+  .mp-product-card__title { display: block; min-height: 42px; margin: 8px 0 14px; color: var(--mp-navy); font-size: 15px; font-weight: 700; line-height: 1.35; text-decoration: none; }
+  .mp-product-card__bottom { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+  .mp-product-card__price { display: flex; flex-wrap: wrap; gap: 5px 9px; align-items: center; }
+  .mp-product-card__price strong { color: var(--mp-navy); font-size: 16px; }
+  .mp-product-card__price s { color: var(--mp-muted); font-size: 11px; }
+  .mp-product-card__action { display: grid; place-items: center; flex: 0 0 auto; width: 35px; height: 35px; border-radius: 10px; color: #fff; background: var(--mp-navy); font-size: 22px; line-height: 1; text-decoration: none; }
+  .mp-final-cta { margin: 88px 0 34px; padding: 54px 5vw; display: flex; align-items: center; justify-content: space-between; gap: 35px; border-radius: 24px; background: var(--mp-cream); }
+  .mp-final-cta h2 { font-size: clamp(30px, 3.5vw, 52px); }
+
+  @media (max-width: 1100px) {
+    .mp-hero { grid-template-columns: 1fr 1fr; }
+    .mp-hero__content { padding: 54px 4vw; }
+    .mp-category-grid { grid-template-columns: repeat(3, 1fr); }
+    .mp-benefits { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .mp-shell { width: min(100% - 24px, 1380px); }
+    .mp-hero { min-height: 0; grid-template-columns: 1fr; border-radius: 20px; }
+    .mp-hero__content { padding: 42px 22px 32px; }
+    .mp-hero h1 { font-size: clamp(43px, 13vw, 62px); }
+    .mp-hero__lead { margin: 18px 0 24px; }
+    .mp-search { grid-template-columns: auto 1fr; padding: 7px 15px; }
+    .mp-search button { grid-column: 1 / -1; width: 100%; }
+    .mp-popular { display: none; }
+    .mp-hero__visual { min-height: 470px; }
+    .mp-hero__card { width: min(76%, 390px); }
+    .mp-hero__product { height: 245px; }
+    .mp-float-card--rating { top: 6%; left: 3%; }
+    .mp-float-card--delivery { bottom: 7%; right: 2%; }
+    .mp-benefits { grid-template-columns: 1fr 1fr; }
+    .mp-benefit { min-height: 92px; padding: 15px; gap: 10px; }
+    .mp-benefit > span { width: 36px; height: 36px; font-size: 17px; }
+    .mp-benefit small { display: none; }
+    .mp-section { padding-top: 66px; }
+    .mp-section__heading { align-items: center; }
+    .mp-section__heading h2 { font-size: 31px; }
+    .mp-category-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .mp-category-card { min-height: 165px; padding: 16px; }
+    .mp-category-card__icon { font-size: 30px; }
+    .mp-promo { min-height: 0; margin-top: 66px; grid-template-columns: 1fr; }
+    .mp-promo__copy { padding: 44px 24px; }
+    .mp-promo__art { min-height: 260px; }
+    .mp-product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .mp-product-card__body { padding: 12px; }
+    .mp-product-card__title { font-size: 13px; }
+    .mp-product-card__price strong { font-size: 14px; }
+    .mp-final-cta { margin-top: 66px; padding: 38px 24px; align-items: flex-start; flex-direction: column; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Accueil marketplace",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "La marketplace des belles découvertes" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Tout ce qu’il vous faut, au même endroit." },
+    { "type": "textarea", "id": "subheading", "label": "Sous-titre", "default": "Des produits utiles, inspirants et soigneusement sélectionnés pour chaque moment du quotidien." }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Catégorie",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icône", "default": "✦" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "Catégorie" },
+        { "type": "text", "id": "caption", "label": "Description", "default": "Découvrez la sélection" },
+        { "type": "collection", "id": "collection", "label": "Collection" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accueil marketplace",
+      "blocks": [
+        { "type": "category" }, { "type": "category" }, { "type": "category" },
+        { "type": "category" }, { "type": "category" }, { "type": "category" }
+      ]
+    }
+  ]
+}
+{% endschema %}
