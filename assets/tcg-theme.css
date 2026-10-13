@@ -1,40 +1,40 @@
 :root,
 :root[data-tcg-theme='light'] {
   color-scheme: light;
-  --tcg-bg: #eef3f2;
-  --tcg-bg-rgb: 238 243 242;
+  --tcg-bg: #f4f7f6;
+  --tcg-bg-rgb: 244 247 246;
   --tcg-surface: #ffffff;
   --tcg-surface-rgb: 255 255 255;
-  --tcg-surface-soft: #e2eae8;
-  --tcg-text: #0d2026;
-  --tcg-text-rgb: 13 32 38;
-  --tcg-muted: #4c6269;
-  --tcg-border: #bdcbc8;
-  --tcg-accent: #10b29f;
-  --tcg-accent-rgb: 16 178 159;
-  --tcg-accent-text: #067467;
-  --tcg-accent-copy: #067467;
+  --tcg-surface-soft: #eaf0ef;
+  --tcg-text: #102128;
+  --tcg-text-rgb: 16 33 40;
+  --tcg-muted: #597078;
+  --tcg-border: #d7e1df;
+  --tcg-accent: #0faf9b;
+  --tcg-accent-rgb: 15 175 155;
+  --tcg-accent-text: #087f72;
+  --tcg-accent-copy: #087f72;
   --tcg-accent-hover: #0b9786;
   --tcg-accent-contrast: #07110f;
-  --tcg-violet: #7567f0;
-  --tcg-violet-rgb: 117 103 240;
+  --tcg-violet: #6b5ce7;
+  --tcg-violet-rgb: 107 92 231;
   --tcg-violet-copy: #4c3fc4;
-  --tcg-gold: #7567f0;
-  --tcg-hot: #f56f52;
-  --tcg-hot-rgb: 245 111 82;
+  --tcg-gold: #6b5ce7;
+  --tcg-hot: #ff7a59;
+  --tcg-hot-rgb: 255 122 89;
   --tcg-hot-copy: #a93b25;
   --tcg-footer-bg: #0b0f14;
   --tcg-footer-text: #e8f3f1;
   --tcg-footer-muted: #91a5aa;
-  --tcg-selected: #d7f2ed;
-  --tcg-shadow: 0 20px 56px rgb(13 32 38 / 0.14);
-  --tcg-holo: linear-gradient(120deg, #10b29f 0%, #7567f0 52%, #f56f52 100%);
-  --tcg-category-1: #d9efeb;
-  --tcg-category-2: #e6e2fa;
-  --tcg-category-3: #f3e1dc;
-  --tcg-category-4: #dce9ec;
-  --tcg-category-5: #e5e4f8;
-  --tcg-category-6: #dcece7;
+  --tcg-selected: #e4f7f3;
+  --tcg-shadow: 0 20px 56px rgb(16 33 40 / 0.11);
+  --tcg-holo: linear-gradient(120deg, #0faf9b 0%, #6b5ce7 52%, #ff7a59 100%);
+  --tcg-category-1: #e0f5f1;
+  --tcg-category-2: #eeeafd;
+  --tcg-category-3: #f7e9e5;
+  --tcg-category-4: #e6f1f3;
+  --tcg-category-5: #eeeefd;
+  --tcg-category-6: #e4f4ef;
 }
 
 :root[data-tcg-theme='dark'] {
@@ -88,7 +88,7 @@ html[data-tcg-theme] .content-for-layout {
 
 html[data-tcg-theme] [class*='color-'] {
   --color-background: var(--tcg-surface);
-  --color-background-rgb: var(--tcg-surface-rgb);
+  --color-background-rgb: var(--tcg-bg-rgb);
   --color-foreground: var(--tcg-text);
   --color-foreground-rgb: var(--tcg-text-rgb);
   --color-foreground-heading: var(--tcg-text);
@@ -199,10 +199,9 @@ html[data-tcg-theme] .header__row .menu-list__link[aria-current='page']::after {
 
 .tcg-theme-toggle svg { width: 17px; height: 17px; }
 .tcg-theme-toggle__sun, .tcg-theme-toggle__moon { display: none; }
-/* The icon now shows the active mode; the accessible label still announces
-   the mode that will be activated when the control is pressed. */
-:root[data-tcg-theme='light'] .tcg-theme-toggle__sun { display: block; }
-:root[data-tcg-theme='dark'] .tcg-theme-toggle__moon { display: block; }
+/* The icon communicates the mode that will be activated when pressed. */
+:root[data-tcg-theme='light'] .tcg-theme-toggle__moon { display: block; }
+:root[data-tcg-theme='dark'] .tcg-theme-toggle__sun { display: block; }
 
 /* Drawers */
 html[data-tcg-theme] .menu-drawer,
