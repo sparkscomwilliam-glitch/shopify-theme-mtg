@@ -1,36 +1,40 @@
 :root,
 :root[data-tcg-theme='light'] {
   color-scheme: light;
-  --tcg-bg: #f4f7f6;
-  --tcg-bg-rgb: 244 247 246;
+  --tcg-bg: #eef3f2;
+  --tcg-bg-rgb: 238 243 242;
   --tcg-surface: #ffffff;
-  --tcg-surface-soft: #eaf0ef;
-  --tcg-text: #102128;
-  --tcg-text-rgb: 16 33 40;
-  --tcg-muted: #597078;
-  --tcg-border: #d7e1df;
-  --tcg-accent: #0faf9b;
-  --tcg-accent-rgb: 15 175 155;
-  --tcg-accent-text: #087f72;
+  --tcg-surface-rgb: 255 255 255;
+  --tcg-surface-soft: #e2eae8;
+  --tcg-text: #0d2026;
+  --tcg-text-rgb: 13 32 38;
+  --tcg-muted: #4c6269;
+  --tcg-border: #bdcbc8;
+  --tcg-accent: #10b29f;
+  --tcg-accent-rgb: 16 178 159;
+  --tcg-accent-text: #067467;
+  --tcg-accent-copy: #067467;
   --tcg-accent-hover: #0b9786;
   --tcg-accent-contrast: #07110f;
-  --tcg-violet: #6b5ce7;
-  --tcg-violet-rgb: 107 92 231;
-  --tcg-gold: #6b5ce7;
-  --tcg-hot: #ff7a59;
-  --tcg-hot-rgb: 255 122 89;
+  --tcg-violet: #7567f0;
+  --tcg-violet-rgb: 117 103 240;
+  --tcg-violet-copy: #4c3fc4;
+  --tcg-gold: #7567f0;
+  --tcg-hot: #f56f52;
+  --tcg-hot-rgb: 245 111 82;
+  --tcg-hot-copy: #a93b25;
   --tcg-footer-bg: #0b0f14;
   --tcg-footer-text: #e8f3f1;
   --tcg-footer-muted: #91a5aa;
-  --tcg-selected: #e4f7f3;
-  --tcg-shadow: 0 20px 56px rgb(16 33 40 / 0.11);
-  --tcg-holo: linear-gradient(120deg, #0faf9b 0%, #6b5ce7 52%, #ff7a59 100%);
-  --tcg-category-1: #e0f5f1;
-  --tcg-category-2: #eeeafd;
-  --tcg-category-3: #f7e9e5;
-  --tcg-category-4: #e6f1f3;
-  --tcg-category-5: #eeeefd;
-  --tcg-category-6: #e4f4ef;
+  --tcg-selected: #d7f2ed;
+  --tcg-shadow: 0 20px 56px rgb(13 32 38 / 0.14);
+  --tcg-holo: linear-gradient(120deg, #10b29f 0%, #7567f0 52%, #f56f52 100%);
+  --tcg-category-1: #d9efeb;
+  --tcg-category-2: #e6e2fa;
+  --tcg-category-3: #f3e1dc;
+  --tcg-category-4: #dce9ec;
+  --tcg-category-5: #e5e4f8;
+  --tcg-category-6: #dcece7;
 }
 
 :root[data-tcg-theme='dark'] {
@@ -38,6 +42,7 @@
   --tcg-bg: #0b0f14;
   --tcg-bg-rgb: 11 15 20;
   --tcg-surface: #151c24;
+  --tcg-surface-rgb: 21 28 36;
   --tcg-surface-soft: #1c2630;
   --tcg-text: #e8f3f1;
   --tcg-text-rgb: 232 243 241;
@@ -46,13 +51,16 @@
   --tcg-accent: #26e6c5;
   --tcg-accent-rgb: 38 230 197;
   --tcg-accent-text: #26e6c5;
+  --tcg-accent-copy: #26e6c5;
   --tcg-accent-hover: #54efd5;
   --tcg-accent-contrast: #07110f;
   --tcg-violet: #8b7cff;
   --tcg-violet-rgb: 139 124 255;
+  --tcg-violet-copy: #8b7cff;
   --tcg-gold: #8b7cff;
   --tcg-hot: #ff6b4a;
   --tcg-hot-rgb: 255 107 74;
+  --tcg-hot-copy: #ff8064;
   --tcg-footer-bg: #0b0f14;
   --tcg-footer-text: #e8f3f1;
   --tcg-footer-muted: #91a5aa;
@@ -80,7 +88,7 @@ html[data-tcg-theme] .content-for-layout {
 
 html[data-tcg-theme] [class*='color-'] {
   --color-background: var(--tcg-surface);
-  --color-background-rgb: var(--tcg-bg-rgb);
+  --color-background-rgb: var(--tcg-surface-rgb);
   --color-foreground: var(--tcg-text);
   --color-foreground-rgb: var(--tcg-text-rgb);
   --color-foreground-heading: var(--tcg-text);
@@ -191,8 +199,10 @@ html[data-tcg-theme] .header__row .menu-list__link[aria-current='page']::after {
 
 .tcg-theme-toggle svg { width: 17px; height: 17px; }
 .tcg-theme-toggle__sun, .tcg-theme-toggle__moon { display: none; }
-:root[data-tcg-theme='light'] .tcg-theme-toggle__moon { display: block; }
-:root[data-tcg-theme='dark'] .tcg-theme-toggle__sun { display: block; }
+/* The icon now shows the active mode; the accessible label still announces
+   the mode that will be activated when the control is pressed. */
+:root[data-tcg-theme='light'] .tcg-theme-toggle__sun { display: block; }
+:root[data-tcg-theme='dark'] .tcg-theme-toggle__moon { display: block; }
 
 /* Drawers */
 html[data-tcg-theme] .menu-drawer,
@@ -292,7 +302,7 @@ html[data-tcg-theme] .predictive-search {
   border-color: var(--tcg-border);
 }
 
-html[data-tcg-theme] .content-for-layout a:not(.button):hover { color: var(--tcg-accent-text); }
+html[data-tcg-theme] .content-for-layout a:not(.button):hover { color: var(--tcg-accent-copy); }
 
 /* Footer stays deep and premium in both modes. */
 html[data-tcg-theme] footer,
@@ -310,6 +320,24 @@ html[data-tcg-theme] footer a,
 html[data-tcg-theme] footer p,
 html[data-tcg-theme] footer input { color: var(--tcg-footer-muted) !important; }
 html[data-tcg-theme] footer a:hover { color: var(--tcg-footer-text) !important; }
+
+/* Horizon applies foreground opacity directly to the legal footer row. Keep
+   the deliberately dark footer legible when the rest of the page is light. */
+html[data-tcg-theme] footer .footer-utilities__text,
+html[data-tcg-theme] footer .footer-utilities__text *,
+html[data-tcg-theme] footer .policy-list-trigger,
+html[data-tcg-theme] footer .policy-list-trigger * {
+  color: var(--tcg-footer-muted) !important;
+}
+
+/* Bright neon remains available for fills, borders and focus rings. Text on
+   light surfaces uses the darker companion token for WCAG contrast. */
+html[data-tcg-theme='light'] .cv-header__brand-kicker,
+html[data-tcg-theme='light'] .cv-header__cart,
+html[data-tcg-theme='light'] .cv-header__catalog-link.is-active,
+html[data-tcg-theme='light'] .cv-header__drawer-link.is-active {
+  color: var(--tcg-accent-copy) !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html[data-tcg-theme] body, .tcg-theme-toggle { transition: none; }

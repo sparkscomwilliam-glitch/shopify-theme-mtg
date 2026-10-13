@@ -11,8 +11,11 @@ html[data-tcg-theme='light'] .cv-section {
   --cv-muted: var(--tcg-muted) !important;
   --cv-border: var(--tcg-border) !important;
   --cv-accent: var(--tcg-accent) !important;
+  --cv-accent-copy: var(--tcg-accent-copy) !important;
   --cv-violet: var(--tcg-violet) !important;
+  --cv-violet-copy: var(--tcg-violet-copy) !important;
   --cv-hot: var(--tcg-hot) !important;
+  --cv-hot-copy: var(--tcg-hot-copy) !important;
   --cv-accent-contrast: var(--tcg-accent-contrast) !important;
 }
 
@@ -29,6 +32,10 @@ html[data-tcg-theme='light'] .cv-offer-feature {
   --offer-bg: var(--tcg-category-2);
 }
 
+html[data-tcg-theme='light'] .cv-specimen-card--1 {
+  background: var(--tcg-category-2) !important;
+}
+
 html[data-tcg-theme='light'] .cv-specimen-card--2,
 html[data-tcg-theme='light'] .cv-category:not(.cv-category--violet):not(.cv-category--hot),
 html[data-tcg-theme='light'] .cv-offer-card:not(.cv-offer-card--violet):not(.cv-offer-card--hot) {
@@ -37,12 +44,80 @@ html[data-tcg-theme='light'] .cv-offer-card:not(.cv-offer-card--violet):not(.cv-
   --offer-bg: var(--tcg-category-1);
 }
 
+html[data-tcg-theme='light'] .cv-specimen-card--2 {
+  background: var(--tcg-category-1) !important;
+}
+
 html[data-tcg-theme='light'] .cv-specimen-card--3,
 html[data-tcg-theme='light'] .cv-category--hot,
 html[data-tcg-theme='light'] .cv-offer-card--hot {
   --card-bg: var(--tcg-category-3);
   --category-bg: var(--tcg-category-3);
   --offer-bg: var(--tcg-category-3);
+}
+
+html[data-tcg-theme='light'] .cv-specimen-card--3 {
+  background: var(--tcg-category-3) !important;
+}
+
+html[data-tcg-theme='light'] .cv-specimen-card--1 .cv-specimen-card__label {
+  color: var(--cv-violet-copy);
+}
+
+html[data-tcg-theme='light'] .cv-specimen-card--2 .cv-specimen-card__label {
+  color: var(--cv-accent-copy);
+}
+
+html[data-tcg-theme='light'] .cv-specimen-card--3 .cv-specimen-card__label {
+  color: var(--cv-hot-copy);
+}
+
+html[data-tcg-theme='light'] .cv-kicker,
+html[data-tcg-theme='light'] .cv-hero__product-info strong,
+html[data-tcg-theme='light'] .cv-product-card__title-row p,
+html[data-tcg-theme='light'] .cv-graded__price,
+html[data-tcg-theme='light'] .cv-newsletter__message {
+  color: var(--cv-accent-copy);
+}
+
+html[data-tcg-theme='light'] .cv-category:not(.cv-category--violet):not(.cv-category--hot) .cv-kicker,
+html[data-tcg-theme='light'] .cv-category:not(.cv-category--violet):not(.cv-category--hot) .cv-category__action,
+html[data-tcg-theme='light'] .cv-offer-card:not(.cv-offer-card--violet):not(.cv-offer-card--hot) .cv-kicker,
+html[data-tcg-theme='light'] .cv-offer-card:not(.cv-offer-card--violet):not(.cv-offer-card--hot) .cv-offer-card__action {
+  color: var(--cv-accent-copy);
+}
+
+html[data-tcg-theme='light'] .cv-category--violet .cv-kicker,
+html[data-tcg-theme='light'] .cv-category--violet .cv-category__action,
+html[data-tcg-theme='light'] .cv-offer-card--violet .cv-kicker,
+html[data-tcg-theme='light'] .cv-offer-card--violet .cv-offer-card__action,
+html[data-tcg-theme='light'] .cv-offer-feature .cv-kicker,
+html[data-tcg-theme='light'] .cv-newsletter__copy .cv-kicker {
+  color: var(--cv-violet-copy);
+}
+
+html[data-tcg-theme='light'] .cv-category--hot .cv-kicker,
+html[data-tcg-theme='light'] .cv-category--hot .cv-category__action,
+html[data-tcg-theme='light'] .cv-offer-card--hot .cv-kicker,
+html[data-tcg-theme='light'] .cv-offer-card--hot .cv-offer-card__action {
+  color: var(--cv-hot-copy);
+}
+
+html[data-tcg-theme='light'] .cv-logo-marquee__item {
+  color: var(--tcg-accent-copy);
+}
+
+html[data-tcg-theme='light'] .cv-logo-marquee__item--violet {
+  color: var(--tcg-violet-copy);
+}
+
+html[data-tcg-theme='light'] .cv-logo-marquee__item--hot {
+  color: var(--tcg-hot-copy);
+}
+
+html[data-tcg-theme='light'] .cv-section--surface,
+html[data-tcg-theme='light'] .cv-benefits {
+  box-shadow: inset 0 1px var(--tcg-border), inset 0 -1px var(--tcg-border);
 }
 
 html[data-tcg-theme='light'] .cv-newsletter__panel {
@@ -246,24 +321,17 @@ a.cv-logo-marquee__item:focus-visible {
   width: 100%;
   min-height: 228px;
   overflow: hidden;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--category-accent) 14%, var(--cv-surface)), var(--cv-surface-soft));
+  background: transparent;
 }
 
-.cv-category__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgb(var(--tcg-bg-rgb) / .76));
-  pointer-events: none;
-}
+.cv-category__media::after { content: none; }
 
 .cv-category__media img {
   width: 100%;
   height: 100%;
   min-height: 228px;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform .5s cubic-bezier(.22, 1, .36, 1), filter .35s ease;
 }
 
@@ -318,9 +386,7 @@ a.cv-logo-marquee__item:focus-visible {
 .cv-offer-card__media {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--offer-accent, var(--cv-violet)) 36%, transparent), transparent 34%),
-    linear-gradient(145deg, var(--cv-surface-soft), var(--cv-bg));
+  background: transparent;
 }
 
 .cv-offer-feature__media {
@@ -333,7 +399,7 @@ a.cv-logo-marquee__item:focus-visible {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform .55s cubic-bezier(.22, 1, .36, 1), filter .35s ease;
 }
 

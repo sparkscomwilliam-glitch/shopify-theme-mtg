@@ -18,7 +18,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Nouveautés",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/nouveautes",
             "highlight": true,
             "chevron": false
           }
@@ -27,7 +27,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Précommandes",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/precommandes",
             "highlight": false,
             "chevron": false
           }
@@ -36,7 +36,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Produits scellés",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/produits-scelles",
             "highlight": false,
             "chevron": true
           }
@@ -45,7 +45,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Cartes à l’unité",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/cartes-a-lunite",
             "highlight": false,
             "chevron": true
           }
@@ -54,7 +54,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Slabs / Grades",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/slabs-grades",
             "highlight": false,
             "chevron": false
           }
@@ -63,7 +63,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Accessoires",
-            "link": "shopify://collections/all",
+            "link": "shopify://collections/accessoires",
             "highlight": false,
             "chevron": false
           }
@@ -81,7 +81,7 @@
           "type": "catalog_link",
           "settings": {
             "label": "Vendre vos cartes",
-            "link": "shopify://collections/all",
+            "link": "shopify://pages/contact",
             "highlight": false,
             "chevron": false
           }
@@ -106,7 +106,9 @@
         "search_placeholder": "Rechercher cartes, displays, accessoires…",
         "account_label": "Compte",
         "wishlist_label": "Favoris",
-        "wishlist_link": ""
+        "wishlist_link": "",
+        "blog_label": "Journal",
+        "blog_link": "/blogs/news"
       }
     }
   },

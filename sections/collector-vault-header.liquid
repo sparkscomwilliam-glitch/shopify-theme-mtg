@@ -2,6 +2,42 @@
 {{ 'collector-vault-header.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'collector-vault-header.js' | asset_url }}" defer></script>
 
+{%- liquid
+  assign current_path = request.path | split: '?' | first | split: '#' | first
+  assign current_path_last_character = current_path | slice: -1, 1
+  if current_path != '/' and current_path_last_character == '/'
+    assign current_path_length = current_path.size | minus: 1
+    assign current_path = current_path | slice: 0, current_path_length
+  endif
+  assign active_catalog_link_found = false
+  assign blog_label = section.settings.blog_label | default: 'Journal'
+  assign blog_url = section.settings.blog_link | default: '/blogs/news' | split: '?' | first | split: '#' | first
+  assign blog_url_last_character = blog_url | slice: -1, 1
+  if blog_url != '/' and blog_url_last_character == '/'
+    assign blog_url_length = blog_url.size | minus: 1
+    assign blog_url = blog_url | slice: 0, blog_url_length
+  endif
+  assign navigation_has_active_link = false
+  if current_path == blog_url or current_path contains '/blogs/'
+    assign navigation_has_active_link = true
+  else
+    for navigation_block in section.blocks
+      if navigation_block.type == 'catalog_link'
+        assign navigation_block_url = navigation_block.settings.link | default: routes.all_products_collection_url | split: '?' | first | split: '#' | first
+        assign navigation_block_url_last_character = navigation_block_url | slice: -1, 1
+        if navigation_block_url != '/' and navigation_block_url_last_character == '/'
+          assign navigation_block_url_length = navigation_block_url.size | minus: 1
+          assign navigation_block_url = navigation_block_url | slice: 0, navigation_block_url_length
+        endif
+        if current_path == navigation_block_url
+          assign navigation_has_active_link = true
+          break
+        endif
+      endif
+    endfor
+  endif
+-%}
+
 <header
   class="cv-header"
   data-cv-header
@@ -54,8 +90,8 @@
         <a class="cv-header__action cv-header__action--account" href="{{ routes.account_url }}">{{ section.settings.account_label }}</a>
       {% endif %}
 
-      {% if section.settings.wishlist_label != blank %}
-        <a class="cv-header__action cv-header__action--wishlist" href="{{ section.settings.wishlist_link | default: '/pages/favoris' }}">
+      {% if section.settings.wishlist_label != blank and section.settings.wishlist_link != blank %}
+        <a class="cv-header__action cv-header__action--wishlist" href="{{ section.settings.wishlist_link }}">
           {{ section.settings.wishlist_label }}
         </a>
       {% endif %}
@@ -124,23 +160,49 @@
       <nav class="cv-header__drawer-nav" aria-label="Catalogue mobile">
         {% for block in section.blocks %}
           {% if block.type == 'catalog_link' and block.settings.label != blank %}
+            {%- liquid
+              assign drawer_link_url = block.settings.link | default: routes.all_products_collection_url | split: '?' | first | split: '#' | first
+              assign drawer_link_url_last_character = drawer_link_url | slice: -1, 1
+              if drawer_link_url != '/' and drawer_link_url_last_character == '/'
+                assign drawer_link_url_length = drawer_link_url.size | minus: 1
+                assign drawer_link_url = drawer_link_url | slice: 0, drawer_link_url_length
+              endif
+              assign drawer_link_is_active = false
+              if active_catalog_link_found == false and current_path == drawer_link_url
+                assign drawer_link_is_active = true
+                assign active_catalog_link_found = true
+              endif
+            -%}
             <a
-              class="cv-header__drawer-link{% if block.settings.highlight %} cv-header__drawer-link--highlight{% endif %}"
-              href="{{ block.settings.link | default: routes.all_products_collection_url }}"
+              class="cv-header__drawer-link{% if drawer_link_is_active %} is-active{% endif %}{% if navigation_has_active_link == false and block.settings.highlight %} cv-header__drawer-link--featured{% endif %}"
+              href="{{ drawer_link_url }}"
+              {% if drawer_link_is_active %}aria-current="page"{% endif %}
             >
               <span>{{ block.settings.label }}</span>
               <span aria-hidden="true">↗</span>
             </a>
           {% endif %}
         {% endfor %}
+        {%- assign drawer_blog_is_active = false -%}
+        {%- if current_path == blog_url or current_path contains '/blogs/' -%}
+          {%- assign drawer_blog_is_active = true -%}
+        {%- endif -%}
+        <a
+          class="cv-header__drawer-link{% if drawer_blog_is_active %} is-active{% endif %}"
+          href="{{ blog_url }}"
+          {% if drawer_blog_is_active %}aria-current="page"{% endif %}
+        >
+          <span>{{ blog_label }}</span>
+          <span aria-hidden="true">↗</span>
+        </a>
       </nav>
 
       <div class="cv-header__drawer-meta">
         {% if shop.customer_accounts_enabled %}
           <a href="{{ routes.account_url }}">{{ section.settings.account_label }}</a>
         {% endif %}
-        {% if section.settings.wishlist_label != blank %}
-          <a href="{{ section.settings.wishlist_link | default: '/pages/favoris' }}">{{ section.settings.wishlist_label }}</a>
+        {% if section.settings.wishlist_label != blank and section.settings.wishlist_link != blank %}
+          <a href="{{ section.settings.wishlist_link }}">{{ section.settings.wishlist_label }}</a>
         {% endif %}
       </div>
     </aside>
@@ -148,11 +210,26 @@
 
   <nav class="cv-header__catalog" data-cv-catalog-nav aria-label="Catalogue" aria-hidden="false">
     <div class="cv-header__catalog-track">
+      {%- assign active_catalog_link_found = false -%}
       {% for block in section.blocks %}
         {% if block.type == 'catalog_link' and block.settings.label != blank %}
+          {%- liquid
+            assign catalog_link_url = block.settings.link | default: routes.all_products_collection_url | split: '?' | first | split: '#' | first
+            assign catalog_link_url_last_character = catalog_link_url | slice: -1, 1
+            if catalog_link_url != '/' and catalog_link_url_last_character == '/'
+              assign catalog_link_url_length = catalog_link_url.size | minus: 1
+              assign catalog_link_url = catalog_link_url | slice: 0, catalog_link_url_length
+            endif
+            assign catalog_link_is_active = false
+            if active_catalog_link_found == false and current_path == catalog_link_url
+              assign catalog_link_is_active = true
+              assign active_catalog_link_found = true
+            endif
+          -%}
           <a
-            class="cv-header__catalog-link{% if block.settings.highlight %} cv-header__catalog-link--highlight{% endif %}"
-            href="{{ block.settings.link | default: routes.all_products_collection_url }}"
+            class="cv-header__catalog-link{% if catalog_link_is_active %} is-active{% endif %}{% if navigation_has_active_link == false and block.settings.highlight %} cv-header__catalog-link--featured{% endif %}"
+            href="{{ catalog_link_url }}"
+            {% if catalog_link_is_active %}aria-current="page"{% endif %}
             {{ block.shopify_attributes }}
           >
             <span>{{ block.settings.label }}</span>
@@ -160,6 +237,18 @@
           </a>
         {% endif %}
       {% endfor %}
+
+      {%- assign catalog_blog_is_active = false -%}
+      {%- if current_path == blog_url or current_path contains '/blogs/' -%}
+        {%- assign catalog_blog_is_active = true -%}
+      {%- endif -%}
+      <a
+        class="cv-header__catalog-link{% if catalog_blog_is_active %} is-active{% endif %}"
+        href="{{ blog_url }}"
+        {% if catalog_blog_is_active %}aria-current="page"{% endif %}
+      >
+        <span>{{ blog_label }}</span>
+      </a>
 
     </div>
   </nav>
@@ -226,6 +315,18 @@
       "type": "url",
       "id": "wishlist_link",
       "label": "Lien des favoris"
+    },
+    {
+      "type": "text",
+      "id": "blog_label",
+      "label": "Libellé du blog",
+      "default": "Journal"
+    },
+    {
+      "type": "url",
+      "id": "blog_link",
+      "label": "Lien du blog",
+      "info": "Par défaut : /blogs/news"
     }
   ],
   "blocks": [

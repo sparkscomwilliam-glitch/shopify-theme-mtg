@@ -1,0 +1,73 @@
+{{ 'neon-product-support.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign source_collection = section.settings.collection
+  if source_collection == blank
+    assign source_collection = product.collections.first
+  endif
+  assign visible_count = 0
+%}
+
+<section class="ns-support-section">
+  <div class="ns-support ns-related" aria-labelledby="NeonRelated-{{ section.id }}">
+    <header class="ns-support__heading">
+      {% if section.settings.kicker != blank %}<p>{{ section.settings.kicker }}</p>{% endif %}
+      <h2 id="NeonRelated-{{ section.id }}">{{ section.settings.heading }}</h2>
+    </header>
+
+    {% if source_collection != blank and source_collection.products_count > 0 %}
+      <div class="ns-related__grid">
+        {% for related_product in source_collection.products limit: section.settings.products_to_show %}
+          {% unless related_product.id == product.id %}
+            {% assign visible_count = visible_count | plus: 1 %}
+            <article class="ns-related__card">
+              <a href="{{ related_product.url }}" aria-label="Voir {{ related_product.title | escape }}">
+                <div class="ns-related__media">
+                  {% if related_product.featured_image != blank %}
+                    {{
+                      related_product.featured_image
+                      | image_url: width: 720
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '240, 360, 540, 720',
+                        sizes: '(min-width: 1000px) 22vw, (min-width: 391px) 46vw, 92vw',
+                        alt: related_product.featured_image.alt | default: related_product.title
+                    }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'ns-related__placeholder' }}
+                  {% endif %}
+                </div>
+                <div class="ns-related__content">
+                  <span class="ns-related__view">Voir la pièce</span>
+                  <h3>{{ related_product.title }}</h3>
+                  <span class="ns-related__price">{{ related_product.price | money_with_currency }}</span>
+                </div>
+              </a>
+            </article>
+          {% endunless %}
+        {% endfor %}
+      </div>
+      {% if visible_count == 0 and request.design_mode %}
+        <p class="ns-related__empty">Ajoutez d’autres produits à cette collection pour afficher une sélection liée.</p>
+      {% endif %}
+    {% elsif request.design_mode %}
+      <p class="ns-related__empty">Choisissez une collection contenant des produits.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Produit · sélection liée",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "À EXPLORER ENSUITE" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Dans la même collection" },
+    { "type": "collection", "id": "collection", "label": "Collection (facultatif)" },
+    { "type": "range", "id": "products_to_show", "label": "Nombre de produits", "min": 2, "max": 8, "step": 1, "default": 4 }
+  ],
+  "presets": [
+    { "name": "Produit · sélection liée" }
+  ]
+}
+{% endschema %}

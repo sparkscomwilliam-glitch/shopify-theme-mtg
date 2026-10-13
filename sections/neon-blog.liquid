@@ -1,0 +1,103 @@
+{{ 'neon-editorial.css' | asset_url | stylesheet_tag }}
+
+<section class="neon-blog">
+  <header class="neon-blog__hero">
+    <div class="neon-editorial__shell">
+      <p class="neon-editorial__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h1 class="neon-editorial__title">{{ section.settings.title | default: blog.title | escape }}</h1>
+      {% if section.settings.intro != blank %}
+        <div class="neon-editorial__intro">{{ section.settings.intro }}</div>
+      {% endif %}
+      <div class="neon-blog__stats" aria-label="Informations du journal">
+        <span class="neon-editorial__chip">{{ blog.articles_count }} article{% if blog.articles_count != 1 %}s{% endif %}</span>
+        <span class="neon-editorial__chip">Guides · Sorties · Collection</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="neon-editorial__shell">
+    {% paginate blog.articles by section.settings.articles_per_page %}
+      <div class="neon-blog__grid">
+        {% for article in blog.articles %}
+          <article class="neon-blog-card">
+            <a class="neon-blog-card__media" href="{{ article.url }}" aria-label="Lire {{ article.title | escape }}">
+              {% if article.image %}
+                {{ article.image
+                  | image_url: width: 1600
+                  | image_tag:
+                    widths: '320, 480, 720, 960, 1200, 1600',
+                    sizes: '(max-width: 640px) calc(100vw - 20px), (max-width: 900px) calc(100vw - 48px), 60vw',
+                    loading: 'lazy',
+                    alt: article.image.alt
+                }}
+              {% else %}
+                <span class="neon-blog-card__placeholder" aria-hidden="true"></span>
+              {% endif %}
+            </a>
+            <div class="neon-blog-card__content">
+              <p class="neon-editorial__card-meta">
+                {{ article.published_at | date: '%d.%m.%Y' }}
+                {% if article.tags.size > 0 %} · {{ article.tags.first }}{% endif %}
+              </p>
+              <h2 class="neon-blog-card__title">{{ article.title | escape }}</h2>
+              {% if article.excerpt != blank %}
+                <div class="neon-blog-card__excerpt">{{ article.excerpt | strip_html }}</div>
+              {% else %}
+                <p class="neon-blog-card__excerpt">Analyse, repères et conseils pour collectionner avec plus de clarté.</p>
+              {% endif %}
+              <a class="neon-blog-card__link" href="{{ article.url }}">Lire l’article</a>
+            </div>
+          </article>
+        {% else %}
+          <div class="neon-blog__empty">Le premier article arrive bientôt.</div>
+        {% endfor %}
+
+        {% if paginate.pages > 1 %}
+          <nav class="neon-blog__pagination" aria-label="Pagination du journal">
+            {{ paginate | default_pagination }}
+          </nav>
+        {% endif %}
+      </div>
+    {% endpaginate %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Journal Neon",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "FIELD NOTES · TCG"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Journal du collectionneur"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Sorties, analyses et méthodes pour acheter, protéger et organiser votre collection.</p>"
+    },
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles par page",
+      "min": 3,
+      "max": 18,
+      "step": 3,
+      "default": 9
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journal Neon"
+    }
+  ]
+}
+{% endschema %}

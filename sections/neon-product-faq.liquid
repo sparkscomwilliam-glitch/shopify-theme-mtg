@@ -1,0 +1,60 @@
+{{ 'neon-product-support.css' | asset_url | stylesheet_tag }}
+
+{% if section.blocks.size > 0 %}
+  <section class="ns-support-section">
+    <div class="ns-support ns-faq" aria-labelledby="NeonFaq-{{ section.id }}">
+      <header class="ns-support__heading">
+        {% if section.settings.kicker != blank %}<p>{{ section.settings.kicker }}</p>{% endif %}
+        <h2 id="NeonFaq-{{ section.id }}">{{ section.settings.heading }}</h2>
+        {% if section.settings.intro != blank %}<div class="rte">{{ section.settings.intro }}</div>{% endif %}
+      </header>
+      <div class="ns-faq__list">
+        {% for block in section.blocks %}
+          {% if block.settings.question != blank %}
+            <details class="ns-faq__item" {% if block.settings.open_by_default %}open{% endif %} {{ block.shopify_attributes }}>
+              <summary>
+                <span>{{ block.settings.question }}</span>
+                <span class="ns-faq__symbol" aria-hidden="true"></span>
+              </summary>
+              {% if block.settings.answer != blank %}<div class="ns-faq__answer rte">{{ block.settings.answer }}</div>{% endif %}
+            </details>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Produit · questions",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Sur-titre", "default": "QUESTIONS UTILES" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Avant de finaliser votre choix" },
+    { "type": "richtext", "id": "intro", "label": "Introduction" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Que contient la commande ?" },
+        { "type": "richtext", "id": "answer", "label": "Réponse", "default": "<p>Listez précisément les éléments inclus sur la fiche avant publication.</p>" },
+        { "type": "checkbox", "id": "open_by_default", "label": "Ouverte par défaut", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Produit · questions",
+      "blocks": [
+        { "type": "question", "settings": { "question": "Que contient la commande ?", "answer": "<p>Listez précisément les éléments inclus sur la fiche avant publication.</p>", "open_by_default": true } },
+        { "type": "question", "settings": { "question": "Comment vérifier la compatibilité ?", "answer": "<p>Consultez les dimensions et formats indiqués dans les détails du produit.</p>" } },
+        { "type": "question", "settings": { "question": "Où consulter les conditions de livraison et de retour ?", "answer": "<p>Ajoutez ici un résumé et un lien vers les politiques à jour de la boutique.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

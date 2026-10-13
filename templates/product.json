@@ -3,17 +3,17 @@
     "main": {
       "type": "neon-specimen-product",
       "blocks": {
-        "proof_shipping": { "type": "proof", "settings": { "text": "Expédition assurée depuis la Suisse" } },
-        "proof_returns": { "type": "proof", "settings": { "text": "Retour sous 14 jours · emballage scellé" } },
-        "proof_report": { "type": "proof", "settings": { "text": "Rapport d’état inclus avant expédition" } },
+        "proof_shipping": { "type": "proof", "settings": { "text": "Options de livraison affichées à la commande" } },
+        "proof_returns": { "type": "proof", "settings": { "text": "Conditions de retour selon la politique de la boutique" } },
+        "proof_report": { "type": "proof", "settings": { "text": "État et contenu décrits sur cette fiche" } },
         "info_provenance": {
           "type": "information",
           "settings": {
             "kicker": "PROVENANCE",
-            "heading": "Une traçabilité claire",
-            "content": "<p>Documentez l’origine, l’édition et les éléments d’authentification de cette pièce.</p>",
+            "heading": "Informations d’origine",
+            "content": "<p>Documentez l’origine, l’édition et les éléments d’identification confirmés de cette pièce.</p>",
             "meta_label": "STATUT",
-            "meta_value": "Vérifié"
+            "meta_value": "À renseigner"
           }
         },
         "info_condition": {
@@ -35,14 +35,34 @@
             "meta_label": "NIVEAU",
             "meta_value": "Collection"
           }
-        }
+        },
+        "accordion_shipping": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Livraison et retours",
+            "content": "<p>Consultez les options de livraison disponibles à la commande et les politiques à jour de la boutique.</p>",
+            "open_by_default": false
+          }
+        },
+        "accordion_care": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Conservation et manipulation",
+            "content": "<p>Complétez cette zone avec les précautions adaptées au matériau et au type de produit.</p>",
+            "open_by_default": false
+          }
+        },
+        "spec_format": { "type": "specification", "settings": { "label": "Format", "value": "À renseigner" } },
+        "spec_language": { "type": "specification", "settings": { "label": "Langue", "value": "À renseigner" } },
+        "spec_condition": { "type": "specification", "settings": { "label": "État", "value": "Voir la description" } },
+        "spec_contents": { "type": "specification", "settings": { "label": "Contenu", "value": "Voir la description" } }
       },
-      "block_order": ["proof_shipping", "proof_returns", "proof_report", "info_provenance", "info_condition", "info_protection"],
+      "block_order": ["proof_shipping", "proof_returns", "proof_report", "accordion_shipping", "accordion_care", "info_provenance", "info_condition", "info_protection", "spec_format", "spec_language", "spec_condition", "spec_contents"],
       "settings": {
         "breadcrumb_collection": "Pièces gradées",
         "in_stock_label": "PIÈCE DISPONIBLE",
         "sold_out_label": "ÉPUISÉ",
-        "authenticity_label": "AUTHENTICITÉ VÉRIFIÉE",
+        "authenticity_label": "INFORMATIONS PRODUIT",
         "archive_label": "NEON ARCHIVE",
         "description_override": "",
         "tax_label": "TVA INCLUSE",
@@ -51,7 +71,44 @@
         "collection_cta_link": "shopify://collections/all",
         "show_zoom": true
       }
+    },
+    "shopping_guidance": {
+      "type": "neon-product-services",
+      "blocks": {
+        "state": { "type": "item", "settings": { "marker": "01", "heading": "État et contenu", "content": "<p>Retrouvez l’état observé et les éléments inclus dans la description de cette fiche.</p>" } },
+        "format": { "type": "item", "settings": { "marker": "02", "heading": "Format et compatibilité", "content": "<p>Vérifiez les dimensions et formats renseignés avant de commander.</p>" } },
+        "shipping": { "type": "item", "settings": { "marker": "03", "heading": "Livraison", "content": "<p>Les options disponibles sont présentées à la commande selon votre destination.</p>" } },
+        "care": { "type": "item", "settings": { "marker": "04", "heading": "Conservation", "content": "<p>Consultez les précautions indiquées pour préserver le produit dans le temps.</p>" } }
+      },
+      "block_order": ["state", "format", "shipping", "care"],
+      "settings": {
+        "kicker": "REPÈRES D’ACHAT",
+        "heading": "Les informations utiles avant de choisir",
+        "intro": "<p>Des repères clairs pour vérifier que le produit correspond à votre collection.</p>"
+      }
+    },
+    "product_faq": {
+      "type": "neon-product-faq",
+      "blocks": {
+        "contents": { "type": "question", "settings": { "question": "Que contient la commande ?", "answer": "<p>Le contenu exact est indiqué dans la description et les détails de la fiche produit.</p>", "open_by_default": true } },
+        "compatibility": { "type": "question", "settings": { "question": "Comment vérifier la compatibilité ?", "answer": "<p>Consultez le format et les dimensions dans les détails du produit. En cas de doute, contactez la boutique avant la commande.</p>", "open_by_default": false } },
+        "policies": { "type": "question", "settings": { "question": "Où consulter les conditions de livraison et de retour ?", "answer": "<p>Les politiques à jour sont accessibles depuis le pied de page et les options disponibles apparaissent à la commande.</p>", "open_by_default": false } }
+      },
+      "block_order": ["contents", "compatibility", "policies"],
+      "settings": {
+        "kicker": "QUESTIONS UTILES",
+        "heading": "Avant de finaliser votre choix",
+        "intro": ""
+      }
+    },
+    "related": {
+      "type": "neon-related-products",
+      "settings": {
+        "kicker": "À EXPLORER ENSUITE",
+        "heading": "Dans la même collection",
+        "products_to_show": 4
+      }
     }
   },
-  "order": ["main"]
+  "order": ["main", "shopping_guidance", "product_faq", "related"]
 }

@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'nwe12-tcg-theme';
+const STORAGE_KEY = 'nwe12-tcg-theme-v2';
 
 function getTheme() {
   return document.documentElement.dataset.tcgTheme === 'dark' ? 'dark' : 'light';
@@ -33,4 +33,3 @@ document.addEventListener('click', (event) => {
 
 document.addEventListener('DOMContentLoaded', updateToggleState);
 document.addEventListener('shopify:section:load', updateToggleState);
-

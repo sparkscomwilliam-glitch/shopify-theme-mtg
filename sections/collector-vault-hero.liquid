@@ -15,12 +15,12 @@
 <section
   class="cv-section cv-hero"
   style="--cv-bg: {{ section.settings.background }}; --cv-surface: {{ section.settings.surface }}; --cv-accent: {{ section.settings.accent }}; --cv-violet: {{ section.settings.secondary }}; --cv-hot: {{ section.settings.hot }};"
-  aria-labelledby="CollectorVaultHero-{{ section.id }}"
+  aria-label="{{ section.settings.heading | strip_html | escape }}"
 >
   <div class="cv-inner cv-hero__desktop">
     <div class="cv-hero__copy">
       {% if section.settings.kicker != blank %}<p class="cv-kicker cv-hero__tag">{{ section.settings.kicker }}</p>{% endif %}
-      <h1 id="CollectorVaultHero-{{ section.id }}">{{ section.settings.heading }}</h1>
+      <h1>{{ section.settings.heading }}</h1>
       {% if section.settings.text != blank %}<div class="cv-hero__lead rte">{{ section.settings.text }}</div>{% endif %}
 
       <div class="cv-hero__actions">
@@ -83,7 +83,7 @@
       <p class="cv-kicker cv-hero-mobile__tag">{{ section.settings.kicker }}</p>
     {% endif %}
 
-    <h1 class="cv-hero-mobile__heading">{{ section.settings.heading }}</h1>
+    <p class="cv-hero-mobile__heading" aria-hidden="true">{{ section.settings.heading }}</p>
 
     {% if section.settings.mobile_text != blank %}
       <div class="cv-hero-mobile__lead rte">{{ section.settings.mobile_text }}</div>
